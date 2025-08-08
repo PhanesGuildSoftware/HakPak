@@ -29,28 +29,3 @@ Thumbs.db
 .idea/
 *.swp
 *.swo
-
-# Package manager files
-node_modules/
-*.deb
-*.rpm
-
-# Build artifacts
-build/
-dist/
-target/
-
-# Configuration files with sensitive data
-config/secrets.*
-*.env
-.env.local
-.env.production
-
-# Downloaded packages and tools
-downloads/
-cache/
-
-# Development and testing
-test-results/
-coverage/
-.nyc_output/
