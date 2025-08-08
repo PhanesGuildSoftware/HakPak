@@ -1,0 +1,14 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Hakpak
+GenericName=Universal Kali Tools Installer
+Comment=Universal Kali Linux tools installer for Debian-based systems
+Exec=/usr/local/bin/hakpak
+Icon=hakpak
+Terminal=true
+Categories=System;Security;Development;
+Keywords=kali;security;tools;penetration;testing;ubuntu;debian;installer;cybersecurity;hacking;
+StartupNotify=true
+MimeType=application/x-shellscript;
+StartupWMClass=hakpak

@@ -1,0 +1,50 @@
+# HakPak .gitignore
+
+# Logs
+*.log
+/var/log/hakpak.log
+
+# Temporary files
+*.tmp
+*.temp
+.tmp/
+
+# Backup files
+*.backup
+*.bak
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Package manager files
+node_modules/
+*.deb
+*.rpm
+
+# Build artifacts
+build/
+dist/
+target/
+
+# Configuration files with sensitive data
+config/secrets.*
+*.env
+.env.local
+.env.production
+
+# Downloaded packages and tools
+downloads/
+cache/
