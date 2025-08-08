@@ -13,6 +13,7 @@
 *.backup
 *.bak
 *~
+*.old
 
 # OS generated files
 .DS_Store
@@ -48,3 +49,8 @@ config/secrets.*
 # Downloaded packages and tools
 downloads/
 cache/
+
+# Development and testing
+test-results/
+coverage/
+.nyc_output/
