@@ -68,13 +68,6 @@ uninstall_hakpak() {
         ((removed_count++))
     fi
     
-    # Remove polkit policy
-    if [[ -f "/usr/share/polkit-1/actions/com.phanesguild.hakpak.policy" ]]; then
-        sudo rm -f "/usr/share/polkit-1/actions/com.phanesguild.hakpak.policy"
-        print_success "Removed polkit policy"
-        ((removed_count++))
-    fi
-    
     # Remove desktop integration
     if [[ -f "/usr/share/applications/hakpak.desktop" ]]; then
         sudo rm -f "/usr/share/applications/hakpak.desktop"
@@ -82,33 +75,12 @@ uninstall_hakpak() {
         ((removed_count++))
     fi
     
-    # Remove icons
-    local icon_paths=(
-        "/usr/share/icons/hicolor/16x16/apps/hakpak.png"
-        "/usr/share/icons/hicolor/32x32/apps/hakpak.png"
-        "/usr/share/icons/hicolor/48x48/apps/hakpak.png"
-        "/usr/share/icons/hicolor/64x64/apps/hakpak.png"
-        "/usr/share/icons/hicolor/128x128/apps/hakpak.png"
-        "/usr/share/icons/hicolor/scalable/apps/hakpak.svg"
-    )
-    
-    for icon_path in "${icon_paths[@]}"; do
-        if [[ -f "$icon_path" ]]; then
-            sudo rm -f "$icon_path"
-            ((removed_count++))
-        fi
-    done
-    
-    if [[ $removed_count -gt 0 ]]; then
-        print_success "Removed $removed_count icon files"
+    if [[ $removed_count -eq 0 ]]; then
+        print_warning "No HakPak files found to remove"
     fi
     
     # Update system caches
     print_info "Updating system caches..."
-    if command -v gtk-update-icon-cache &> /dev/null; then
-        sudo gtk-update-icon-cache -f -t /usr/share/icons/hicolor 2>/dev/null || true
-    fi
-    
     if command -v update-desktop-database &> /dev/null; then
         sudo update-desktop-database /usr/share/applications 2>/dev/null || true
     fi
@@ -125,27 +97,6 @@ check_installation() {
     [[ -d "/opt/hakpak" ]] && { echo "  • Installation directory: /opt/hakpak"; ((found_items++)); }
     [[ -f "/usr/local/bin/hakpak" ]] && { echo "  • System executable: /usr/local/bin/hakpak"; ((found_items++)); }
     [[ -f "/usr/share/applications/hakpak.desktop" ]] && { echo "  • Desktop entry"; ((found_items++)); }
-    [[ -f "/usr/share/polkit-1/actions/com.phanesguild.hakpak.policy" ]] && { echo "  • Polkit policy"; ((found_items++)); }
-    
-    # Check for icons
-    local icon_count=0
-    local icon_paths=(
-        "/usr/share/icons/hicolor/16x16/apps/hakpak.png"
-        "/usr/share/icons/hicolor/32x32/apps/hakpak.png"
-        "/usr/share/icons/hicolor/48x48/apps/hakpak.png"
-        "/usr/share/icons/hicolor/64x64/apps/hakpak.png"
-        "/usr/share/icons/hicolor/128x128/apps/hakpak.png"
-        "/usr/share/icons/hicolor/scalable/apps/hakpak.svg"
-    )
-    
-    for icon_path in "${icon_paths[@]}"; do
-        [[ -f "$icon_path" ]] && ((icon_count++))
-    done
-    
-    if [[ $icon_count -gt 0 ]]; then
-        echo "  • Icons: $icon_count files"
-        ((found_items++))
-    fi
     
     if [[ $found_items -eq 0 ]]; then
         print_warning "No HakPak installation found"

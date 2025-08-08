@@ -121,7 +121,6 @@ verify_files() {
     
     local required_files=(
         "hakpak.sh"
-        "hakpak-launcher.sh"
     )
     
     for file in "${required_files[@]}"; do
@@ -144,18 +143,10 @@ install_system_files() {
     
     # Copy main files
     sudo cp "$SCRIPT_DIR/hakpak.sh" "$INSTALL_DIR/"
-    sudo cp "$SCRIPT_DIR/hakpak-launcher.sh" "$INSTALL_DIR/"
     sudo chmod +x "$INSTALL_DIR/hakpak.sh"
-    sudo chmod +x "$INSTALL_DIR/hakpak-launcher.sh"
     
     # Create system-wide executable
     sudo ln -sf "$INSTALL_DIR/hakpak.sh" "$BIN_DIR/hakpak"
-    
-    # Install polkit policy if available
-    if [[ -f "$SCRIPT_DIR/com.phanesguild.hakpak.policy" ]]; then
-        sudo cp "$SCRIPT_DIR/com.phanesguild.hakpak.policy" "/usr/share/polkit-1/actions/"
-        print_success "Polkit policy installed"
-    fi
     
     print_success "System files installed to $INSTALL_DIR"
 }
@@ -166,46 +157,27 @@ install_desktop_integration() {
     
     # Create directories
     sudo mkdir -p "$DESKTOP_DIR"
-    sudo mkdir -p "$ICONS_DIR/hicolor/"{16x16,32x32,48x48,64x64,128x128,scalable}"/apps"
     
-    # Install icons
-    local icon_sizes=(16 32 48 64 128)
-    for size in "${icon_sizes[@]}"; do
-        if [[ -f "$SCRIPT_DIR/hakpak-${size}.png" ]]; then
-            sudo cp "$SCRIPT_DIR/hakpak-${size}.png" "$ICONS_DIR/hicolor/${size}x${size}/apps/hakpak.png"
-        fi
-    done
-    
-    # Install SVG icon
-    if [[ -f "$SCRIPT_DIR/hakpak.svg" ]]; then
-        sudo cp "$SCRIPT_DIR/hakpak.svg" "$ICONS_DIR/hicolor/scalable/apps/hakpak.svg"
-    fi
-    
-    # Create desktop entry
+    # Create desktop entry that launches hakpak directly in terminal
     sudo tee "$DESKTOP_DIR/hakpak.desktop" > /dev/null << 'EOF'
 [Desktop Entry]
 Type=Application
 Name=HakPak
 Comment=Universal Kali Tools Installer
-Exec=hakpak-launcher
-Icon=hakpak
-Terminal=false
+Exec=sh -c 'hakpak; read -p "Press Enter to close..."'
+Icon=utilities-terminal
+Terminal=true
 Categories=System;Security;
 Keywords=security;tools;kali;hacking;penetration testing;
 StartupNotify=true
 EOF
-    
-    # Update icon cache
-    if command -v gtk-update-icon-cache &> /dev/null; then
-        sudo gtk-update-icon-cache -f -t "$ICONS_DIR/hicolor" 2>/dev/null || true
-    fi
     
     # Update desktop database
     if command -v update-desktop-database &> /dev/null; then
         sudo update-desktop-database "$DESKTOP_DIR" 2>/dev/null || true
     fi
     
-    print_success "Desktop integration installed"
+    print_success "Desktop integration installed (launches in terminal)"
 }
 
 # Uninstall HakPak
@@ -215,16 +187,11 @@ uninstall_hakpak() {
     # Remove system files
     sudo rm -rf "$INSTALL_DIR" 2>/dev/null || true
     sudo rm -f "$BIN_DIR/hakpak" 2>/dev/null || true
-    sudo rm -f "/usr/share/polkit-1/actions/com.phanesguild.hakpak.policy" 2>/dev/null || true
     
     # Remove desktop integration
     sudo rm -f "$DESKTOP_DIR/hakpak.desktop" 2>/dev/null || true
-    sudo rm -f "$ICONS_DIR/hicolor/"*/apps/hakpak.* 2>/dev/null || true
     
-    # Update caches
-    if command -v gtk-update-icon-cache &> /dev/null; then
-        sudo gtk-update-icon-cache -f -t "$ICONS_DIR/hicolor" 2>/dev/null || true
-    fi
+    # Update desktop database
     if command -v update-desktop-database &> /dev/null; then
         sudo update-desktop-database "$DESKTOP_DIR" 2>/dev/null || true
     fi
