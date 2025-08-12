@@ -19,6 +19,8 @@ declare -r GREEN='\033[0;32m'
 declare -r RED='\033[0;31m'
 declare -r YELLOW='\033[1;33m'
 declare -r BLUE='\033[0;34m'
+declare -r PURPLE='\033[0;35m'
+declare -r CYAN='\033[0;36m'
 declare -r BOLD='\033[1m'
 declare -r NC='\033[0m'
 
@@ -30,17 +32,17 @@ print_info() { echo -e "${BLUE}[i]${NC} $1"; }
 
 show_header() {
     clear
-    echo -e "${BOLD}${BLUE}"
-    echo "██   ██  █████  ██   ██ ██████   █████  ██   ██"
-    echo "██   ██ ██   ██ ██  ██  ██   ██ ██   ██ ██  ██ "
-    echo "███████ ███████ █████   ██████  ███████ █████  "
-    echo "██   ██ ██   ██ ██  ██  ██      ██   ██ ██  ██ "
-    echo "██   ██ ██   ██ ██   ██ ██      ██   ██ ██   ██"
-    echo -e "${NC}"
+    echo -e "${BOLD}${CYAN}██╗  ██╗ █████╗ ██╗  ██╗██████╗  █████╗ ██╗  ██╗${NC}"
+    echo -e "${BOLD}${CYAN}██║  ██║██╔══██╗██║ ██╔╝██╔══██╗██╔══██╗██║ ██╔╝${NC}"
+    echo -e "${BOLD}${CYAN}███████║███████║█████╔╝ ██████╔╝███████║█████╔╝${NC} "
+    echo -e "${BOLD}${CYAN}██╔══██║██╔══██║██╔═██╗ ██╔═══╝ ██╔══██║██╔═██╗${NC} "
+    echo -e "${BOLD}${CYAN}██║  ██║██║  ██║██║  ██╗██║     ██║  ██║██║  ██╗${NC}"
+    echo -e "${BOLD}${BLUE}╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝${NC}"
+    echo
     echo -e "${BOLD}${GREEN}Universal Kali Tools Installer v${HAKPAK_VERSION}${NC}"
     echo -e "${BLUE}═══════════════════════════════════════════════════════${NC}"
     echo -e "${BLUE}Author:${NC} Teyvone Wells @ PhanesGuild Software LLC"
-    echo -e "${BLUE}Support:${NC} https://phanesguild.com"
+    echo -e "${BLUE}Support:${NC} https://www.phanesguild.llc"
     echo -e "${BLUE}═══════════════════════════════════════════════════════${NC}"
     echo
 }

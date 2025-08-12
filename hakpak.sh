@@ -14,6 +14,8 @@ declare -r GREEN='\033[0;32m'
 declare -r RED='\033[0;31m'
 declare -r YELLOW='\033[1;33m'
 declare -r BLUE='\033[0;34m'
+declare -r PURPLE='\033[0;35m'
+declare -r CYAN='\033[0;36m'
 declare -r BOLD='\033[1m'
 declare -r NC='\033[0m'
 
@@ -25,19 +27,19 @@ print_info() { echo -e "${BLUE}[i]${NC} $1"; }
 
 show_header() {
     clear
-    echo -e "${BOLD}${BLUE}"
-    echo "██   ██  █████  ██   ██ ██████   █████  ██   ██"
-    echo "██   ██ ██   ██ ██  ██  ██   ██ ██   ██ ██  ██ "
-    echo "███████ ███████ █████   ██████  ███████ █████  "
-    echo "██   ██ ██   ██ ██  ██  ██      ██   ██ ██  ██ "
-    echo "██   ██ ██   ██ ██   ██ ██      ██   ██ ██   ██"
-    echo -e "${NC}"
+    echo -e "${BOLD}${CYAN}██╗  ██╗ █████╗ ██╗  ██╗██████╗  █████╗ ██╗  ██╗${NC}"
+    echo -e "${BOLD}${CYAN}██║  ██║██╔══██╗██║ ██╔╝██╔══██╗██╔══██╗██║ ██╔╝${NC}"
+    echo -e "${BOLD}${CYAN}███████║███████║█████╔╝ ██████╔╝███████║█████╔╝${NC} "
+    echo -e "${BOLD}${CYAN}██╔══██║██╔══██║██╔═██╗ ██╔═══╝ ██╔══██║██╔═██╗${NC} "
+    echo -e "${BOLD}${CYAN}██║  ██║██║  ██║██║  ██╗██║     ██║  ██║██║  ██╗${NC}"
+    echo -e "${BOLD}${BLUE}╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝${NC}"
+    echo
     echo -e "${BOLD}${GREEN}Professional Security Toolkit v${HAKPAK_VERSION}${NC}"
     echo -e "${BLUE}═══════════════════════════════════════════════════════${NC}"
     echo -e "${BLUE}Author:${NC} Teyvone Wells @ PhanesGuild Software LLC"
     echo -e "${BLUE}Platform:${NC} Ubuntu 24.04 LTS (Tested & Verified)"
     echo -e "${BLUE}Tools:${NC} 15 Essential Security Tools"
-    echo -e "${BLUE}Support:${NC} https://github.com/PhanesGuildSoftware/hakpak"
+    echo -e "${BLUE}Support:${NC} https://www.phanesguild.llc"
     echo -e "${BLUE}═══════════════════════════════════════════════════════${NC}"
     echo
 }
@@ -98,27 +100,33 @@ print_help() {
     echo -e "${BOLD}EXAMPLES:${NC}"
     echo "  sudo hakpak                              # Launch interactive menu"
     echo "  sudo hakpak --status                     # Show system status"
-    echo "  sudo hakpak --install kali-linux-default # Install default tools"
     echo "  sudo hakpak --install nmap               # Install specific tool"
+    echo "  sudo hakpak --install sqlmap             # Install SQL injection tool"
+    echo "  sudo hakpak --install hydra              # Install password cracker"
     echo "  sudo hakpak --list-metapackages          # Show available packages"
     echo "  sudo hakpak --setup-repo                 # Setup repository only"
     echo "  sudo hakpak --fix-deps                   # Fix broken packages"
     echo ""
     echo -e "${BOLD}SUPPORTED DISTRIBUTIONS:${NC}"
-    echo "  • Ubuntu 20.04+ (LTS recommended)"
-    echo "  • Debian 11+ (Bullseye+)"
-    echo "  • Pop!_OS 20.04+"
-    echo "  • Linux Mint 20+"
-    echo "  • Parrot OS 4.11+"
+    echo "  • Ubuntu 24.04 LTS (Tested & Verified)"
+    echo "  • Other Debian-based distributions (Untested - Use at own risk)"
+    echo ""
+    echo -e "${BOLD}AVAILABLE TOOLS (15 Essential Security Tools):${NC}"
+    echo "  • Network: nmap, sqlmap, nikto"
+    echo "  • Web Testing: dirb, gobuster, wfuzz, ffuf"
+    echo "  • Password: hydra, john, hashcat"
+    echo "  • Analysis: wireshark, tcpdump, netcat"
+    echo "  • Exploitation: exploitdb, searchsploit"
     echo ""
     echo -e "${BOLD}SYSTEM REQUIREMENTS:${NC}"
-    echo "  • Supported Debian-based distribution"
+    echo "  • Ubuntu 24.04 LTS (Primary support)"
     echo "  • Root/sudo privileges"
     echo "  • Internet connection"
-    echo "  • 2GB+ available disk space (8GB+ for large packages)"
+    echo "  • 5GB+ available disk space"
     echo ""
     echo -e "${BOLD}SUPPORT:${NC}"
     echo "  • Log file: /var/log/hakpak.log"
+    echo "  • Website: https://www.phanesguild.llc"
     echo "  • PhanesGuild Software LLC"
     echo ""
 }
