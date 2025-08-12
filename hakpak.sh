@@ -1,53 +1,46 @@
 #!/bin/bash
 
-###################################################################################
 # HakPak v1.0 - Professional Security Toolkit for Ubuntu 24.04
-# 
-# Description: Safely installs Kali Linux penetration testing tools on 
-#              Ubuntu, Debian, and other compatible distributions
-# 
-# Version: 1.0.0 (Ubuntu 24.04 Edition)
-# Release Date: August 11, 2025
 # Author: Teyvone Wells @ PhanesGuild Software LLC
-# Repository: https://github.com/PhanesGuildSoftware/hakpak
-# License: MIT License
-# 
-# Features:
-# - 15 Essential Security Tools
-# - Advanced Conflict Resolution
-# - Safe Installation with Automatic Fallbacks
-# - Ubuntu 24.04 & Debian Compatible
-# - Professional Grade Error Handling
-# 
-# Supported Distributions:
-# - Ubuntu 24.04 LTS (Primary)
-# - Debian 12+ (Bookworm)
-# - Pop!_OS, Linux Mint, Parrot OS
-# 
-# WARNING: This script modifies system repositories and installs packages.
-#          Use at your own risk and ensure you have system backups.
-###################################################################################
 
-# HAKPAK - Universal Kali Tools Installer for Debian-Based Systems
-# Author: Teyvone Wells @ PhanesGuild Software LLC
-# Purpose: Universal Kali Linux tools installer for Debian-based distributions
-# Version: 1.0 (Ubuntu 24.04 Edition)
-# Last Modified: 2025-08-11
-# Supported: Ubuntu, Debian, Pop!_OS, Linux Mint, Parrot OS
+set -euo pipefail
 
-set -euo pipefail  # Enhanced error handling
+# Version and branding
+readonly HAKPAK_VERSION="1.0"
+readonly SCRIPT_NAME="HakPak"
 
-# Colors and formatting
+# Colors
 declare -r GREEN='\033[0;32m'
 declare -r RED='\033[0;31m'
 declare -r YELLOW='\033[1;33m'
 declare -r BLUE='\033[0;34m'
 declare -r BOLD='\033[1m'
-declare -r NC='\033[0m' # No Color
+declare -r NC='\033[0m'
 
-# Configuration
-declare -r SCRIPT_NAME="Hakpak"
-declare -r HAKPAK_VERSION="1.0"
+# Output functions
+print_success() { echo -e "${GREEN}[✓]${NC} $1"; }
+print_error() { echo -e "${RED}[✗]${NC} $1" >&2; }
+print_warning() { echo -e "${YELLOW}[!]${NC} $1"; }
+print_info() { echo -e "${BLUE}[i]${NC} $1"; }
+
+show_header() {
+    clear
+    echo -e "${BOLD}${BLUE}"
+    echo "██   ██  █████  ██   ██ ██████   █████  ██   ██"
+    echo "██   ██ ██   ██ ██  ██  ██   ██ ██   ██ ██  ██ "
+    echo "███████ ███████ █████   ██████  ███████ █████  "
+    echo "██   ██ ██   ██ ██  ██  ██      ██   ██ ██  ██ "
+    echo "██   ██ ██   ██ ██   ██ ██      ██   ██ ██   ██"
+    echo -e "${NC}"
+    echo -e "${BOLD}${GREEN}Professional Security Toolkit v${HAKPAK_VERSION}${NC}"
+    echo -e "${BLUE}═══════════════════════════════════════════════════════${NC}"
+    echo -e "${BLUE}Author:${NC} Teyvone Wells @ PhanesGuild Software LLC"
+    echo -e "${BLUE}Platform:${NC} Ubuntu 24.04 LTS (Tested & Verified)"
+    echo -e "${BLUE}Tools:${NC} 15 Essential Security Tools"
+    echo -e "${BLUE}Support:${NC} https://github.com/PhanesGuildSoftware/hakpak"
+    echo -e "${BLUE}═══════════════════════════════════════════════════════${NC}"
+    echo
+}
 declare LOG_FILE="/var/log/hakpak.log"  # Not readonly to allow fallback
 declare -r KALI_REPO_URL="http://http.kali.org/kali"
 declare -r KALI_GPG_URL="https://archive.kali.org/archive-key.asc"
@@ -2329,6 +2322,9 @@ trap cleanup SIGINT SIGTERM
 
 # Main execution with argument parsing
 main() {
+    # Show professional header
+    show_header
+    
     # Parse command line arguments
     case "${1:-}" in
         -h|--help)
