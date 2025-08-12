@@ -68,6 +68,13 @@ uninstall_hakpak() {
         ((removed_count++))
     fi
     
+    # Remove license verification system
+    if [[ -d "/usr/share/hakpak" ]]; then
+        sudo rm -rf "/usr/share/hakpak"
+        print_success "Removed license verification system"
+        ((removed_count++))
+    fi
+    
     # Remove desktop integration
     if [[ -f "/usr/share/applications/hakpak.desktop" ]]; then
         sudo rm -f "/usr/share/applications/hakpak.desktop"
@@ -97,6 +104,7 @@ check_installation() {
     [[ -d "/opt/hakpak" ]] && { echo "  • Installation directory: /opt/hakpak"; ((found_items++)); }
     [[ -f "/usr/local/bin/hakpak" ]] && { echo "  • System executable: /usr/local/bin/hakpak"; ((found_items++)); }
     [[ -f "/usr/share/applications/hakpak.desktop" ]] && { echo "  • Desktop entry"; ((found_items++)); }
+    [[ -d "/usr/share/hakpak" ]] && { echo "  • License verification system: /usr/share/hakpak"; ((found_items++)); }
     
     if [[ $found_items -eq 0 ]]; then
         print_warning "No HakPak installation found"

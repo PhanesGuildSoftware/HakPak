@@ -1,0 +1,188 @@
+# HakPak Tools Directory
+
+This directory contains utility scripts for HakPak enterprise licensing and development.
+
+## 🔐 Licensing Tools
+
+### Key Management
+
+#### `generate_keys.sh`
+Generates RSA 4096-bit keypair for signing enterprise licenses.
+
+```bash
+./tools/generate_keys.sh
+```
+
+**Important**: 
+- Keep `keys/private.pem` secure and never commit to version control
+- Only `keys/public.pem` should be committed to the repository
+- Private key is used by PhanesGuild Software LLC for license generation
+
+### License Generation
+
+#### `generate_license.sh`
+Creates signed enterprise licenses for HakPak Pro features.
+
+```bash
+# Interactive mode (recommended)
+./tools/generate_license.sh
+
+# Command-line mode
+./tools/generate_license.sh --cli "Company Name" "Enterprise" \
+  "2025-01-01" "2026-01-01" 100 "24/7 Priority" \
+  '"Advanced Reporting", "API Access"'
+```
+
+**License Types**:
+- **Professional**: Small teams, business hours support
+- **Enterprise**: Large organizations, 24/7 priority support  
+- **Educational**: Academic institutions, community support
+- **Trial**: 30-day evaluation, self-service
+
+**Features Available**:
+- Advanced Reporting
+- Centralized Management
+- Custom Tool Bundles
+- API Access
+- SSO Integration
+- Compliance Reporting
+
+### License Validation
+
+#### `validate_license.sh`
+Validates enterprise license signatures and displays license information.
+
+```bash
+# Validate default license
+./tools/validate_license.sh
+
+# Validate specific license file
+./tools/validate_license.sh /path/to/license.lic
+```
+
+## 🛡️ Security Considerations
+
+### Key Security
+- Private keys must be stored securely
+- Use hardware security modules (HSM) for production environments
+- Regularly rotate keys according to security policy
+- Maintain secure backup of private keys
+
+### License Security
+- Licenses contain customer information and should be treated as confidential
+- Use encrypted communication channels for license delivery
+- Maintain audit trail of license generation and distribution
+- Implement license revocation procedures if needed
+
+### Access Control
+- Restrict access to license generation tools to authorized personnel only
+- Use role-based access control for different license operations
+- Log all license generation activities for audit purposes
+
+## 📋 Enterprise Workflow
+
+### License Generation Process
+
+1. **Customer Onboarding**
+   - Verify customer information and purchase
+   - Determine appropriate license type and features
+   - Document in CRM system
+
+2. **License Creation**
+   ```bash
+   ./tools/generate_license.sh
+   ```
+   - Use interactive mode for accuracy
+   - Verify all details before generation
+   - Save license file securely
+
+3. **License Delivery**
+   - Encrypt license file for transmission
+   - Use secure delivery method (encrypted email, secure portal)
+   - Provide installation instructions
+   - Document delivery in customer records
+
+4. **License Validation**
+   - Customer validates license after installation
+   - Verify license functionality
+   - Provide support for any issues
+
+### License Management
+
+- **Renewal Process**: Generate new license before expiration
+- **Upgrade Process**: Generate new license with additional features
+- **Support Incidents**: Validate customer license status
+- **Compliance Audits**: Provide license verification capabilities
+
+## 🔧 Development Tools
+
+### Testing License System
+
+```bash
+# Generate test keys
+./tools/generate_keys.sh
+
+# Create test license
+./tools/generate_license.sh --cli "Test Company" "Trial" \
+  "$(date +%Y-%m-%d)" "$(date -d '+30 days' +%Y-%m-%d)" 5 \
+  "Self-Service" '"Advanced Reporting"'
+
+# Validate test license
+./tools/validate_license.sh licenses/test_company_*.lic
+```
+
+### Integration Testing
+
+Ensure license validation is properly integrated into HakPak main script:
+
+```bash
+# Test enterprise feature access
+sudo hakpak --status
+# Should show license status and available features
+
+# Test feature restrictions
+sudo hakpak --enterprise-feature
+# Should check license before allowing access
+```
+
+## 📞 Support and Troubleshooting
+
+### Common Issues
+
+**Missing Dependencies**
+```bash
+# Install required packages
+sudo apt-get install openssl jq
+```
+
+**Key Generation Failures**
+- Ensure sufficient entropy for key generation
+- Check file system permissions
+- Verify OpenSSL installation
+
+**License Validation Failures**
+- Verify public key is present and readable
+- Check license file format and integrity
+- Ensure system clock is synchronized
+
+### Contact Information
+
+- **Technical Support**: owner@phanesguild.llc
+- **Enterprise Sales**: owner@phanesguild.llc
+- **Security Issues**: owner@phanesguild.llc
+- **Discord**: PhanesGuildSoftware
+- **GitHub**: [PhanesGuildSoftware](https://github.com/PhanesGuildSoftware)
+
+## 📄 License and Legal
+
+These tools are part of HakPak and subject to the same MIT license. However:
+
+- Enterprise licenses generated by these tools are subject to separate commercial terms
+- Private keys and license files are proprietary to PhanesGuild Software LLC
+- Unauthorized use of license generation tools is strictly prohibited
+
+---
+
+**For internal PhanesGuild Software LLC use only**
+
+*Last Updated: August 11, 2025*

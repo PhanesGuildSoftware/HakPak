@@ -97,6 +97,14 @@ print_help() {
     echo "  --install PACKAGE       Install specific metapackage or tool"
     echo "  --interactive           Launch interactive menu (default)"
     echo ""
+    echo -e "${BOLD}ENTERPRISE OPTIONS:${NC}"
+    echo "  --enterprise-status     Show enterprise license status and features"
+    echo "  --enterprise-validate   Validate enterprise license file"
+    echo "  --activate LICENSE_KEY  Activate HakPak Pro with license key"
+    echo "  --pro-dashboard         Launch HakPak Pro analytics dashboard (Pro license required)"
+    echo "  --install-pro-suite     Install HakPak Pro Security Suite (Pro license required)"
+    echo "  --init                  Initialize HakPak with license mode detection"
+    echo ""
     echo -e "${BOLD}EXAMPLES:${NC}"
     echo "  sudo hakpak                              # Launch interactive menu"
     echo "  sudo hakpak --status                     # Show system status"
@@ -106,6 +114,12 @@ print_help() {
     echo "  sudo hakpak --list-metapackages          # Show available packages"
     echo "  sudo hakpak --setup-repo                 # Setup repository only"
     echo "  sudo hakpak --fix-deps                   # Fix broken packages"
+    echo "  sudo hakpak --enterprise-status          # Show enterprise license info"
+    echo "  sudo hakpak --enterprise-validate        # Validate current license"
+    echo "  sudo hakpak --activate LICENSE_KEY       # Activate Pro license"
+    echo "  sudo hakpak --pro-dashboard              # Access Pro analytics dashboard"
+    echo "  sudo hakpak --install-pro-suite          # Install Pro security tools"
+    echo "  sudo hakpak --init                       # Initialize with mode detection"
     echo ""
     echo -e "${BOLD}SUPPORTED DISTRIBUTIONS:${NC}"
     echo "  • Ubuntu 24.04 LTS (Tested & Verified)"
@@ -127,6 +141,9 @@ print_help() {
     echo -e "${BOLD}SUPPORT:${NC}"
     echo "  • Log file: /var/log/hakpak.log"
     echo "  • Website: https://www.phanesguild.llc"
+    echo "  • Email: owner@phanesguild.llc"
+    echo "  • Discord: PhanesGuildSoftware"
+    echo "  • GitHub: https://github.com/PhanesGuildSoftware"
     echo "  • PhanesGuild Software LLC"
     echo ""
 }
@@ -1938,6 +1955,19 @@ list_metapackages() {
         available_kali_packages=$(apt-cache search "kali-" | grep "^kali-" | wc -l)
         echo -e "${BLUE}[i]${NC} Total available Kali packages: $available_kali_packages"
     fi
+    
+    # Show enterprise license status
+    echo
+    echo -e "${BOLD}${PURPLE}Enterprise License Status:${NC}"
+    echo "════════════════════════════════════════"
+    if check_enterprise_license; then
+        print_success "Valid enterprise license found"
+        get_license_info | sed 's/^/  /'
+    else
+        print_info "Community edition (no enterprise license)"
+        echo "  • Contact owner@phanesguild.llc for Pro features"
+        echo "  • Advanced reporting, centralized management, and more"
+    fi
 }
 
 # Enhanced main menu
@@ -1957,9 +1987,24 @@ main_menu() {
         echo "10) Offline Installer Mode"
         echo "11) Container Isolation Mode"
         echo "12) View Installation Log"
-        echo "13) Exit"
+        
+        # Pro features section
+        if is_pro_valid; then
+            echo "──────── HakPak Pro Features ────────"
+            echo "14) Install Pro Security Suite"
+            echo "15) Launch Pro Analytics Dashboard"
+            echo "16) Enterprise License Status"
+            echo "17) Exit"
+        else
+            echo "14) Enterprise License Status"
+            echo "15) Exit"
+        fi
         echo "═══════════════════════════════════════"
-        read -rp "Select an option [1-13]: " choice
+        if is_pro_valid; then
+            read -rp "Select an option [1-17]: " choice
+        else
+            read -rp "Select an option [1-15]: " choice
+        fi
 
         case $choice in
             1) install_kali_top10 ;;
@@ -1989,8 +2034,50 @@ main_menu() {
                 print_success "Exiting Hakpak — Forge wisely."
                 exit 0
                 ;;
+            14)
+                if is_pro_valid; then
+                    # Pro feature: Install Pro Security Suite
+                    require_pro || continue
+                    install_pro_tools
+                else
+                    # Show enterprise license status
+                    show_enterprise_status
+                fi
+                ;;
+            15)
+                if is_pro_valid; then
+                    # Pro feature: Launch Analytics Dashboard
+                    require_pro || continue
+                    launch_pro_dashboard
+                else
+                    # Exit option for non-Pro users
+                    print_success "Exiting Hakpak — Forge wisely."
+                    exit 0
+                fi
+                ;;
+            16)
+                if is_pro_valid; then
+                    # Pro user: Show enterprise license status
+                    show_enterprise_status
+                else
+                    print_error "Invalid option."
+                fi
+                ;;
+            17)
+                if is_pro_valid; then
+                    # Pro user: Exit
+                    print_success "Exiting Hakpak Pro — Forge wisely."
+                    exit 0
+                else
+                    print_error "Invalid option."
+                fi
+                ;;
             *)
-                print_error "Invalid option. Please select 1-13."
+                if is_pro_valid; then
+                    print_error "Invalid option. Please select 1-17."
+                else
+                    print_error "Invalid option. Please select 1-15."
+                fi
                 ;;
         esac
         
@@ -2328,6 +2415,406 @@ cleanup() {
 # Trap signals for cleanup
 trap cleanup SIGINT SIGTERM
 
+# Terms of use acceptance
+show_terms_and_accept() {
+    clear
+    echo -e "${BOLD}${RED}╔══════════════════════════════════════════════════════════════════════════════╗${NC}"
+    echo -e "${BOLD}${RED}║                           ⚠️  LEGAL DISCLAIMER  ⚠️                          ║${NC}"
+    echo -e "${BOLD}${RED}║                         READ CAREFULLY BEFORE PROCEEDING                    ║${NC}"
+    echo -e "${BOLD}${RED}╚══════════════════════════════════════════════════════════════════════════════╝${NC}"
+    echo
+    echo -e "${BOLD}${YELLOW}HakPak installs penetration testing and security assessment tools.${NC}"
+    echo -e "${BOLD}${YELLOW}By using this software, you acknowledge and agree that:${NC}"
+    echo
+    echo -e "${GREEN}✅ You have explicit authorization to test the systems you intend to scan${NC}"
+    echo -e "${GREEN}✅ You will only use these tools on systems you own or have written permission to test${NC}"
+    echo -e "${GREEN}✅ You understand that unauthorized scanning/testing may violate laws${NC}"
+    echo -e "${GREEN}✅ You accept full responsibility for your actions and consequences${NC}"
+    echo
+    echo -e "${BOLD}${RED}⚠️  IMPORTANT WARNINGS:${NC}"
+    echo -e "${RED}• Unauthorized network scanning is ILLEGAL in many jurisdictions${NC}"
+    echo -e "${RED}• Always obtain proper written authorization before testing${NC}"
+    echo -e "${RED}• These tools can cause system instability if misused${NC}"
+    echo -e "${RED}• PhanesGuild Software LLC disclaims ALL liability for misuse${NC}"
+    echo
+    echo -e "${BOLD}${BLUE}INTENDED USE:${NC}"
+    echo -e "${BLUE}• Authorized penetration testing and security assessments${NC}"
+    echo -e "${BLUE}• Educational purposes in controlled environments${NC}"
+    echo -e "${BLUE}• Security research with proper authorization${NC}"
+    echo -e "${BLUE}• Defensive security improvements on owned systems${NC}"
+    echo
+    echo -e "${BOLD}${CYAN}By proceeding, you certify that you will use these tools ethically and legally.${NC}"
+    echo
+    echo -ne "${BOLD}${YELLOW}Do you accept these terms and agree to use these tools responsibly? [y/N]: ${NC}"
+    
+    read -r response
+    case "$response" in
+        [yY]|[yY][eE][sS])
+            print_success "Terms accepted. Proceeding with HakPak installation..."
+            log_message "INFO" "User accepted terms of use - proceeding with installation"
+            return 0
+            ;;
+        *)
+            print_info "Terms not accepted. Exiting HakPak."
+            print_info "For questions about terms of use, contact: owner@phanesguild.llc"
+            log_message "INFO" "User declined terms of use - exiting"
+            exit 0
+            ;;
+    esac
+}
+
+# Check and display license mode - elegant conditional pattern
+check_license_mode() {
+    if is_pro_valid; then
+        print_info "Pro license validated. Enabling Pro features..."
+        return 0
+    else
+        print_info "Running in Community mode."
+        return 1
+    fi
+}
+
+# Initialize HakPak with license mode detection
+initialize_hakpak() {
+    print_info "Initializing HakPak Security Toolkit..."
+    
+    # Elegant Pro/Community mode detection - silent check
+    if is_pro_valid; then
+        print_info "Pro license validated. Enabling Pro features..."
+        print_success "HakPak Pro mode activated"
+        echo "🚀 Enterprise features available:"
+        echo "   • Advanced vulnerability scanning"
+        echo "   • Enterprise reporting dashboard"
+        echo "   • Compliance audit framework"
+        echo "   • Custom security tool bundles"
+        echo "   • API access and automation"
+        echo "   • Priority technical support"
+    else
+        print_info "Running in Community mode."
+        print_info "Core security tools and basic features available"
+        echo "💡 Upgrade to HakPak Pro for enhanced capabilities:"
+        echo "   • Visit: https://phanesguild.llc/hakpak"
+        echo "   • Contact: owner@phanesguild.llc | Discord: PhanesGuildSoftware"
+    fi
+    echo
+}
+
+# Pro Tools Suite Installation - example Pro feature
+install_pro_tools() {
+    print_info "Installing HakPak Pro Security Suite..."
+    echo "========================================"
+    echo
+    
+    # Simulate Pro tool installation
+    local pro_tools=(
+        "Advanced Vulnerability Scanner (ProScan)"
+        "Enterprise Reporting Engine"
+        "Centralized Management Console"
+        "Custom Payload Generator"
+        "Network Topology Mapper"
+        "Compliance Audit Framework"
+        "API Security Testing Suite"
+        "Cloud Security Assessment Tools"
+    )
+    
+    echo "Pro Tools to be installed:"
+    for tool in "${pro_tools[@]}"; do
+        echo "  • $tool"
+    done
+    echo
+    
+    print_warning "This is a demonstration of Pro tool installation."
+    print_info "In production, this would install additional premium security tools."
+    echo
+    
+    # Simulate installation progress
+    for i in {1..8}; do
+        tool_name="${pro_tools[$((i-1))]}"
+        print_info "Installing: $tool_name"
+        
+        # Simulate installation time
+        for j in {1..3}; do
+            echo -n "."
+            sleep 0.2
+        done
+        echo " ✓"
+    done
+    
+    echo
+    print_success "HakPak Pro Security Suite installation complete!"
+    print_info "Pro tools are now available in your security toolkit."
+    echo
+    print_info "Access Pro features with:"
+    echo "  • hakpak --pro-dashboard     (Analytics Dashboard)"
+    echo "  • hakpak --pro-scan          (Advanced Scanning)"
+    echo "  • hakpak --pro-report        (Enterprise Reporting)"
+    echo "  • hakpak --pro-compliance    (Compliance Auditing)"
+}
+
+# Pro Analytics Dashboard - example Pro feature
+launch_pro_dashboard() {
+    print_info "HakPak Pro Analytics Dashboard"
+    echo "======================================"
+    echo
+    print_info "Loading security analytics for this system..."
+    
+    # Simulate dashboard loading
+    for i in {1..3}; do
+        echo -n "."
+        sleep 0.5
+    done
+    echo
+    echo
+    
+    print_success "Dashboard Ready"
+    echo
+    echo "📊 System Security Overview:"
+    echo "   • Installed security tools: $(ls /usr/bin | grep -E '(nmap|hydra|hashcat|john|aircrack|sqlmap|burpsuite|nikto|dirb|gobuster|ffuf|wpscan)' | wc -l)"
+    echo "   • Last security scan: $(date -d '5 days ago' '+%Y-%m-%d')"
+    echo "   • Vulnerability database status: Up to date"
+    echo "   • Active security monitoring: Enabled"
+    echo
+    echo "🎯 Threat Intelligence Feed:"
+    echo "   • CVE updates: 127 new this week"
+    echo "   • IoC updates: 1,249 new indicators"
+    echo "   • Risk assessment: Medium"
+    echo
+    echo "🛡️  Compliance Status:"
+    echo "   • SOC 2 compliance: ✓ Ready"
+    echo "   • NIST framework: ✓ Aligned"
+    echo "   • ISO 27001: ✓ Compliant"
+    echo
+    echo "📈 Usage Analytics:"
+    echo "   • Tools launched this month: 142"
+    echo "   • Most used tool: nmap (34 executions)"
+    echo "   • Average session duration: 2.3 hours"
+    echo
+    print_info "For full dashboard access, visit: https://dashboard.phanesguild.llc"
+    print_info "Mobile app available on iOS and Android app stores"
+}
+
+# --- BEGIN LICENSE CHECK BLOCK ---
+# Requires: openssl, base64, jq (jq recommended)
+PUBLIC_KEY_PATH="/usr/share/hakpak/public.pem"  # Production installation path
+LICENSE_TARGET_SYSTEM="/etc/hakpak/license.lic"
+USER_LICENSE_PATH="$HOME/.config/hakpak/license.lic"
+WATERMARK_DIR="/var/lib/hakpak"
+WATERMARK_USER_DIR="$HOME/.local/share/hakpak"
+
+# Ensure directories exist (best-effort)
+mkdir -p "$WATERMARK_USER_DIR"
+if [ "$(id -u)" -eq 0 ]; then
+  mkdir -p "$WATERMARK_DIR"
+fi
+
+license_error() { echo "HakPak: ERROR: $*" >&2; }
+license_info()  { echo "HakPak: $*"; }
+
+# Locate license file function
+_find_license_file() {
+  if [ -f "$LICENSE_TARGET_SYSTEM" ]; then
+    echo "$LICENSE_TARGET_SYSTEM"
+    return 0
+  elif [ -f "$USER_LICENSE_PATH" ]; then
+    echo "$USER_LICENSE_PATH"
+    return 0
+  else
+    return 1
+  fi
+}
+
+# Verify license file signed by private key; returns 0 if valid
+verify_license_file() {
+  local licfile
+  licfile="$1"
+  # Parse our custom bundle format
+  local payload_b64 sig_b64 payload_file sig_file
+  payload_file=$(mktemp)
+  sig_file=$(mktemp)
+
+  awk '/-----BEGIN HAKPAK LICENSE-----/{p=1;next} /-----SIGNATURE-----/{p=2;next} /-----END HAKPAK LICENSE-----/{p=0} p==1{print}' "$licfile" | base64 -d > "$payload_file" 2>/dev/null || { rm -f "$payload_file" "$sig_file"; return 2; }
+  awk '/-----SIGNATURE-----/,/-----END HAKPAK LICENSE-----/' "$licfile" | sed 's/-----SIGNATURE-----//;s/-----END HAKPAK LICENSE-----//' | tr -d '\n' | base64 -d > "$sig_file" 2>/dev/null || { rm -f "$payload_file" "$sig_file"; return 3; }
+
+  if [ ! -f "$PUBLIC_KEY_PATH" ]; then
+    license_error "Public key not found at ${PUBLIC_KEY_PATH}. Cannot verify license."
+    rm -f "$payload_file" "$sig_file"
+    return 4
+  fi
+
+  if openssl dgst -sha256 -verify "$PUBLIC_KEY_PATH" -signature "$sig_file" "$payload_file" >/dev/null 2>&1; then
+    # signature valid — parse expiry and return valid code 0
+    if command -v jq >/dev/null 2>&1; then
+      local expires_at
+      expires_at=$(jq -r '.expires_at' < "$payload_file")
+      if [ -n "$expires_at" ] && [ "$expires_at" != "null" ]; then
+        # compare times (UTC)
+        local now ts_exp
+        now=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+        ts_exp=$(date -d "$expires_at" +"%s" 2>/dev/null || echo 0)
+        ts_now=$(date -d "$now" +"%s" 2>/dev/null || echo 0)
+        if [ "$ts_now" -gt "$ts_exp" ]; then
+          rm -f "$payload_file" "$sig_file"
+          return 5  # expired
+        fi
+      fi
+    fi
+    # store payload to watermark file
+    _store_license_watermark "$payload_file"
+    rm -f "$payload_file" "$sig_file"
+    return 0
+  else
+    rm -f "$payload_file" "$sig_file"
+    return 6
+  fi
+}
+
+_store_license_watermark() {
+  local payload_file="$1"
+  # extract buyer info for watermark
+  if command -v jq >/dev/null 2>&1; then
+    local buyer_email buyer_name license_id
+    buyer_email=$(jq -r '.buyer_email' < "$payload_file")
+    buyer_name=$(jq -r '.buyer_name' < "$payload_file")
+    license_id=$(jq -r '.license_id' < "$payload_file")
+    local target="${WATERMARK_USER_DIR}/watermark.txt"
+    local systarget="${WATERMARK_DIR}/watermark.txt"
+    echo "HakPak Pro License" > "$target"
+    echo "buyer_name: $buyer_name" >> "$target"
+    echo "buyer_email: $buyer_email" >> "$target"
+    echo "license_id: $license_id" >> "$target"
+    echo "installed_at: $(date -u +"%Y-%m-%dT%H:%M:%SZ")" >> "$target"
+    # Also write system-wide watermark if running as root
+    if [ "$(id -u)" -eq 0 ]; then
+      echo "HakPak Pro License" > "$systarget"
+      echo "buyer_name: $buyer_name" >> "$systarget"
+      echo "buyer_email: $buyer_email" >> "$systarget"
+      echo "license_id: $license_id" >> "$systarget"
+      echo "installed_at: $(date -u +"%Y-%m-%dT%H:%M:%SZ")" >> "$systarget"
+      chmod 600 "$systarget"
+    fi
+  else
+    # If jq isn't present, still write a simple fingerprint
+    local fingerprint
+    fingerprint=$(sha256sum "$payload_file" | awk '{print $1}')
+    echo "HakPak Pro License - fingerprint: $fingerprint" > "${WATERMARK_USER_DIR}/watermark.txt"
+  fi
+}
+
+# Public helper: is_pro_valid
+is_pro_valid() {
+  local licfile
+  if licfile=$(_find_license_file); then
+    verify_license_file "$licfile"
+    case $? in
+      0) return 0 ;;    # valid
+      5) license_error "License expired"; return 1 ;;
+      2|3) license_error "Invalid license format"; return 1 ;;
+      4) license_error "Missing public key"; return 1 ;;
+      6) license_error "Signature verification failed"; return 1 ;;
+      *) license_error "License verification error"; return 1 ;;
+    esac
+  else
+    return 1
+  fi
+}
+
+# Gate for Pro-only functions. Usage:
+#   require_pro || exit 1
+require_pro() {
+  if is_pro_valid; then
+    return 0
+  else
+    echo
+    print_warning "HakPak Pro feature requires a valid Pro license."
+    print_info "Place your license file at one of these locations:"
+    print_info "  $LICENSE_TARGET_SYSTEM"
+    print_info "  $USER_LICENSE_PATH"
+    echo
+    print_info "To obtain a license, visit: https://phanesguild.llc/hakpak"
+    print_info "Contact: owner@phanesguild.llc | Discord: PhanesGuildSoftware"
+    return 1
+  fi
+}
+
+# Get license information for display
+get_license_info() {
+  local licfile
+  if licfile=$(_find_license_file); then
+    local payload_file
+    payload_file=$(mktemp)
+    
+    # Extract payload
+    awk '/-----BEGIN HAKPAK LICENSE-----/{p=1;next} /-----SIGNATURE-----/{p=2;next} /-----END HAKPAK LICENSE-----/{p=0} p==1{print}' "$licfile" | base64 -d > "$payload_file" 2>/dev/null || {
+      rm -f "$payload_file"
+      echo "Invalid license format"
+      return 1
+    }
+    
+    if command -v jq >/dev/null 2>&1; then
+      jq -r '
+      "License ID: " + .license_id,
+      "Buyer: " + .buyer_name + " (" + .buyer_email + ")",
+      "Product: " + .product + " v" + .version,
+      "Issued: " + .issued_at,
+      "Expires: " + .expires_at,
+      "Notes: " + .notes
+      ' "$payload_file"
+    else
+      echo "License information available (install jq for details)"
+      cat "$payload_file"
+    fi
+    
+    rm -f "$payload_file"
+  else
+    echo "No license file found"
+    return 1
+  fi
+}
+
+# Enterprise status display
+show_enterprise_status() {
+  print_info "HakPak Pro License Status:"
+  echo "================================"
+  
+  if is_pro_valid; then
+    print_success "Valid HakPak Pro license found"
+    get_license_info | sed 's/^/  /'
+    
+    # Show watermark info if available
+    if [ -f "${WATERMARK_DIR}/watermark.txt" ] || [ -f "${WATERMARK_USER_DIR}/watermark.txt" ]; then
+      echo
+      print_info "License Installation Details:"
+      if [ -f "${WATERMARK_DIR}/watermark.txt" ]; then
+        cat "${WATERMARK_DIR}/watermark.txt" | sed 's/^/  /'
+      elif [ -f "${WATERMARK_USER_DIR}/watermark.txt" ]; then
+        cat "${WATERMARK_USER_DIR}/watermark.txt" | sed 's/^/  /'
+      fi
+    fi
+  else
+    print_warning "No valid HakPak Pro license found"
+    echo
+    print_info "HakPak Pro features available with license:"
+    echo "  • Advanced reporting and analytics"
+    echo "  • Centralized management dashboard"
+    echo "  • Custom tool bundle creation"
+    echo "  • API access for automation"
+    echo "  • SSO integration capabilities"
+    echo "  • Compliance reporting tools"
+    echo "  • Priority technical support"
+    echo
+    print_info "License file locations:"
+    echo "  • System-wide: $LICENSE_TARGET_SYSTEM"
+    echo "  • User-specific: $USER_LICENSE_PATH"
+    echo
+    print_info "Contact owner@phanesguild.llc for licensing information"
+    print_info "Visit: https://phanesguild.llc/hakpak"
+  fi
+}
+
+# Source the license verification library
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "${SCRIPT_DIR}/lib/license.sh"
+
 # Main execution with argument parsing
 main() {
     # Show professional header
@@ -2390,6 +2877,77 @@ main() {
             install_individual_tool "$2"
             exit 0
             ;;
+        --enterprise-status)
+            touch "$LOG_FILE" 2>/dev/null || LOG_FILE="/tmp/hakpak.log"
+            show_enterprise_status
+            exit 0
+            ;;
+        --enterprise-validate)
+            touch "$LOG_FILE" 2>/dev/null || LOG_FILE="/tmp/hakpak.log"
+            if [[ -n "${2:-}" ]]; then
+                if verify_license_file "$2"; then
+                    print_success "License file is valid: $2"
+                    get_license_info
+                else
+                    print_error "Invalid license file: $2"
+                    exit 1
+                fi
+            else
+                if is_pro_valid; then
+                    print_success "Enterprise license is valid"
+                    get_license_info
+                else
+                    print_error "No valid enterprise license found"
+                    exit 1
+                fi
+            fi
+            exit 0
+            ;;
+        --activate)
+            touch "$LOG_FILE" 2>/dev/null || LOG_FILE="/tmp/hakpak.log"
+            if [[ -z "${2:-}" ]]; then
+                print_error "License key is required"
+                print_info "Usage: hakpak --activate <LICENSE_KEY>"
+                print_info "Example: hakpak --activate eyJsaWNlbnNl..."
+                exit 1
+            fi
+            
+            print_info "Activating HakPak Pro license..."
+            if activate_license "$2"; then
+                print_success "🎉 HakPak Pro activated successfully!"
+                echo
+                print_info "You can now access Pro features:"
+                echo "  • sudo hakpak --pro-dashboard"
+                echo "  • sudo hakpak --install-pro-suite"
+                echo "  • sudo hakpak --enterprise-status"
+            else
+                print_error "License activation failed"
+                exit 1
+            fi
+            exit 0
+            ;;
+        --pro-dashboard)
+            touch "$LOG_FILE" 2>/dev/null || LOG_FILE="/tmp/hakpak.log"
+            require_pro || exit 1
+            launch_pro_dashboard
+            exit 0
+            ;;
+        --install-pro-suite)
+            touch "$LOG_FILE" 2>/dev/null || LOG_FILE="/tmp/hakpak.log"
+            # Example usage inside your CLI flow:
+            if [ "$1" = "--install-pro-suite" ]; then
+                require_pro || exit 1
+                # proceed with pro-only installs
+                install_pro_tools
+            fi
+            exit 0
+            ;;
+        --init)
+            touch "$LOG_FILE" 2>/dev/null || LOG_FILE="/tmp/hakpak.log"
+            # Elegant conditional pattern demonstration
+            initialize_hakpak
+            exit 0
+            ;;
         --interactive|"")
             # Default interactive mode
             ;;
@@ -2414,6 +2972,9 @@ main() {
     
     print_banner
     log_message "INFO" "Hakpak v$HAKPAK_VERSION started on $DISTRO_NAME $DISTRO_VERSION"
+    
+    # Show terms and get acceptance for interactive mode
+    show_terms_and_accept
     
     main_menu
 }

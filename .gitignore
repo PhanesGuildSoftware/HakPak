@@ -29,3 +29,33 @@ Thumbs.db
 .idea/
 *.swp
 *.swo
+
+# Private keys - NEVER COMMIT THESE
+keys/private.pem
+*.pem.private
+*_private.pem
+
+# Generated licenses (contain customer data)
+licenses/*.lic
+
+# Enterprise sensitive files
+customer_data/
+sales/
+contracts/
+
+# Development and testing
+dev/
+test_output/
+*.test
+build/
+dist/
+
+# Cache files
+.cache/
+node_modules/
+__pycache__/
+
+# Distribution packages
+*.deb
+*.rpm
+*.tar.gz
