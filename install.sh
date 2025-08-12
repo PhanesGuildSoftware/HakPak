@@ -7,7 +7,7 @@
 set -euo pipefail
 
 # Version and branding
-readonly HAKPAK_VERSION="2.0"
+readonly HAKPAK_VERSION="1.0"
 readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 readonly INSTALL_DIR="/opt/hakpak"
 readonly BIN_DIR="/usr/local/bin"
