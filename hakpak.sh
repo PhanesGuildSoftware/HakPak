@@ -1,10 +1,38 @@
 #!/bin/bash
 
+###################################################################################
+# HakPak v1.0 - Professional Security Toolkit for Ubuntu 24.04
+# 
+# Description: Safely installs Kali Linux penetration testing tools on 
+#              Ubuntu, Debian, and other compatible distributions
+# 
+# Version: 1.0.0 (Ubuntu 24.04 Edition)
+# Release Date: August 11, 2025
+# Author: Teyvone Wells @ PhanesGuild Software LLC
+# Repository: https://github.com/PhanesGuildSoftware/hakpak
+# License: MIT License
+# 
+# Features:
+# - 15 Essential Security Tools
+# - Advanced Conflict Resolution
+# - Safe Installation with Automatic Fallbacks
+# - Ubuntu 24.04 & Debian Compatible
+# - Professional Grade Error Handling
+# 
+# Supported Distributions:
+# - Ubuntu 24.04 LTS (Primary)
+# - Debian 12+ (Bookworm)
+# - Pop!_OS, Linux Mint, Parrot OS
+# 
+# WARNING: This script modifies system repositories and installs packages.
+#          Use at your own risk and ensure you have system backups.
+###################################################################################
+
 # HAKPAK - Universal Kali Tools Installer for Debian-Based Systems
 # Author: Teyvone Wells @ PhanesGuild Software LLC
 # Purpose: Universal Kali Linux tools installer for Debian-based distributions
-# Version: 2.0
-# Last Modified: 2025-08-04
+# Version: 1.0 (Ubuntu 24.04 Edition)
+# Last Modified: 2025-08-11
 # Supported: Ubuntu, Debian, Pop!_OS, Linux Mint, Parrot OS
 
 set -euo pipefail  # Enhanced error handling
@@ -19,7 +47,7 @@ declare -r NC='\033[0m' # No Color
 
 # Configuration
 declare -r SCRIPT_NAME="Hakpak"
-declare -r HAKPAK_VERSION="2.0"
+declare -r HAKPAK_VERSION="1.0"
 declare LOG_FILE="/var/log/hakpak.log"  # Not readonly to allow fallback
 declare -r KALI_REPO_URL="http://http.kali.org/kali"
 declare -r KALI_GPG_URL="https://archive.kali.org/archive-key.asc"
@@ -29,6 +57,7 @@ declare DISTRO_NAME=""
 declare DISTRO_VERSION=""
 declare DISTRO_CODENAME=""
 declare DISTRO_ARCH=""
+declare DISTRO_ID=""   # <-- make ID global so other funcs can use it
 
 # Logging function
 log_message() {
@@ -156,9 +185,8 @@ detect_distribution() {
     [[ -z "$DISTRO_CODENAME" ]] && DISTRO_CODENAME=$(echo "$os_info" | grep '^UBUNTU_CODENAME=' | cut -d'=' -f2- | tr -d '"')
     
     # Extract ID for distribution checking
-    local DISTRO_ID
     DISTRO_ID=$(echo "$os_info" | grep '^ID=' | cut -d'=' -f2- | tr -d '"')
-    
+
     DISTRO_ARCH=$(dpkg --print-architecture)
     
     # Check if distribution is supported
@@ -227,6 +255,32 @@ perform_safety_checks() {
     fi
     
     print_success "Environment safety checks completed"
+}
+
+# Check and install essential dependencies
+check_dependencies() {
+    print_info "Checking essential dependencies..."
+    
+    local dependencies=("curl" "wget" "apt-transport-https" "ca-certificates" "gnupg" "lsb-release")
+    local missing_deps=()
+    
+    for dep in "${dependencies[@]}"; do
+        if ! dpkg -l "$dep" 2>/dev/null | grep -q "^ii"; then
+            missing_deps+=("$dep")
+        fi
+    done
+    
+    if [[ ${#missing_deps[@]} -gt 0 ]]; then
+        print_info "Installing missing dependencies: ${missing_deps[*]}"
+        if apt update && apt install -y "${missing_deps[@]}"; then
+            print_success "Dependencies installed successfully"
+        else
+            print_error "Failed to install dependencies. Please install manually: ${missing_deps[*]}"
+            exit 1
+        fi
+    else
+        print_success "All dependencies satisfied"
+    fi
 }
 
 # Enhanced dependency conflict resolution
@@ -426,13 +480,13 @@ EOF
 
 # Modular function: Install Kali Top 10 Tools
 install_kali_top10() {
-    print_info "Installing Essential Security Tools (Ubuntu 24.04 Compatible)..."
+    print_info "Installing Essential Security Tools (Ubuntu 24.04 & Debian Compatible)..."
     setup_kali_repository || return 1
-    
-    # For Ubuntu 24.04, install individual tools instead of metapackages
-    if [[ "$DISTRO_NAME" == *"Ubuntu"* ]] && [[ "$DISTRO_VERSION" == "24.04" ]]; then
-        print_info "Ubuntu 24.04 detected - installing compatible individual tools..."
-        
+
+    # For Ubuntu 24.04 and Debian, install individual tools instead of metapackages
+    if { [[ "$DISTRO_NAME" == *"Ubuntu"* ]] && [[ "$DISTRO_VERSION" == "24.04" ]]; } || [[ "$DISTRO_NAME" == *"Debian"* ]]; then
+        print_info "Ubuntu 24.04 or Debian detected - installing compatible individual tools..."
+
         local essential_tools=(
             "nmap"              # Network scanner
             "sqlmap"            # SQL injection testing  
@@ -450,12 +504,12 @@ install_kali_top10() {
             "exploitdb"         # Exploit database
             "searchsploit"      # Exploit search tool
         )
-        
+
         local installed_count=0
         local total_tools=${#essential_tools[@]}
-        
+
         print_info "Installing $total_tools essential security tools..."
-        
+
         for tool in "${essential_tools[@]}"; do
             if install_package_safe "$tool" "$tool"; then
                 ((installed_count++))
@@ -463,11 +517,11 @@ install_kali_top10() {
                 print_warning "Skipped: $tool (not available or conflicts)"
             fi
         done
-        
+
         echo ""
         print_success "Essential Tools Installation Complete!"
         print_info "Successfully installed: $installed_count out of $total_tools tools"
-        
+
         if [[ $installed_count -gt 10 ]]; then
             print_success "You now have a comprehensive security toolkit!"
         elif [[ $installed_count -gt 5 ]]; then
@@ -475,7 +529,7 @@ install_kali_top10() {
         else
             print_warning "Some tools had conflicts. Try installing them individually."
         fi
-        
+
         return 0
     else
         # For other distributions, try the metapackage
@@ -486,18 +540,18 @@ install_kali_top10() {
 
 # Modular function: Install Full Kali Tools
 install_kali_full() {
-    if [[ "$DISTRO_NAME" == *"Ubuntu"* ]] && [[ "$DISTRO_VERSION" == "24.04" ]]; then
-        print_warning "Ubuntu 24.04 Compatibility Notice"
-        echo "Large Kali metapackages have dependency conflicts with Ubuntu 24.04."
+    if { [[ "$DISTRO_NAME" == *"Ubuntu"* ]] && [[ "$DISTRO_VERSION" == "24.04" ]]; } || [[ "$DISTRO_NAME" == *"Debian"* ]]; then
+        print_warning "Ubuntu 24.04 or Debian Compatibility Notice"
+        echo "Large Kali metapackages have dependency conflicts with Ubuntu 24.04 and Debian."
         echo "Instead, HakPak will install compatible tool collections."
         echo ""
         read -rp "Continue with compatible installation? [Y/n]: " confirm
         [[ $confirm =~ ^[Nn]$ ]] && return 0
-        
+
         setup_kali_repository || return 1
-        
-        print_info "Installing comprehensive security tool collection for Ubuntu 24.04..."
-        
+
+        print_info "Installing comprehensive security tool collection for Ubuntu 24.04/Debian..."
+
         # Install working tool categories
         local tool_categories=(
             "Information Gathering Tools"
@@ -506,7 +560,7 @@ install_kali_full() {
             "Password Security Tools"
             "Vulnerability Assessment"
         )
-        
+
         local category_tools=(
             "nmap wireshark tcpdump netcat-traditional dnsutils whois"
             "sqlmap nikto dirb gobuster wfuzz ffuf zaproxy"
@@ -514,40 +568,40 @@ install_kali_full() {
             "hydra john hashcat wordlists"
             "exploitdb searchsploit lynis chkrootkit"
         )
-        
+
         local total_installed=0
-        
+
         for i in "${!tool_categories[@]}"; do
             echo ""
             print_info "Installing: ${tool_categories[$i]}"
-            
+
             local tools_in_category=(${category_tools[$i]})
             local category_count=0
-            
+
             for tool in "${tools_in_category[@]}"; do
                 if install_package_safe "$tool" "$tool"; then
                     ((category_count++))
                     ((total_installed++))
                 fi
             done
-            
+
             print_info "Category complete: $category_count tools installed"
         done
-        
+
         echo ""
-        print_success "Ubuntu 24.04 Compatible Installation Complete!"
+        print_success "Ubuntu 24.04/Debian Compatible Installation Complete!"
         print_info "Total tools installed: $total_installed"
         print_info "This provides comprehensive security testing capabilities."
-        
+
         return 0
     else
         # Original full installation for other distributions
         print_warning "Installing Full Kali Toolset - This will install ~8GB+ of tools"
         read -rp "Continue? [y/N]: " confirm
         [[ $confirm =~ ^[Yy]$ ]] || return 0
-        
+
         setup_kali_repository || return 1
-        
+
         # Pre-install dependency resolution
         print_info "Preparing system for large installation..."
         fix_dependencies
@@ -737,7 +791,7 @@ EOF
         [[ -z "$package_cat" ]] && package_cat="custom"
         
         echo "$package_name|$package_desc|$package_cat" >> "$toolkit_file"
-        print_success "Added '$package_name' to toolkit"
+         print_success "Added '$package_name' to toolkit"
     done
     
     print_success "Custom toolkit '$toolkit_name' created successfully"
@@ -1275,11 +1329,16 @@ install_docker() {
     # Install prerequisites
     apt install -y apt-transport-https ca-certificates curl gnupg lsb-release
     
+    # Detect Debian vs Ubuntu for Docker repo
+    . /etc/os-release
+    local docker_base="ubuntu"
+    if [[ "$ID" == "debian" ]]; then docker_base="debian"; fi
+    
     # Add Docker's official GPG key
-    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+    curl -fsSL "https://download.docker.com/linux/${docker_base}/gpg" | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
     
     # Add Docker repository
-    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/${docker_base} $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
     
     # Install Docker
     apt update
@@ -1686,7 +1745,7 @@ install_package_safe() {
     
     print_info "Installing $description..."
     
-    # Check if package exists in Kali repository
+    # Check if package exists in any repository
     if ! apt-cache show "$package" &> /dev/null; then
         print_error "Package '$package' not found in repositories"
         return 1
@@ -1698,31 +1757,55 @@ install_package_safe() {
         return 0
     fi
     
-    # Install with visible output and force from Kali repo if available
-    print_info "Running: apt install -y $package"
+    print_info "Checking package availability..."
+    apt-cache policy "$package"
     
-    # Try to install with target release for Kali packages
-    if apt-cache policy "$package" | grep -q "kali-rolling"; then
-        print_info "Installing from Kali repository..."
+    # First, try installing from Ubuntu repository (safer for dependencies)
+    if apt-cache policy "$package" | grep -q "ubuntu"; then
+        print_info "Installing Ubuntu version (safer for dependencies)..."
+        local ubuntu_version=$(apt-cache policy "$package" | grep "ubuntu" | head -1 | awk '{print $1}')
+        if [[ -n "$ubuntu_version" ]]; then
+            if DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends "$package=$ubuntu_version"; then
+                print_success "$description installed successfully from Ubuntu repository"
+                log_message "INFO" "Successfully installed from Ubuntu: $package"
+                return 0
+            fi
+        fi
+    fi
+    
+    # If Ubuntu version failed or doesn't exist, try Kali with dependency resolution
+    if apt-cache policy "$package" | grep -q "kali"; then
+        print_info "Attempting Kali version with full dependency resolution..."
+        
+        # Try installing the entire dependency chain from Kali
         if DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends -t kali-rolling "$package"; then
             print_success "$description installed successfully from Kali repository"
             log_message "INFO" "Successfully installed from Kali: $package"
             return 0
         fi
+        
+        # If that fails, try allowing mixed versions
+        print_info "Attempting mixed-repository installation with version flexibility..."
+        if DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends --allow-downgrades --allow-change-held-packages "$package"; then
+            print_success "$description installed successfully (mixed repositories)"
+            log_message "INFO" "Successfully installed with mixed repos: $package"
+            return 0
+        fi
     fi
     
-    # Fallback to regular installation
-    if DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends "$package"; then
-        print_success "$description installed successfully"
-        log_message "INFO" "Successfully installed: $package"
+    # Last resort: try installing just from Ubuntu repos to avoid conflicts
+    print_info "Falling back to Ubuntu repository version..."
+    if DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends --no-install-suggests -o APT::Default-Release=noble "$package"; then
+        print_success "$description installed successfully from Ubuntu (fallback)"
+        log_message "INFO" "Successfully installed Ubuntu fallback: $package"
         return 0
-    else
-        print_error "Failed to install $description"
-        print_info "Checking package availability..."
-        apt-cache policy "$package" | head -10
-        log_message "ERROR" "Failed to install: $package"
-        return 1
     fi
+    
+    print_error "Failed to install $description"
+    print_info "Checking package availability..."
+    apt-cache policy "$package"
+    log_message "ERROR" "Failed to install: $package"
+    return 1
 }
 
 install_large_package() {
@@ -1884,12 +1967,13 @@ main_menu() {
                 read -rp "Enter tool name: " toolname
                 [[ -n $toolname ]] && install_individual_tool "$toolname"
                 ;;
-            4) list_available_tools ;;
+                       4) list_available_tools ;;
             5) show_system_status ;;
             6) setup_kali_repository ;;
             7) remove_kali_repository ;;
             8) fix_dependencies ;;
             9) custom_toolkits_manager ;;
+            
             10) offline_installer_mode ;;
             11) container_isolation_mode ;;
             12)
@@ -2259,6 +2343,7 @@ main() {
             touch "$LOG_FILE" 2>/dev/null || LOG_FILE="/tmp/hakpak.log"
             detect_distribution
             perform_safety_checks
+            check_dependencies
             show_system_status
             exit 0
             ;;
@@ -2266,6 +2351,7 @@ main() {
             touch "$LOG_FILE" 2>/dev/null || LOG_FILE="/tmp/hakpak.log"
             detect_distribution
             perform_safety_checks
+            check_dependencies
             setup_kali_repository
             exit 0
             ;;
@@ -2320,6 +2406,7 @@ main() {
     # Initialize system
     detect_distribution
     perform_safety_checks
+    check_dependencies
     
     print_banner
     log_message "INFO" "Hakpak v$HAKPAK_VERSION started on $DISTRO_NAME $DISTRO_VERSION"
