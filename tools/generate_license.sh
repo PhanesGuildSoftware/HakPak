@@ -3,6 +3,7 @@
 # Usage:
 #   ./generate_license.sh "Buyer Name" "buyer@example.com" "notes(optional)" "duration_days"
 #
+# Generates HakPak v1.0.0 licenses (all HakPak now requires licensing)
 # Produces: buyer_email.lic (contains base64 of JSON payload + signature)
 set -euo pipefail
 
@@ -15,6 +16,9 @@ fi
 
 if [ $# -lt 3 ]; then
   echo "Usage: $0 \"Buyer Name\" \"buyer@example.com\" \"notes\" [duration_days]"
+  echo ""
+  echo "Example:"
+  echo "  $0 \"John Doe\" \"john@example.com\" \"HakPak License\""
   exit 1
 fi
 
@@ -32,11 +36,11 @@ payload=$(cat <<JSON
   "license_id": "${LICENSE_ID}",
   "buyer_name": "$(echo "$BUYER_NAME" | sed 's/"/\\"/g')",
   "buyer_email": "$(echo "$BUYER_EMAIL" | sed 's/"/\\"/g')",
+  "product": "HakPak",
   "notes": "$(echo "$NOTES" | sed 's/"/\\"/g')",
   "issued_at": "${ISSUED_AT}",
   "expires_at": "${EXPIRES_AT}",
-  "product": "HakPak Pro",
-  "version": "1.0"
+  "version": "1.0.0"
 }
 JSON
 )

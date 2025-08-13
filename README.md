@@ -293,40 +293,39 @@ Installed Security Tools: (8/15)
 
 ## �️ HakPak Editions & Pricing
 
-HakPak is available in three editions:
+## 💰 Pricing
 
-### 1. **Solo Ops** — **$19.99 One-Time Payment**
+🔑 **HakPak** - $49.99 (License Required)
 - 15+ essential security tools
-- License-free operation (no activation required)
-- Community support via GitHub
-- Perfect for students and personal use
-
-### 2. **Field Agent Pro** — **$49.99 One-Time Payment**
-- 50+ professional security tools
-- License activation required
-- Priority email support (24-48hr response)
+- Advanced tool collections  
+- Extended Kali metapackages
+- System overview dashboard
+- Priority email support (24-48hr)
 - Commercial use license
-- Custom installation profiles
-
-### 3. **Black Ops Enterprise** — **$99.99 One-Time Payment**
-- Unlimited tools + experimental modules
 - Multi-machine deployment rights
-- SLA-level support (4-12hr response)
-- Enterprise commercial license
-- Advanced deployment tools
+
+⚠️ **License Required**: HakPak requires a valid license for all operations. No free tier available.
 
 ---
 
 ### 🔑 How Licensing Works
-HakPak Pro uses an **offline-friendly license key system** to prevent unauthorized use while keeping privacy in mind.
 
-1. After purchasing HakPak Pro, you will receive:
+HakPak uses an **offline-friendly license key system** to prevent unauthorized use while keeping privacy in mind.
+
+1. After purchasing HakPak, you will receive:
    - Your **unique license key**
    - Instructions for offline activation
+
 2. To activate, run:
+
    ```bash
    sudo hakpak --activate <your-license-key>
    ```
+
+3. **License Features**:
+   - ✅ **Offline validation** - No internet required after activation
+   - ✅ **Privacy focused** - No telemetry or phone-home
+   - ✅ **RSA 4096-bit signatures** - Military-grade security
 
 Contact: [owner@phanesguild.llc](mailto:owner@phanesguild.llc)
 

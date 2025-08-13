@@ -79,12 +79,17 @@ print_help() {
     echo -e "${BLUE}${BOLD}"
     echo "╔══════════════════════════════════════════════════════════════╗"
     echo "║                    HAKPAK v$HAKPAK_VERSION - HELP                        ║"
-    echo "║            Universal Kali Tools Installer                   ║"
+    echo "║         Professional Security Toolkit (License Required)    ║"
     echo "╚══════════════════════════════════════════════════════════════╝"
     echo -e "${NC}"
     echo ""
     echo -e "${BOLD}USAGE:${NC}"
     echo "  sudo hakpak [OPTION]"
+    echo ""
+    echo -e "${BOLD}LICENSING:${NC}"
+    echo "  ⚠️  HakPak requires a valid license for all operations"
+    echo "  🔑 Activate: sudo hakpak --activate YOUR_LICENSE_KEY"
+    echo "  🛒 Purchase: https://phanesguild.llc/hakpak"
     echo ""
     echo -e "${BOLD}OPTIONS:${NC}"
     echo "  --gui                   Launch graphical interface"
@@ -98,15 +103,15 @@ print_help() {
     echo "  --install PACKAGE       Install specific metapackage or tool"
     echo "  --interactive           Launch interactive menu (default)"
     echo ""
-    echo -e "${BOLD}ENTERPRISE OPTIONS:${NC}"
-    echo "  --enterprise-status     Show enterprise license status and features"
-    echo "  --enterprise-validate   Validate enterprise license file"
-    echo "  --activate LICENSE_KEY  Activate HakPak Pro with license key"
-    echo "  --pro-dashboard         Show HakPak Pro system overview (Pro license required)"
-    echo "  --install-pro-suite     Install additional Kali metapackages (Pro license required)"
-    echo "  --init                  Initialize HakPak with license mode detection"
+    echo -e "${BOLD}LICENSE OPTIONS:${NC}"
+    echo "  --license-status        Show HakPak license status and features"
+    echo "  --validate-license      Validate license file"
+    echo "  --activate LICENSE_KEY  Activate HakPak with license key"
+    echo "  --dashboard             Show HakPak system overview (license required)"
+    echo "  --install-comprehensive Install comprehensive toolset (license required)"
     echo ""
     echo -e "${BOLD}EXAMPLES:${NC}"
+    echo "  sudo hakpak --activate LICENSE_KEY       # First step: activate license"
     echo "  sudo hakpak                              # Launch interactive menu"
     echo "  sudo hakpak --status                     # Show system status"
     echo "  sudo hakpak --install nmap               # Install specific tool"
@@ -115,10 +120,8 @@ print_help() {
     echo "  sudo hakpak --list-metapackages          # Show available packages"
     echo "  sudo hakpak --setup-repo                 # Setup repository only"
     echo "  sudo hakpak --fix-deps                   # Fix broken packages"
-    echo "  sudo hakpak --enterprise-status          # Show enterprise license info"
-    echo "  sudo hakpak --enterprise-validate        # Validate current license"
-    echo "  sudo hakpak --activate LICENSE_KEY       # Activate Pro license"
-    echo "  sudo hakpak --pro-dashboard              # Access Pro analytics dashboard"
+    echo "  sudo hakpak --license-status             # Show license info"
+    echo "  sudo hakpak --pro-dashboard              # Access Pro system overview"
     echo "  sudo hakpak --install-pro-suite          # Install Pro security tools"
     echo "  sudo hakpak --init                       # Initialize with mode detection"
     echo ""
@@ -1973,6 +1976,18 @@ list_metapackages() {
 
 # Enhanced main menu
 main_menu() {
+    # Check license before allowing access to main menu
+    if ! require_license; then
+        echo
+        print_error "HakPak requires a valid license to proceed"
+        echo
+        print_info "To activate your license:"
+        echo "  sudo hakpak --activate YOUR_LICENSE_KEY"
+        echo
+        print_info "Purchase HakPak at: https://phanesguild.llc/hakpak"
+        exit 1
+    fi
+    
     while true; do
         echo -e "\n${BOLD}${GREEN}HAKPAK MAIN FORGE${NC}"
         echo "═══════════════════════════════════════"
@@ -2586,7 +2601,6 @@ launch_pro_dashboard() {
     
     print_info "For detailed tool documentation, run: hakpak --help"
 }
-}
 
 # --- BEGIN LICENSE CHECK BLOCK ---
 # Requires: openssl, base64, jq (jq recommended)
@@ -2881,12 +2895,12 @@ main() {
             install_individual_tool "$2"
             exit 0
             ;;
-        --enterprise-status)
+        --license-status|--enterprise-status)
             touch "$LOG_FILE" 2>/dev/null || LOG_FILE="/tmp/hakpak.log"
             show_enterprise_status
             exit 0
             ;;
-        --enterprise-validate)
+        --validate-license|--enterprise-validate)
             touch "$LOG_FILE" 2>/dev/null || LOG_FILE="/tmp/hakpak.log"
             if [[ -n "${2:-}" ]]; then
                 if verify_license_file "$2"; then
@@ -2897,11 +2911,11 @@ main() {
                     exit 1
                 fi
             else
-                if is_pro_valid; then
-                    print_success "Enterprise license is valid"
+                if is_licensed; then
+                    print_success "HakPak license is valid"
                     get_license_info
                 else
-                    print_error "No valid enterprise license found"
+                    print_error "No valid HakPak license found"
                     exit 1
                 fi
             fi
@@ -2916,14 +2930,20 @@ main() {
                 exit 1
             fi
             
-            print_info "Activating HakPak Pro license..."
+            print_info "Activating HakPak license..."
             if activate_license "$2"; then
-                print_success "🎉 HakPak Pro activated successfully!"
-                echo
-                print_info "You can now access Pro features:"
-                echo "  • sudo hakpak --pro-dashboard"
-                echo "  • sudo hakpak --install-pro-suite"
-                echo "  • sudo hakpak --enterprise-status"
+                # Check if license was successfully activated
+                if [[ "$(get_license_tier)" == "Licensed" ]]; then
+                    print_success "🎉 HakPak activated successfully!"
+                    echo
+                    print_info "You can now access all HakPak features:"
+                    echo "  • sudo hakpak --license-status"
+                    echo "  • sudo hakpak --install-comprehensive"
+                    echo "  • sudo hakpak (main menu)"
+                else
+                    print_error "License activation failed"
+                    exit 1
+                fi
             else
                 print_error "License activation failed"
                 exit 1

@@ -1,7 +1,27 @@
 #!/usr/bin/env bash
 # lib/license.sh
 # HakPak Pro License Verification Library
-# This file contains all license checking and validation functions
+# This file contains all license checki# Public helper: is_licensed (all HakPak users need valid license)
+is_licensed() {
+  local licfile
+  if licfile=$(_find_license_file); then
+    verify_license_file "$licfile"
+    case $? in
+      0) return 0 ;;    # valid
+      5) license_error "License expired"; return 1 ;;
+      2|3) license_error "Invalid license format"; return 1 ;;
+      4) license_error "Missing public key"; return 1 ;;
+      6) license_error "Signature verification failed"; return 1 ;;
+      *) license_error "License verification error"; return 1 ;;
+    esac
+  else
+    return 1  # no license file found
+  fi
+}
+
+# Legacy compatibility - all features now require license
+is_pro_valid() {
+  is_licensedn functions
 
 # --- BEGIN LICENSE CHECK BLOCK ---
 # Requires: openssl, base64, jq (jq recommended)
@@ -134,14 +154,22 @@ is_pro_valid() {
   fi
 }
 
-# Gate for Pro-only functions. Usage:
-#   require_pro || exit 1
-require_pro() {
-  if is_pro_valid; then
+# Get license tier - all users need license now
+get_license_tier() {
+  if is_licensed; then
+    echo "Licensed"
+  else
+    echo "Unlicensed"
+  fi
+}
+
+# Gate for any HakPak function - all require license now
+require_license() {
+  if is_licensed; then
     return 0
   else
     echo
-    print_warning "HakPak Pro feature requires a valid Pro license."
+    print_warning "HakPak requires a valid license to use all features."
     print_info "Place your license file at one of these locations:"
     print_info "  $LICENSE_TARGET_SYSTEM"
     print_info "  $USER_LICENSE_PATH"
@@ -151,6 +179,11 @@ require_pro() {
     echo
     return 1
   fi
+}
+
+# Legacy compatibility - all features now require license
+require_pro() {
+  require_license
 }
     return 1
   fi
@@ -191,13 +224,13 @@ get_license_info() {
   fi
 }
 
-# Enterprise status display
+# License status display
 show_enterprise_status() {
-  print_info "HakPak Pro License Status:"
-  echo "================================"
+  print_info "HakPak License Status:"
+  echo "========================"
   
-  if is_pro_valid; then
-    print_success "Valid HakPak Pro license found"
+  if is_licensed; then
+    print_success "Valid HakPak license found"
     get_license_info | sed 's/^/  /'
     
     # Show watermark info if available
@@ -211,23 +244,24 @@ show_enterprise_status() {
       fi
     fi
   else
-    print_warning "No valid HakPak Pro license found"
+    print_warning "No valid HakPak license found"
     echo
-    print_info "HakPak Pro features available with license:"
-    echo "  • Advanced reporting and analytics"
-    echo "  • Centralized management dashboard"
-    echo "  • Custom tool bundle creation"
-    echo "  • API access for automation"
-    echo "  • SSO integration capabilities"
-    echo "  • Compliance reporting tools"
-    echo "  • Priority technical support"
+    print_info "HakPak features require a valid license:"
+    echo "  • 15+ essential security tools"
+    echo "  • Advanced tool collections"
+    echo "  • Extended Kali metapackages"
+    echo "  • System overview dashboard"
+    echo "  • Priority email support"
+    echo "  • Commercial use rights"
     echo
     print_info "License file locations:"
     echo "  • System-wide: $LICENSE_TARGET_SYSTEM"
     echo "  • User-specific: $USER_LICENSE_PATH"
     echo
-    print_info "Contact owner@phanesguild.llc for licensing information"
-    print_info "Visit: https://phanesguild.llc/hakpak"
+    print_info "To activate your license:"
+    echo "  sudo hakpak --activate YOUR_LICENSE_KEY"
+    echo
+    print_info "Purchase HakPak at: https://phanesguild.llc/hakpak"
   fi
 }
 
