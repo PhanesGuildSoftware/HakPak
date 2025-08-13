@@ -21,7 +21,8 @@ is_licensed() {
 
 # Legacy compatibility - all features now require license
 is_pro_valid() {
-  is_licensedn functions
+  is_licensed
+}
 
 # --- BEGIN LICENSE CHECK BLOCK ---
 # Requires: openssl, base64, jq (jq recommended)
