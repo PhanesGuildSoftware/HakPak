@@ -116,38 +116,62 @@ _store_license_watermark() {
   fi
 }
 
-# Public helper: is_pro_valid
+# Source server license functions if available
+if [ -f "./lib/server_license.sh" ]; then
+    source "./lib/server_license.sh"
+    SERVER_LICENSE_AVAILABLE=true
+else
+    SERVER_LICENSE_AVAILABLE=false
+fi
+
+# Public helper: is_pro_valid (enhanced with server validation)
 is_pro_valid() {
-  local licfile
-  if licfile=$(_find_license_file); then
-    verify_license_file "$licfile"
-    case $? in
-      0) return 0 ;;    # valid
-      5) license_error "License expired"; return 1 ;;
-      2|3) license_error "Invalid license format"; return 1 ;;
-      4) license_error "Missing public key"; return 1 ;;
-      6) license_error "Signature verification failed"; return 1 ;;
-      *) license_error "License verification error"; return 1 ;;
-    esac
+  if [ "$SERVER_LICENSE_AVAILABLE" = "true" ] && [ "${HAKPAK_OFFLINE_ONLY:-false}" != "true" ]; then
+    # Use enhanced validation with server check
+    is_pro_valid_enhanced
   else
-    return 1
+    # Use original offline-only validation
+    local licfile
+    if licfile=$(_find_license_file); then
+      verify_license_file "$licfile"
+      case $? in
+        0) return 0 ;;    # valid
+        5) license_error "License expired"; return 1 ;;
+        2|3) license_error "Invalid license format"; return 1 ;;
+        4) license_error "Missing public key"; return 1 ;;
+        6) license_error "Signature verification failed"; return 1 ;;
+        *) license_error "License verification error"; return 1 ;;
+      esac
+    else
+      return 1
+    fi
   fi
 }
 
 # Gate for Pro-only functions. Usage:
 #   require_pro || exit 1
 require_pro() {
-  if is_pro_valid; then
-    return 0
+  if [ "$SERVER_LICENSE_AVAILABLE" = "true" ] && [ "${HAKPAK_OFFLINE_ONLY:-false}" != "true" ]; then
+    # Use enhanced validation with server check
+    require_pro_enhanced
   else
-    echo
-    print_warning "HakPak Pro feature requires a valid Pro license."
-    print_info "Place your license file at one of these locations:"
-    print_info "  $LICENSE_TARGET_SYSTEM"
-    print_info "  $USER_LICENSE_PATH"
-    echo
-    print_info "To obtain a license, visit: https://phanesguild.llc/hakpak"
-    print_info "Contact: owner@phanesguild.llc"
+    # Use original offline-only validation
+    if is_pro_valid; then
+      return 0
+    else
+      echo
+      print_warning "HakPak Pro feature requires a valid Pro license."
+      print_info "Place your license file at one of these locations:"
+      print_info "  $LICENSE_TARGET_SYSTEM"
+      print_info "  $USER_LICENSE_PATH"
+      echo
+      print_info "To obtain a license, visit: https://phanesguild.llc/hakpak"
+      print_info "Contact: owner@phanesguild.llc"
+      echo
+      return 1
+    fi
+  fi
+}
     return 1
   fi
 }

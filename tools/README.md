@@ -2,7 +2,26 @@
 
 This directory contains utility scripts for HakPak enterprise licensing and development.
 
-## 🔐 Licensing Tools
+## � **User Types**
+
+### **For License Vendors (PhanesGuild Software LLC)**
+These tools are for creating and managing customer licenses:
+- Generate cryptographic keys
+- Create signed customer licenses  
+- Validate license integrity
+
+### **For End Customers**
+Customers don't need these tools directly. Instead:
+- Purchase HakPak Pro license
+- Receive license key via email
+- Activate with: `sudo hakpak --activate <license-key>`
+
+### **For Developers/Contributors**
+Use these tools for testing and development of license features.
+
+---
+
+## �🔐 Licensing Tools
 
 ### Key Management
 

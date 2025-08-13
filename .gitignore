@@ -1,8 +1,16 @@
 # HakPak .gitignore
 
 # Logs
-*.log
-/var/log/hakpak.log
+*.lo# Cryptographic keys and licenses (CRITICAL - NEVER COMMIT)
+keys/private.pem
+keys/public.pem
+*.lic
+licenses/*.lic
+*.license
+
+# Personal/vendor specific keys
+vendor_keys/
+customer_licenses/ar/log/hakpak.log
 
 # Temporary files
 *.tmp

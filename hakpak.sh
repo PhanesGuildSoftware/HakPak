@@ -87,6 +87,7 @@ print_help() {
     echo "  sudo hakpak [OPTION]"
     echo ""
     echo -e "${BOLD}OPTIONS:${NC}"
+    echo "  --gui                   Launch graphical interface"
     echo "  -h, --help              Show this help message"
     echo "  -v, --version           Show version information"
     echo "  -s, --status            Show system status and installed packages"
@@ -2822,6 +2823,16 @@ main() {
     
     # Parse command line arguments
     case "${1:-}" in
+        --gui)
+            # Launch GUI interface
+            HAKPAK_DIR="$(dirname "$(readlink -f "$0")")"
+            if [[ -f "${HAKPAK_DIR}/hakpak-gui.sh" ]]; then
+                exec "${HAKPAK_DIR}/hakpak-gui.sh" --gui
+            else
+                print_error "GUI launcher not found. Run install-desktop.sh first."
+                exit 1
+            fi
+            ;;
         -h|--help)
             print_help
             exit 0
