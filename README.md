@@ -87,26 +87,51 @@ HakPak is a professional-grade security toolkit installer that brings essential 
 - Internet connection
 - 5GB+ available disk space
 
-### One-Line Installation
+### Simple Installation
 
+**Step 1:** Download and extract HakPak
 ```bash
-curl -fsSL https://raw.githubusercontent.com/PhanesGuildSoftware/hakpak/main/install.sh | sudo bash
+# Option A: Download release package
+wget https://releases.phanesguild.llc/hakpak-v1.0.zip
+unzip hakpak-v1.0.zip
+cd hakpak/
+
+# Option B: Clone from GitHub
+git clone https://github.com/PhanesGuildSoftware/hakpak.git
+cd hakpak/
 ```
 
-### Manual Installation
+**Step 2:** Install HakPak to system
+```bash
+sudo ./hakpak.sh --install
+```
+
+**Step 3:** Activate your license
+```bash
+sudo hakpak --activate YOUR_LICENSE_KEY
+```
+
+**Step 4:** Start using HakPak
+```bash
+sudo hakpak              # Interactive menu
+sudo hakpak --gui        # Graphical interface
+```
+
+### Legacy Installation (Alternative)
 
 ```bash
 git clone https://github.com/PhanesGuildSoftware/hakpak.git
 cd hakpak
-sudo ./install.sh
+sudo ./bin/install.sh    # System installation
+./bin/install-desktop.sh # Desktop integration
 ```
 
 ### Quick Tool Installation
 
 ```bash
 # Install specific tools
-sudo hakpak --install nmap
-sudo hakpak --install sqlmap
+sudo hakpak --install-tool nmap
+sudo hakpak --install-tool sqlmap
 
 # Interactive menu
 sudo hakpak
@@ -149,7 +174,7 @@ sudo hakpak --status
 sudo hakpak --setup-repo
 
 # Install specific tool
-sudo hakpak --install hydra
+sudo hakpak --install-tool hydra
 
 # Fix dependency issues
 sudo hakpak --fix-deps
@@ -165,12 +190,13 @@ sudo hakpak --remove-repo
 
 | Command | Description |
 |---------|-------------|
+| `--install` | Install HakPak to system (run from download folder) |
 | `--help` | Show comprehensive help |
 | `--version` | Display version information |
 | `--status` | Show system and package status |
 | `--setup-repo` | Configure Kali repository only |
 | `--remove-repo` | Remove Kali repository and preferences |
-| `--install TOOL` | Install specific tool or metapackage |
+| `--install-tool TOOL` | Install specific tool or metapackage |
 | `--fix-deps` | Resolve dependency conflicts |
 | `--list-metapackages` | Show available Kali packages |
 | `--interactive` | Launch interactive menu (default) |

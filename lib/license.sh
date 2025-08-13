@@ -185,9 +185,6 @@ require_license() {
 require_pro() {
   require_license
 }
-    return 1
-  fi
-}
 
 # Get license information for display
 get_license_info() {

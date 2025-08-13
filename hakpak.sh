@@ -91,6 +91,9 @@ print_help() {
     echo "  🔑 Activate: sudo hakpak --activate YOUR_LICENSE_KEY"
     echo "  🛒 Purchase: https://phanesguild.llc/hakpak"
     echo ""
+    echo -e "${BOLD}INSTALLATION:${NC}"
+    echo "  --install               Install HakPak to system (run from download folder)"
+    echo ""
     echo -e "${BOLD}OPTIONS:${NC}"
     echo "  --gui                   Launch graphical interface"
     echo "  -h, --help              Show this help message"
@@ -100,7 +103,7 @@ print_help() {
     echo "  --remove-repo           Remove Kali repository and preferences"
     echo "  --fix-deps              Fix dependency issues"
     echo "  --list-metapackages     List all available Kali metapackages"
-    echo "  --install PACKAGE       Install specific metapackage or tool"
+    echo "  --install-tool PACKAGE  Install specific metapackage or tool"
     echo "  --interactive           Launch interactive menu (default)"
     echo ""
     echo -e "${BOLD}LICENSE OPTIONS:${NC}"
@@ -111,12 +114,13 @@ print_help() {
     echo "  --install-comprehensive Install comprehensive toolset (license required)"
     echo ""
     echo -e "${BOLD}EXAMPLES:${NC}"
-    echo "  sudo hakpak --activate LICENSE_KEY       # First step: activate license"
+    echo "  sudo ./hakpak.sh --install              # Install HakPak to system (first time)"
+    echo "  sudo hakpak --activate LICENSE_KEY       # Activate with license key"
     echo "  sudo hakpak                              # Launch interactive menu"
     echo "  sudo hakpak --status                     # Show system status"
-    echo "  sudo hakpak --install nmap               # Install specific tool"
-    echo "  sudo hakpak --install sqlmap             # Install SQL injection tool"
-    echo "  sudo hakpak --install hydra              # Install password cracker"
+    echo "  sudo hakpak --install-tool nmap          # Install specific tool"
+    echo "  sudo hakpak --install-tool sqlmap        # Install SQL injection tool"
+    echo "  sudo hakpak --install-tool hydra         # Install password cracker"
     echo "  sudo hakpak --list-metapackages          # Show available packages"
     echo "  sudo hakpak --setup-repo                 # Setup repository only"
     echo "  sudo hakpak --fix-deps                   # Fix broken packages"
@@ -2479,6 +2483,96 @@ show_terms_and_accept() {
     esac
 }
 
+# Install HakPak to system - one-command installation
+install_system() {
+    print_info "Installing HakPak to system..."
+    echo "════════════════════════════════════"
+    
+    # Check if running from source directory
+    if [[ ! -f "hakpak.sh" ]]; then
+        print_error "Must run --install from HakPak source directory"
+        print_info "Usage: sudo ./hakpak.sh --install"
+        exit 1
+    fi
+    
+    # Check root privileges
+    if [[ $EUID -ne 0 ]]; then
+        print_error "System installation requires root privileges"
+        print_info "Usage: sudo ./hakpak.sh --install"
+        exit 1
+    fi
+    
+    print_info "Step 1: Installing HakPak executable..."
+    
+    # Create installation directory
+    local install_dir="/usr/local/bin"
+    local share_dir="/usr/share/hakpak"
+    
+    # Copy main executable
+    if cp "hakpak.sh" "${install_dir}/hakpak" && chmod +x "${install_dir}/hakpak"; then
+        print_success "HakPak executable installed to ${install_dir}/hakpak"
+    else
+        print_error "Failed to install HakPak executable"
+        exit 1
+    fi
+    
+    # Create share directory and copy supporting files
+    mkdir -p "${share_dir}"
+    
+    # Copy license library if it exists
+    if [[ -f "lib/license.sh" ]]; then
+        mkdir -p "${share_dir}/lib"
+        cp "lib/license.sh" "${share_dir}/lib/"
+        print_success "License library installed"
+    fi
+    
+    # Copy RSA public key if it exists
+    if [[ -f "keys/public.pem" ]]; then
+        mkdir -p "${share_dir}/keys"
+        cp "keys/public.pem" "${share_dir}/keys/"
+        print_success "RSA public key installed"
+    fi
+    
+    print_info "Step 2: Setting up desktop integration..."
+    
+    # Run desktop integration if script exists
+    if [[ -f "bin/install-desktop.sh" ]]; then
+        if ./bin/install-desktop.sh; then
+            print_success "Desktop integration completed"
+        else
+            print_warning "Desktop integration failed (non-critical)"
+        fi
+    else
+        print_warning "Desktop integration script not found (skipping)"
+    fi
+    
+    print_info "Step 3: Setting up GUI launcher..."
+    
+    # Copy GUI launcher if it exists
+    if [[ -f "hakpak-gui.sh" ]]; then
+        cp "hakpak-gui.sh" "${share_dir}/"
+        chmod +x "${share_dir}/hakpak-gui.sh"
+        print_success "GUI launcher installed"
+    fi
+    
+    echo
+    print_success "HakPak system installation completed!"
+    echo "════════════════════════════════════"
+    echo
+    print_info "Next steps:"
+    echo "  1. Activate your license: sudo hakpak --activate YOUR_LICENSE_KEY"
+    echo "  2. Launch HakPak: sudo hakpak"
+    echo "  3. Or use GUI: hakpak --gui"
+    echo
+    print_info "Installation details:"
+    echo "  • Executable: ${install_dir}/hakpak"
+    echo "  • Support files: ${share_dir}/"
+    echo "  • Desktop integration: ~/.local/share/applications/"
+    echo
+    print_info "For help: hakpak --help"
+    print_info "Support: owner@phanesguild.llc"
+}
+
 # Check and display license mode - elegant conditional pattern
 check_license_mode() {
     if is_pro_valid; then
@@ -2884,15 +2978,20 @@ main() {
             list_metapackages
             exit 0
             ;;
-        --install)
+        --install-tool)
             if [[ -z "${2:-}" ]]; then
-                print_error "Package name required. Use: hakpak --install PACKAGE_NAME"
+                print_error "Package name required. Use: hakpak --install-tool PACKAGE_NAME"
                 exit 1
             fi
             touch "$LOG_FILE" 2>/dev/null || LOG_FILE="/tmp/hakpak.log"
             detect_distribution
             perform_safety_checks
             install_individual_tool "$2"
+            exit 0
+            ;;
+        --install)
+            # System installation - no additional packages needed
+            install_system
             exit 0
             ;;
         --license-status|--enterprise-status)
