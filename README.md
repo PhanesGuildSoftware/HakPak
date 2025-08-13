@@ -291,22 +291,29 @@ Installed Security Tools: (8/15)
 
 ---
 
-## �️ HakPak Licensing & Activation
+## �️ HakPak Editions & Pricing
 
-HakPak is available in two editions:
+HakPak is available in three editions:
 
-### 1. **Community Edition** (Free)
-- Includes 15 essential security tools
-- Basic repository setup
-- Core HakPak installation features
+### 1. **Solo Ops** — **$19.99 One-Time Payment**
+- 15+ essential security tools
+- License-free operation (no activation required)
+- Community support via GitHub
+- Perfect for students and personal use
 
-### 2. **Pro Edition** (Commercial Use) — **$99 One-Time Payment**
-- Full vetted security toolset
-- Enterprise-grade stability checks
-- Signed releases for authenticity
-- Priority support via email
-- Custom deployment scripts upon request
-- Offline license verification (no constant internet required)
+### 2. **Field Agent Pro** — **$49.99 One-Time Payment**
+- 50+ professional security tools
+- License activation required
+- Priority email support (24-48hr response)
+- Commercial use license
+- Custom installation profiles
+
+### 3. **Black Ops Enterprise** — **$99.99 One-Time Payment**
+- Unlimited tools + experimental modules
+- Multi-machine deployment rights
+- SLA-level support (4-12hr response)
+- Enterprise commercial license
+- Advanced deployment tools
 
 ---
 

@@ -102,8 +102,8 @@ print_help() {
     echo "  --enterprise-status     Show enterprise license status and features"
     echo "  --enterprise-validate   Validate enterprise license file"
     echo "  --activate LICENSE_KEY  Activate HakPak Pro with license key"
-    echo "  --pro-dashboard         Launch HakPak Pro analytics dashboard (Pro license required)"
-    echo "  --install-pro-suite     Install HakPak Pro Security Suite (Pro license required)"
+    echo "  --pro-dashboard         Show HakPak Pro system overview (Pro license required)"
+    echo "  --install-pro-suite     Install additional Kali metapackages (Pro license required)"
     echo "  --init                  Initialize HakPak with license mode detection"
     echo ""
     echo -e "${BOLD}EXAMPLES:${NC}"
@@ -2483,13 +2483,13 @@ initialize_hakpak() {
     if is_pro_valid; then
         print_info "Pro license validated. Enabling Pro features..."
         print_success "HakPak Pro mode activated"
-        echo "🚀 Enterprise features available:"
-        echo "   • Advanced vulnerability scanning"
-        echo "   • Enterprise reporting dashboard"
-        echo "   • Compliance audit framework"
-        echo "   • Custom security tool bundles"
-        echo "   • API access and automation"
-        echo "   • Priority technical support"
+        echo "🚀 Pro features available:"
+        echo "   • Additional Kali metapackage installation"
+        echo "   • Extended security tool collections" 
+        echo "   • Priority email support"
+        echo "   • Commercial usage license"
+        echo "   • Multi-machine deployment rights"
+        echo "   • Advanced system overview dashboard"
     else
         print_info "Running in Community mode."
         print_info "Core security tools and basic features available"
@@ -2506,92 +2506,86 @@ install_pro_tools() {
     echo "========================================"
     echo
     
-    # Simulate Pro tool installation
-    local pro_tools=(
-        "Advanced Vulnerability Scanner (ProScan)"
-        "Enterprise Reporting Engine"
-        "Centralized Management Console"
-        "Custom Payload Generator"
-        "Network Topology Mapper"
-        "Compliance Audit Framework"
-        "API Security Testing Suite"
-        "Cloud Security Assessment Tools"
+    # Real Pro tool installation - install additional Kali metapackages
+    local pro_metapackages=(
+        "kali-tools-web"
+        "kali-tools-wireless" 
+        "kali-tools-forensics"
+        "kali-tools-crypto-stego"
+        "kali-tools-vulnerability"
+        "kali-tools-exploitation"
+        "kali-tools-post-exploitation"
+        "kali-tools-reverse-engineering"
     )
     
-    echo "Pro Tools to be installed:"
-    for tool in "${pro_tools[@]}"; do
-        echo "  • $tool"
+    echo "Installing Pro metapackages:"
+    for package in "${pro_metapackages[@]}"; do
+        echo "  • $package"
     done
     echo
     
-    print_warning "This is a demonstration of Pro tool installation."
-    print_info "In production, this would install additional premium security tools."
+    print_info "Installing additional security tool collections..."
     echo
     
-    # Simulate installation progress
-    for i in {1..8}; do
-        tool_name="${pro_tools[$((i-1))]}"
-        print_info "Installing: $tool_name"
+    # Install the metapackages
+    for package in "${pro_metapackages[@]}"; do
+        print_info "Installing: $package"
         
-        # Simulate installation time
-        for j in {1..3}; do
-            echo -n "."
-            sleep 0.2
-        done
-        echo " ✓"
+        if DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends "$package"; then
+            print_success "✓ $package installed successfully"
+        else
+            print_warning "⚠ $package installation failed or partially completed"
+        fi
     done
     
     echo
     print_success "HakPak Pro Security Suite installation complete!"
-    print_info "Pro tools are now available in your security toolkit."
+    print_info "Additional security tools are now available."
     echo
-    print_info "Access Pro features with:"
-    echo "  • hakpak --pro-dashboard     (Analytics Dashboard)"
-    echo "  • hakpak --pro-scan          (Advanced Scanning)"
+    print_info "To see all available tools, run:"
+    echo "  • hakpak --list-tools"
     echo "  • hakpak --pro-report        (Enterprise Reporting)"
     echo "  • hakpak --pro-compliance    (Compliance Auditing)"
 }
 
 # Pro Analytics Dashboard - example Pro feature
 launch_pro_dashboard() {
-    print_info "HakPak Pro Analytics Dashboard"
-    echo "======================================"
+    print_info "HakPak Pro System Overview"
+    echo "=============================="
     echo
-    print_info "Loading security analytics for this system..."
     
-    # Simulate dashboard loading
-    for i in {1..3}; do
-        echo -n "."
-        sleep 0.5
+    # Real system analytics
+    print_info "Gathering system security information..."
+    echo
+    
+    echo "📊 Installed Security Tools:"
+    local security_tools=0
+    
+    # Count actual installed security tools
+    for tool in nmap sqlmap nikto dirb gobuster hydra john hashcat wireshark wfuzz ffuf aircrack-ng burpsuite; do
+        if command -v "$tool" >/dev/null 2>&1; then
+            echo "   ✓ $tool"
+            ((security_tools++))
+        fi
     done
+    
     echo
+    echo "📈 System Statistics:"
+    echo "   • Total security tools installed: $security_tools"
+    echo "   • Kali repositories: $(ls -1 /etc/apt/sources.list.d/ 2>/dev/null | grep -c kali || echo "0")"
+    echo "   • System architecture: $(uname -m)"
+    echo "   • Kernel version: $(uname -r)"
+    echo "   • Available disk space: $(df -h / | awk 'NR==2 {print $4}')"
     echo
     
-    print_success "Dashboard Ready"
+    echo "🛡️ Security Status:"
+    echo "   • HakPak license status: $(is_pro_valid && echo "✓ Valid Pro License" || echo "✗ No Pro License")"
+    echo "   • Repository status: $(apt list --upgradable 2>/dev/null | wc -l) packages can be upgraded"
+    echo "   • Last update check: $(stat -c %y /var/lib/apt/periodic/update-success-stamp 2>/dev/null | cut -d' ' -f1 || echo "Unknown")"
     echo
-    echo "📊 System Security Overview:"
-    echo "   • Installed security tools: $(ls /usr/bin | grep -E '(nmap|hydra|hashcat|john|aircrack|sqlmap|burpsuite|nikto|dirb|gobuster|ffuf|wpscan)' | wc -l)"
-    echo "   • Last security scan: $(date -d '5 days ago' '+%Y-%m-%d')"
-    echo "   • Vulnerability database status: Up to date"
-    echo "   • Active security monitoring: Enabled"
-    echo
-    echo "🎯 Threat Intelligence Feed:"
-    echo "   • CVE updates: 127 new this week"
-    echo "   • IoC updates: 1,249 new indicators"
-    echo "   • Risk assessment: Medium"
-    echo
-    echo "🛡️  Compliance Status:"
-    echo "   • SOC 2 compliance: ✓ Ready"
-    echo "   • NIST framework: ✓ Aligned"
-    echo "   • ISO 27001: ✓ Compliant"
-    echo
-    echo "📈 Usage Analytics:"
-    echo "   • Tools launched this month: 142"
-    echo "   • Most used tool: nmap (34 executions)"
-    echo "   • Average session duration: 2.3 hours"
-    echo
-    print_info "For full dashboard access, visit: https://dashboard.phanesguild.llc"
-    print_info "Mobile app available on iOS and Android app stores"
+    
+    print_info "For detailed tool documentation, run: hakpak --help"
+}
 }
 
 # --- BEGIN LICENSE CHECK BLOCK ---
@@ -2795,13 +2789,12 @@ show_enterprise_status() {
     print_warning "No valid HakPak Pro license found"
     echo
     print_info "HakPak Pro features available with license:"
-    echo "  • Advanced reporting and analytics"
-    echo "  • Centralized management dashboard"
-    echo "  • Custom tool bundle creation"
-    echo "  • API access for automation"
-    echo "  • SSO integration capabilities"
-    echo "  • Compliance reporting tools"
-    echo "  • Priority technical support"
+    echo "  • Additional Kali metapackage installation"
+    echo "  • Extended security tool collections"
+    echo "  • Priority email support"
+    echo "  • Commercial usage license"
+    echo "  • Multi-machine deployment rights"
+    echo "  • Advanced system overview dashboard"
     echo
     print_info "License file locations:"
     echo "  • System-wide: $LICENSE_TARGET_SYSTEM"

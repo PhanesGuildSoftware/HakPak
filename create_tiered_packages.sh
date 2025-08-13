@@ -206,12 +206,12 @@ Your Pro license key has been sent to your email. Activate it to unlock all Pro 
 
 ## Pro Features (License Required)
 
-✅ **50+ Professional Tools**
-✅ **Custom Installation Profiles** 
+✅ **Additional Kali Metapackages**
+✅ **Extended Security Tool Collections** 
 ✅ **Priority Email Support (24-48hr)**
-✅ **Advanced Analytics Dashboard**
-✅ **Lifetime Updates**
+✅ **System Overview Dashboard**
 ✅ **Commercial Use License**
+✅ **Multi-machine Deployment Rights**
 
 ## Support
 - **Priority Email**: owner@phanesguild.llc
@@ -270,12 +270,12 @@ Your Enterprise license key enables multi-machine deployment and SLA support.
 
 ## Enterprise Features (License Required)
 
-✅ **Unlimited Tools + Experimental Modules**
-✅ **Multi-Machine Deployment**
+✅ **All Pro Features Included**
+✅ **Multi-Machine Deployment Rights**
 ✅ **SLA-Level Support (4-12hr response)**
-✅ **Commercial Organizational License**
-✅ **Custom Tool Integration**
-✅ **Enterprise Analytics & Reporting**
+✅ **Organizational Commercial License**
+✅ **Enterprise Deployment Tools**
+✅ **Priority Feature Requests**
 
 ## Support
 - **SLA Email**: owner@phanesguild.llc  

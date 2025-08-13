@@ -10,10 +10,9 @@ File: hakpak-solo-v1.0.0.tar.gz
 Strategy: Psychological pricing below $20 barrier
 ```
 
-### **📈 Month 2: Full Product Line Expansion**
+### **📈 Month 2: Three-Tier Product Line**
 ```
 HakPak Solo Ops:           $19.99  (entry-level, license-free)
-HakPak Complete Toolkit:   $29.99  (all tools, no licensing)
 HakPak Field Agent Pro:    $49.99  (professional, licensed)
 HakPak Black Ops Enterprise: $99.99 (ultimate, multi-machine)
 ```
@@ -60,17 +59,16 @@ Optimistic Estimates:
 - Net revenue: ~$3,824/month
 ```
 
-### **Month 2: Full Product Line**
+### **Month 2: Three-Tier Sales Mix**
 ```
 Projected Monthly Sales Mix:
 - 80 × Solo ($19.99) = $1,599.20
-- 40 × Complete ($29.99) = $1,199.60
-- 25 × Pro ($49.99) = $1,249.75
-- 10 × Enterprise ($99.99) = $999.90
-Total: $5,048.45/month
+- 30 × Pro ($49.99) = $1,499.70
+- 15 × Enterprise ($99.99) = $1,499.85
+Total: $4,598.75/month
 
-After fees: ~$4,902/month
-Annual projection: ~$58,824
+After fees: ~$4,459/month
+Annual projection: ~$53,508
 ```
 
 ---
@@ -88,19 +86,6 @@ Value Proposition:
 ✅ "Perfect for students and researchers"
 
 Marketing Angle: Affordability + Immediate Value
-```
-
-### **$29.99 - HakPak Complete Toolkit**
-```
-Tagline: "Everything You Need - Under $30!"
-
-Value Proposition:
-✅ "Complete 50+ tool collection"
-✅ "Save $30 vs buying tools individually"
-✅ "Professional-grade security arsenal"
-✅ "One-time purchase, lifetime use"
-
-Marketing Angle: Completeness + Value
 ```
 
 ### **$49.99 - HakPak Field Agent Pro**
