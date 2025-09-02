@@ -1,21 +1,21 @@
 #!/bin/bash
 
-# HakPak v1.0 - Professional Security Toolkit for Ubuntu 24.04
+# HakPak v1.0 - Open Source Security Toolkit for Ubuntu/Debian
 # Author: Teyvone Wells @ PhanesGuild Software LLC
 
 set -euo pipefail
 
 # Version and branding
-readonly HAKPAK_VERSION="1.0"
+readonly HAKPAK_VERSION="1.1.0"
 readonly SCRIPT_NAME="HakPak"
 
 # Colors
 declare -r GREEN='\033[0;32m'
 declare -r RED='\033[0;31m'
 declare -r YELLOW='\033[1;33m'
+# Check and display license mode - elegant conditional pattern
 declare -r BLUE='\033[0;34m'
 declare -r PURPLE='\033[0;35m'
-declare -r CYAN='\033[0;36m'
 declare -r BOLD='\033[1m'
 declare -r NC='\033[0m'
 
@@ -34,7 +34,7 @@ show_header() {
     echo -e "${BOLD}${CYAN}██║  ██║██║  ██║██║  ██╗██║     ██║  ██║██║  ██╗${NC}"
     echo -e "${BOLD}${BLUE}╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝${NC}"
     echo
-    echo -e "${BOLD}${GREEN}Professional Security Toolkit v${HAKPAK_VERSION}${NC}"
+    echo -e "${BOLD}${GREEN}Open Source Security Toolkit v${HAKPAK_VERSION}${NC}"
     echo -e "${BLUE}═══════════════════════════════════════════════════════${NC}"
     echo -e "${BLUE}Author:${NC} Teyvone Wells @ PhanesGuild Software LLC"
     echo -e "${BLUE}Platform:${NC} Ubuntu 24.04 LTS (Tested & Verified)"
@@ -79,20 +79,26 @@ print_help() {
     echo -e "${BLUE}${BOLD}"
     echo "╔══════════════════════════════════════════════════════════════╗"
     echo "║                    HAKPAK v$HAKPAK_VERSION - HELP                        ║"
-    echo "║         Professional Security Toolkit (License Required)    ║"
+    echo "║         Open Source Security Toolkit (All Features Free)   ║"
     echo "╚══════════════════════════════════════════════════════════════╝"
     echo -e "${NC}"
     echo ""
     echo -e "${BOLD}USAGE:${NC}"
     echo "  sudo hakpak [OPTION]"
     echo ""
-    echo -e "${BOLD}LICENSING:${NC}"
-    echo "  ⚠️  HakPak requires a valid license for all operations"
-    echo "  🔑 Activate: sudo hakpak --activate YOUR_LICENSE_KEY"
-    echo "  🛒 Purchase: https://phanesguild.llc/hakpak"
+    echo -e "${BOLD}MODE:${NC}"
+    echo "  🟢 Open Source Build — All features enabled."
+    echo "  (Legacy license commands deprecated; will be removed ≥2.0)"
     echo ""
     echo -e "${BOLD}INSTALLATION:${NC}"
     echo "  --install               Install HakPak to system (run from download folder)"
+
+# Initialize HakPak (Open Source)
+initialize_hakpak() {
+    print_info "Initializing HakPak Security Toolkit (Open Source Mode)..."
+    print_info "All features available. No license required."
+    echo
+}
     echo ""
     echo -e "${BOLD}OPTIONS:${NC}"
     echo "  --gui                   Launch graphical interface"
@@ -104,18 +110,17 @@ print_help() {
     echo "  --fix-deps              Fix dependency issues"
     echo "  --list-metapackages     List all available Kali metapackages"
     echo "  --install-tool PACKAGE  Install specific metapackage or tool"
+    echo "  --self-test             Run non-invasive environment & package availability test"
     echo "  --interactive           Launch interactive menu (default)"
     echo ""
-    echo -e "${BOLD}LICENSE OPTIONS:${NC}"
-    echo "  --license-status        Show HakPak license status and features"
-    echo "  --validate-license      Validate license file"
-    echo "  --activate LICENSE_KEY  Activate HakPak with license key"
-    echo "  --dashboard             Show HakPak system overview (license required)"
-    echo "  --install-comprehensive Install comprehensive toolset (license required)"
+    echo -e "${BOLD}DEPRECATED LEGACY OPTIONS (No-Op):${NC}"
+    echo "  --license-status, --validate-license, --activate, --paste-license (ignored)"
+    echo "  --pro-dashboard, --install-pro-suite (integrated/removed)"
+    echo "  --dashboard / --install-comprehensive (use menu or --install-tool)"
     echo ""
     echo -e "${BOLD}EXAMPLES:${NC}"
     echo "  sudo ./hakpak.sh --install              # Install HakPak to system (first time)"
-    echo "  sudo hakpak --activate LICENSE_KEY       # Activate with license key"
+    echo "  sudo hakpak --status                     # System overview"
     echo "  sudo hakpak                              # Launch interactive menu"
     echo "  sudo hakpak --status                     # Show system status"
     echo "  sudo hakpak --install-tool nmap          # Install specific tool"
@@ -124,9 +129,7 @@ print_help() {
     echo "  sudo hakpak --list-metapackages          # Show available packages"
     echo "  sudo hakpak --setup-repo                 # Setup repository only"
     echo "  sudo hakpak --fix-deps                   # Fix broken packages"
-    echo "  sudo hakpak --license-status             # Show license info"
-    echo "  sudo hakpak --pro-dashboard              # Access Pro system overview"
-    echo "  sudo hakpak --install-pro-suite          # Install Pro security tools"
+    echo "  # Legacy removed: --license-status / --pro-dashboard / --install-pro-suite"
     echo "  sudo hakpak --init                       # Initialize with mode detection"
     echo ""
     echo -e "${BOLD}SUPPORTED DISTRIBUTIONS:${NC}"
@@ -1973,25 +1976,13 @@ list_metapackages() {
         get_license_info | sed 's/^/  /'
     else
         print_info "Community edition (no enterprise license)"
-        echo "  • Contact owner@phanesguild.llc for Pro features"
+    echo "  • Project: Open Source Edition"
         echo "  • Advanced reporting, centralized management, and more"
     fi
 }
 
 # Enhanced main menu
 main_menu() {
-    # Check license before allowing access to main menu
-    if ! require_license; then
-        echo
-        print_error "HakPak requires a valid license to proceed"
-        echo
-        print_info "To activate your license:"
-        echo "  sudo hakpak --activate YOUR_LICENSE_KEY"
-        echo
-        print_info "Purchase HakPak at: https://phanesguild.llc/hakpak"
-        exit 1
-    fi
-    
     while true; do
         echo -e "\n${BOLD}${GREEN}HAKPAK MAIN FORGE${NC}"
         echo "═══════════════════════════════════════"
@@ -2007,24 +1998,12 @@ main_menu() {
         echo "10) Offline Installer Mode"
         echo "11) Container Isolation Mode"
         echo "12) View Installation Log"
-        
-        # Pro features section
-        if is_pro_valid; then
-            echo "──────── HakPak Pro Features ────────"
-            echo "14) Install Pro Security Suite"
-            echo "15) Launch Pro Analytics Dashboard"
-            echo "16) Enterprise License Status"
-            echo "17) Exit"
-        else
-            echo "14) Enterprise License Status"
-            echo "15) Exit"
-        fi
+        echo "13) Install Full Security Suite"
+    echo "14) System Dashboard"
+        echo "15) Open Source Status"
+        echo "16) Exit"
         echo "═══════════════════════════════════════"
-        if is_pro_valid; then
-            read -rp "Select an option [1-17]: " choice
-        else
-            read -rp "Select an option [1-15]: " choice
-        fi
+        read -rp "Select an option [1-16]: " choice
 
         case $choice in
             1) install_kali_top10 ;;
@@ -2050,54 +2029,12 @@ main_menu() {
                     print_info "No log file found"
                 fi
                 ;;
-            13)
-                print_success "Exiting Hakpak — Forge wisely."
-                exit 0
-                ;;
-            14)
-                if is_pro_valid; then
-                    # Pro feature: Install Pro Security Suite
-                    require_pro || continue
-                    install_pro_tools
-                else
-                    # Show enterprise license status
-                    show_enterprise_status
-                fi
-                ;;
-            15)
-                if is_pro_valid; then
-                    # Pro feature: Launch Analytics Dashboard
-                    require_pro || continue
-                    launch_pro_dashboard
-                else
-                    # Exit option for non-Pro users
-                    print_success "Exiting Hakpak — Forge wisely."
-                    exit 0
-                fi
-                ;;
-            16)
-                if is_pro_valid; then
-                    # Pro user: Show enterprise license status
-                    show_enterprise_status
-                else
-                    print_error "Invalid option."
-                fi
-                ;;
-            17)
-                if is_pro_valid; then
-                    # Pro user: Exit
-                    print_success "Exiting Hakpak Pro — Forge wisely."
-                    exit 0
-                else
-                    print_error "Invalid option."
-                fi
-                ;;
+            13) install_kali_full ;;
+            14) show_system_dashboard ;;
+            15) show_enterprise_status ;;
+            16) print_success "Exiting HakPak — Forge wisely."; exit 0 ;;
             *)
-                if is_pro_valid; then
-                    print_error "Invalid option. Please select 1-17."
-                else
-                    print_error "Invalid option. Please select 1-15."
-                fi
+                print_error "Invalid option. Please select 1-16."
                 ;;
         esac
         
@@ -2519,19 +2456,7 @@ install_system() {
     # Create share directory and copy supporting files
     mkdir -p "${share_dir}"
     
-    # Copy license library if it exists
-    if [[ -f "lib/license.sh" ]]; then
-        mkdir -p "${share_dir}/lib"
-        cp "lib/license.sh" "${share_dir}/lib/"
-        print_success "License library installed"
-    fi
-    
-    # Copy RSA public key if it exists
-    if [[ -f "keys/public.pem" ]]; then
-        mkdir -p "${share_dir}/keys"
-        cp "keys/public.pem" "${share_dir}/keys/"
-        print_success "RSA public key installed"
-    fi
+    # (Removed) legacy license library & key copy (open source mode)
     
     print_info "Step 2: Setting up desktop integration..."
     
@@ -2560,9 +2485,8 @@ install_system() {
     echo "════════════════════════════════════"
     echo
     print_info "Next steps:"
-    echo "  1. Activate your license: sudo hakpak --activate YOUR_LICENSE_KEY"
-    echo "  2. Launch HakPak: sudo hakpak"
-    echo "  3. Or use GUI: hakpak --gui"
+    echo "  1. Launch HakPak: sudo hakpak"
+    echo "  2. Or use GUI: hakpak --gui"
     echo
     print_info "Installation details:"
     echo "  • Executable: ${install_dir}/hakpak"
@@ -2573,111 +2497,27 @@ install_system() {
     print_info "Support: owner@phanesguild.llc"
 }
 
-# Check and display license mode - elegant conditional pattern
-check_license_mode() {
-    if is_pro_valid; then
-        print_info "Pro license validated. Enabling Pro features..."
-        return 0
-    else
-        print_info "Running in Community mode."
-        return 1
-    fi
-}
-
-# Initialize HakPak with license mode detection
 initialize_hakpak() {
-    print_info "Initializing HakPak Security Toolkit..."
-    
-    # Elegant Pro/Community mode detection - silent check
-    if is_pro_valid; then
-        print_info "Pro license validated. Enabling Pro features..."
-        print_success "HakPak Pro mode activated"
-        echo "🚀 Pro features available:"
-        echo "   • Additional Kali metapackage installation"
-        echo "   • Extended security tool collections" 
-        echo "   • Priority email support"
-        echo "   • Commercial usage license"
-        echo "   • Multi-machine deployment rights"
-        echo "   • Advanced system overview dashboard"
-    else
-        print_info "Running in Community mode."
-        print_info "Core security tools and basic features available"
-        echo "💡 Upgrade to HakPak Pro for enhanced capabilities:"
-        echo "   • Visit: https://phanesguild.llc/hakpak"
-        echo "   • Contact: owner@phanesguild.llc | Discord: PhanesGuildSoftware"
-    fi
+    print_info "Initializing HakPak Security Toolkit (Open Source Mode)..."
+    print_info "All features available. No license required."
     echo
 }
 
-# Pro Tools Suite Installation - example Pro feature
-install_pro_tools() {
-    print_info "Installing HakPak Pro Security Suite..."
-    echo "========================================"
+# System dashboard (formerly Pro dashboard) now always available
+show_system_dashboard() {
+    print_info "HakPak System Dashboard"
+    echo "========================="
     echo
-    
-    # Real Pro tool installation - install additional Kali metapackages
-    local pro_metapackages=(
-        "kali-tools-web"
-        "kali-tools-wireless" 
-        "kali-tools-forensics"
-        "kali-tools-crypto-stego"
-        "kali-tools-vulnerability"
-        "kali-tools-exploitation"
-        "kali-tools-post-exploitation"
-        "kali-tools-reverse-engineering"
-    )
-    
-    echo "Installing Pro metapackages:"
-    for package in "${pro_metapackages[@]}"; do
-        echo "  • $package"
-    done
+    print_info "Collecting system security information..."
     echo
-    
-    print_info "Installing additional security tool collections..."
-    echo
-    
-    # Install the metapackages
-    for package in "${pro_metapackages[@]}"; do
-        print_info "Installing: $package"
-        
-        if DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends "$package"; then
-            print_success "✓ $package installed successfully"
-        else
-            print_warning "⚠ $package installation failed or partially completed"
-        fi
-    done
-    
-    echo
-    print_success "HakPak Pro Security Suite installation complete!"
-    print_info "Additional security tools are now available."
-    echo
-    print_info "To see all available tools, run:"
-    echo "  • hakpak --list-tools"
-    echo "  • hakpak --pro-report        (Enterprise Reporting)"
-    echo "  • hakpak --pro-compliance    (Compliance Auditing)"
-}
-
-# Pro Analytics Dashboard - example Pro feature
-launch_pro_dashboard() {
-    print_info "HakPak Pro System Overview"
-    echo "=============================="
-    echo
-    
-    # Real system analytics
-    print_info "Gathering system security information..."
-    echo
-    
     echo "📊 Installed Security Tools:"
     local security_tools=0
-    
-    # Count actual installed security tools
     for tool in nmap sqlmap nikto dirb gobuster hydra john hashcat wireshark wfuzz ffuf aircrack-ng burpsuite; do
         if command -v "$tool" >/dev/null 2>&1; then
             echo "   ✓ $tool"
             ((security_tools++))
         fi
     done
-    
     echo
     echo "📈 System Statistics:"
     echo "   • Total security tools installed: $security_tools"
@@ -2686,236 +2526,90 @@ launch_pro_dashboard() {
     echo "   • Kernel version: $(uname -r)"
     echo "   • Available disk space: $(df -h / | awk 'NR==2 {print $4}')"
     echo
-    
-    echo "🛡️ Security Status:"
-    echo "   • HakPak license status: $(is_pro_valid && echo "✓ Valid Pro License" || echo "✗ No Pro License")"
-    echo "   • Repository status: $(apt list --upgradable 2>/dev/null | wc -l) packages can be upgraded"
+    echo "🛡️ Environment Status:"
+    echo "   • HakPak mode: Open Source (no license required)"
+    echo "   • Upgradable packages: $(apt list --upgradable 2>/dev/null | wc -l)"
     echo "   • Last update check: $(stat -c %y /var/lib/apt/periodic/update-success-stamp 2>/dev/null | cut -d' ' -f1 || echo "Unknown")"
     echo
-    
-    print_info "For detailed tool documentation, run: hakpak --help"
+    print_info "Need help? Run: hakpak --help"
 }
 
-# --- BEGIN LICENSE CHECK BLOCK ---
-# Requires: openssl, base64, jq (jq recommended)
-PUBLIC_KEY_PATH="/usr/share/hakpak/public.pem"  # Production installation path
-LICENSE_TARGET_SYSTEM="/etc/hakpak/license.lic"
-USER_LICENSE_PATH="$HOME/.config/hakpak/license.lic"
-WATERMARK_DIR="/var/lib/hakpak"
-WATERMARK_USER_DIR="$HOME/.local/share/hakpak"
+#############################################
+# Licensing subsystem removed (open source) #
+# (Legacy code purged in OSS transition)    #
+#############################################
 
-# Ensure directories exist (best-effort)
-mkdir -p "$WATERMARK_USER_DIR"
-if [ "$(id -u)" -eq 0 ]; then
-  mkdir -p "$WATERMARK_DIR"
-fi
-
-license_error() { echo "HakPak: ERROR: $*" >&2; }
-license_info()  { echo "HakPak: $*"; }
-
-# Locate license file function
-_find_license_file() {
-  if [ -f "$LICENSE_TARGET_SYSTEM" ]; then
-    echo "$LICENSE_TARGET_SYSTEM"
-    return 0
-  elif [ -f "$USER_LICENSE_PATH" ]; then
-    echo "$USER_LICENSE_PATH"
-    return 0
-  else
-    return 1
-  fi
-}
-
-# Verify license file signed by private key; returns 0 if valid
-verify_license_file() {
-  local licfile
-  licfile="$1"
-  # Parse our custom bundle format
-  local payload_b64 sig_b64 payload_file sig_file
-  payload_file=$(mktemp)
-  sig_file=$(mktemp)
-
-  awk '/-----BEGIN HAKPAK LICENSE-----/{p=1;next} /-----SIGNATURE-----/{p=2;next} /-----END HAKPAK LICENSE-----/{p=0} p==1{print}' "$licfile" | base64 -d > "$payload_file" 2>/dev/null || { rm -f "$payload_file" "$sig_file"; return 2; }
-  awk '/-----SIGNATURE-----/,/-----END HAKPAK LICENSE-----/' "$licfile" | sed 's/-----SIGNATURE-----//;s/-----END HAKPAK LICENSE-----//' | tr -d '\n' | base64 -d > "$sig_file" 2>/dev/null || { rm -f "$payload_file" "$sig_file"; return 3; }
-
-  if [ ! -f "$PUBLIC_KEY_PATH" ]; then
-    license_error "Public key not found at ${PUBLIC_KEY_PATH}. Cannot verify license."
-    rm -f "$payload_file" "$sig_file"
-    return 4
-  fi
-
-  if openssl dgst -sha256 -verify "$PUBLIC_KEY_PATH" -signature "$sig_file" "$payload_file" >/dev/null 2>&1; then
-    # signature valid — parse expiry and return valid code 0
-    if command -v jq >/dev/null 2>&1; then
-      local expires_at
-      expires_at=$(jq -r '.expires_at' < "$payload_file")
-      if [ -n "$expires_at" ] && [ "$expires_at" != "null" ]; then
-        # compare times (UTC)
-        local now ts_exp
-        now=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-        ts_exp=$(date -d "$expires_at" +"%s" 2>/dev/null || echo 0)
-        ts_now=$(date -d "$now" +"%s" 2>/dev/null || echo 0)
-        if [ "$ts_now" -gt "$ts_exp" ]; then
-          rm -f "$payload_file" "$sig_file"
-          return 5  # expired
-        fi
-      fi
-    fi
-    # store payload to watermark file
-    _store_license_watermark "$payload_file"
-    rm -f "$payload_file" "$sig_file"
-    return 0
-  else
-    rm -f "$payload_file" "$sig_file"
-    return 6
-  fi
-}
-
-_store_license_watermark() {
-  local payload_file="$1"
-  # extract buyer info for watermark
-  if command -v jq >/dev/null 2>&1; then
-    local buyer_email buyer_name license_id
-    buyer_email=$(jq -r '.buyer_email' < "$payload_file")
-    buyer_name=$(jq -r '.buyer_name' < "$payload_file")
-    license_id=$(jq -r '.license_id' < "$payload_file")
-    local target="${WATERMARK_USER_DIR}/watermark.txt"
-    local systarget="${WATERMARK_DIR}/watermark.txt"
-    echo "HakPak Pro License" > "$target"
-    echo "buyer_name: $buyer_name" >> "$target"
-    echo "buyer_email: $buyer_email" >> "$target"
-    echo "license_id: $license_id" >> "$target"
-    echo "installed_at: $(date -u +"%Y-%m-%dT%H:%M:%SZ")" >> "$target"
-    # Also write system-wide watermark if running as root
-    if [ "$(id -u)" -eq 0 ]; then
-      echo "HakPak Pro License" > "$systarget"
-      echo "buyer_name: $buyer_name" >> "$systarget"
-      echo "buyer_email: $buyer_email" >> "$systarget"
-      echo "license_id: $license_id" >> "$systarget"
-      echo "installed_at: $(date -u +"%Y-%m-%dT%H:%M:%SZ")" >> "$systarget"
-      chmod 600 "$systarget"
-    fi
-  else
-    # If jq isn't present, still write a simple fingerprint
-    local fingerprint
-    fingerprint=$(sha256sum "$payload_file" | awk '{print $1}')
-    echo "HakPak Pro License - fingerprint: $fingerprint" > "${WATERMARK_USER_DIR}/watermark.txt"
-  fi
-}
-
-# Public helper: is_pro_valid
-is_pro_valid() {
-  local licfile
-  if licfile=$(_find_license_file); then
-    verify_license_file "$licfile"
-    case $? in
-      0) return 0 ;;    # valid
-      5) license_error "License expired"; return 1 ;;
-      2|3) license_error "Invalid license format"; return 1 ;;
-      4) license_error "Missing public key"; return 1 ;;
-      6) license_error "Signature verification failed"; return 1 ;;
-      *) license_error "License verification error"; return 1 ;;
-    esac
-  else
-    return 1
-  fi
-}
-
-# Gate for Pro-only functions. Usage:
-#   require_pro || exit 1
-require_pro() {
-  if is_pro_valid; then
-    return 0
-  else
-    echo
-    print_warning "HakPak Pro feature requires a valid Pro license."
-    print_info "Place your license file at one of these locations:"
-    print_info "  $LICENSE_TARGET_SYSTEM"
-    print_info "  $USER_LICENSE_PATH"
-    echo
-    print_info "To obtain a license, visit: https://phanesguild.llc/hakpak"
-    print_info "Contact: owner@phanesguild.llc | Discord: PhanesGuildSoftware"
-    return 1
-  fi
-}
-
-# Get license information for display
-get_license_info() {
-  local licfile
-  if licfile=$(_find_license_file); then
-    local payload_file
-    payload_file=$(mktemp)
-    
-    # Extract payload
-    awk '/-----BEGIN HAKPAK LICENSE-----/{p=1;next} /-----SIGNATURE-----/{p=2;next} /-----END HAKPAK LICENSE-----/{p=0} p==1{print}' "$licfile" | base64 -d > "$payload_file" 2>/dev/null || {
-      rm -f "$payload_file"
-      echo "Invalid license format"
-      return 1
-    }
-    
-    if command -v jq >/dev/null 2>&1; then
-      jq -r '
-      "License ID: " + .license_id,
-      "Buyer: " + .buyer_name + " (" + .buyer_email + ")",
-      "Product: " + .product + " v" + .version,
-      "Issued: " + .issued_at,
-      "Expires: " + .expires_at,
-      "Notes: " + .notes
-      ' "$payload_file"
-    else
-      echo "License information available (install jq for details)"
-      cat "$payload_file"
-    fi
-    
-    rm -f "$payload_file"
-  else
-    echo "No license file found"
-    return 1
-  fi
-}
-
-# Enterprise status display
 show_enterprise_status() {
-  print_info "HakPak Pro License Status:"
-  echo "================================"
-  
-  if is_pro_valid; then
-    print_success "Valid HakPak Pro license found"
-    get_license_info | sed 's/^/  /'
-    
-    # Show watermark info if available
-    if [ -f "${WATERMARK_DIR}/watermark.txt" ] || [ -f "${WATERMARK_USER_DIR}/watermark.txt" ]; then
-      echo
-      print_info "License Installation Details:"
-      if [ -f "${WATERMARK_DIR}/watermark.txt" ]; then
-        cat "${WATERMARK_DIR}/watermark.txt" | sed 's/^/  /'
-      elif [ -f "${WATERMARK_USER_DIR}/watermark.txt" ]; then
-        cat "${WATERMARK_USER_DIR}/watermark.txt" | sed 's/^/  /'
-      fi
-    fi
-  else
-    print_warning "No valid HakPak Pro license found"
-    echo
-    print_info "HakPak Pro features available with license:"
-    echo "  • Additional Kali metapackage installation"
-    echo "  • Extended security tool collections"
-    echo "  • Priority email support"
-    echo "  • Commercial usage license"
-    echo "  • Multi-machine deployment rights"
-    echo "  • Advanced system overview dashboard"
-    echo
-    print_info "License file locations:"
-    echo "  • System-wide: $LICENSE_TARGET_SYSTEM"
-    echo "  • User-specific: $USER_LICENSE_PATH"
-    echo
-    print_info "Contact owner@phanesguild.llc for licensing information"
-    print_info "Visit: https://phanesguild.llc/hakpak"
-  fi
+    print_info "HakPak Open Source Mode"
+    echo "========================"
+    echo "All features available. Legacy licensing removed."
+    echo "Version: v$HAKPAK_VERSION"
+    echo "Project: https://github.com/PhanesGuildSoftware/hakpak"
 }
 
-# Source the license verification library
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "${SCRIPT_DIR}/lib/license.sh"
+# Self-test (non-invasive) for new distro validation (Ubuntu 25.04, Debian 13, etc.)
+self_test() {
+    echo
+    print_info "Starting HakPak self-test (read-only where possible)..."
+    detect_distribution
+    echo
+    print_info "Distribution: $DISTRO_NAME $DISTRO_VERSION ($DISTRO_CODENAME) [$DISTRO_ARCH]"
+    print_info "Checking core commands..."
+    local needed_bins=(curl wget grep awk sed dpkg apt-get openssl base64)
+    local missing=()
+    for b in "${needed_bins[@]}"; do
+        command -v "$b" >/dev/null 2>&1 || missing+=("$b")
+    done
+    if [[ ${#missing[@]} -gt 0 ]]; then
+        print_warning "Missing required binaries: ${missing[*]}"
+    else
+        print_success "All core binaries present"
+    fi
+    echo
+    print_info "Enumerating essential tool package availability (simulation)..."
+    local tools=(nmap sqlmap nikto dirb gobuster wfuzz ffuf hydra john hashcat exploitdb searchsploit wireshark tcpdump netcat-openbsd)
+    local available=0
+    local unavailable=()
+    # Update package lists only if root (to avoid permission noise)
+    if [[ $EUID -eq 0 ]]; then
+        apt-get update -o Dir::Etc::sourcelist="sources.list" -o Dir::Etc::sourceparts="-" -o APT::Get::List-Cleanup="0" >/dev/null 2>&1 || print_warning "apt-get update encountered issues (continuing)"
+    else
+        print_info "Not root: skipping apt-get update (using existing cache)"
+    fi
+    for pkg in "${tools[@]}"; do
+        if apt-cache show "$pkg" >/dev/null 2>&1; then
+            ((available++))
+        else
+            unavailable+=("$pkg")
+        fi
+    done
+    print_info "Essential tool packages found: $available/${#tools[@]}"
+    if [[ ${#unavailable[@]} -gt 0 ]]; then
+        print_warning "Unavailable packages: ${unavailable[*]}"
+        print_info "If on a fresh base image, add Kali repo then re-run: hakpak --setup-repo && hakpak --self-test"
+    else
+        print_success "All essential packages resolvable"
+    fi
+    echo
+    print_info "Simulating dependency dry-run for first three tools..."
+    local sample=(nmap sqlmap nikto)
+    for s in "${sample[@]}"; do
+        if [[ $EUID -eq 0 ]]; then
+            if apt-get -s install -y "$s" >/dev/null 2>&1; then
+                print_success "Dry-run OK: $s"
+            else
+                print_warning "Dry-run encountered issues: $s"
+            fi
+        else
+            print_info "(skip dry-run, not root): $s"
+        fi
+    done
+    echo
+    print_info "(Legacy license system retired – no checks required)"
+    print_info "Self-test complete."
+}
+
+## (Removed) interactive license paste handler (deprecated)
 
 # Main execution with argument parsing
 main() {
@@ -2994,75 +2688,14 @@ main() {
             install_system
             exit 0
             ;;
-        --license-status|--enterprise-status)
+        --self-test)
             touch "$LOG_FILE" 2>/dev/null || LOG_FILE="/tmp/hakpak.log"
+            self_test
+            exit 0
+            ;;
+        --license-status|--enterprise-status|--validate-license|--enterprise-validate|--activate|--paste-license|--activate-paste|--pro-dashboard|--install-pro-suite)
+            print_warning "Legacy option '$1' is deprecated and ignored (open source build)."
             show_enterprise_status
-            exit 0
-            ;;
-        --validate-license|--enterprise-validate)
-            touch "$LOG_FILE" 2>/dev/null || LOG_FILE="/tmp/hakpak.log"
-            if [[ -n "${2:-}" ]]; then
-                if verify_license_file "$2"; then
-                    print_success "License file is valid: $2"
-                    get_license_info
-                else
-                    print_error "Invalid license file: $2"
-                    exit 1
-                fi
-            else
-                if is_licensed; then
-                    print_success "HakPak license is valid"
-                    get_license_info
-                else
-                    print_error "No valid HakPak license found"
-                    exit 1
-                fi
-            fi
-            exit 0
-            ;;
-        --activate)
-            touch "$LOG_FILE" 2>/dev/null || LOG_FILE="/tmp/hakpak.log"
-            if [[ -z "${2:-}" ]]; then
-                print_error "License key is required"
-                print_info "Usage: hakpak --activate <LICENSE_KEY>"
-                print_info "Example: hakpak --activate eyJsaWNlbnNl..."
-                exit 1
-            fi
-            
-            print_info "Activating HakPak license..."
-            if activate_license "$2"; then
-                # Check if license was successfully activated
-                if [[ "$(get_license_tier)" == "Licensed" ]]; then
-                    print_success "🎉 HakPak activated successfully!"
-                    echo
-                    print_info "You can now access all HakPak features:"
-                    echo "  • sudo hakpak --license-status"
-                    echo "  • sudo hakpak --install-comprehensive"
-                    echo "  • sudo hakpak (main menu)"
-                else
-                    print_error "License activation failed"
-                    exit 1
-                fi
-            else
-                print_error "License activation failed"
-                exit 1
-            fi
-            exit 0
-            ;;
-        --pro-dashboard)
-            touch "$LOG_FILE" 2>/dev/null || LOG_FILE="/tmp/hakpak.log"
-            require_pro || exit 1
-            launch_pro_dashboard
-            exit 0
-            ;;
-        --install-pro-suite)
-            touch "$LOG_FILE" 2>/dev/null || LOG_FILE="/tmp/hakpak.log"
-            # Example usage inside your CLI flow:
-            if [ "$1" = "--install-pro-suite" ]; then
-                require_pro || exit 1
-                # proceed with pro-only installs
-                install_pro_tools
-            fi
             exit 0
             ;;
         --init)

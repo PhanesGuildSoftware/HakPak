@@ -7,17 +7,50 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added
+### Planned
+
+- Additional distribution self-test coverage
+- Packaging refinements (deb/rpm exploration)
+
+## [1.1.0] - 2025-09-01
+
+### Changed
+
+- Project fully transitioned to Open Source edition (MIT) — all former "Pro" features unlocked
+- Removed legacy licensing subsystem (`lib/license.sh`, activation, validation code paths)
+- Simplified dashboard (formerly Pro dashboard) now universally available
+- Updated help text and CLI to mark legacy flags as deprecated no-ops
+
+### Added (1.1.0)
+
+- Release packaging script: `scripts/package-release.sh` for clean distributable archives
+- Deprecation notice in `lib/README.md`
+
+### Removed
+
+- License verification logic, activation flow, watermarking, RSA key distribution
+- Pro suite installer and upgrade prompts
+
+### Security
+
+- Eliminated dead code related to cryptographic verification reducing surface area
+
+### Migration Notes
+
+- Any automation invoking legacy flags (`--activate`, `--license-status`, `--pro-dashboard`, `--install-pro-suite`) will still succeed but perform no action and emit a warning. Plan to remove these flags in the next major release.
+
+
+### Added (1.0.0)
 - Terms of use acceptance prompt for legal compliance
 - Comprehensive README.md with screenshots and documentation
 - Contributing guidelines for community development
 - Enterprise support contact information
 
-### Changed
+### Changed (1.0.0)
 - Enhanced legal disclaimers throughout application
 - Improved professional presentation and branding
 
-### Security
+### Security (1.0.0)
 - Added mandatory terms acceptance before tool installation
 - Enhanced legal liability protection measures
 

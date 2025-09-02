@@ -1,50 +1,36 @@
-# ⚡ HakPak — Security Tools, Supercharged.
+# ⚡ HakPak — Security Tools Supercharged
 
 **One Command. Every Tool You Need.**  
 HakPak is the ultimate Linux security toolkit installer — built for professionals, pentesters, and sysadmins who value speed, precision, and stability.  
 No more hunting for packages, battling broken dependencies, or wasting time on setup.  
-HakPak delivers **a curated, fully-vetted security arse### Professional Support
-- 🌐 **Website**: [phanesguild.llc](https://www.phanesguild.llc)
-- 📧 **Email**: [owner@phanesguild.llc](mailto:owner@phanesguild.llc)
-- 💬 **Discord**: PhanesGuildSoftware
-- 🐙 **GitHub**: [PhanesGuildSoftware](https://github.com/PhanesGuildSoftware)
-- 💼 **Enterprise**: [owner@phanesguild.llc](mailto:owner@phanesguild.llc)
-
-### Author
-**Teyvone Wells**  
-*PhanesGuild Software LLC*  
-🐙 [GitHub Organization](https://github.com/PhanesGuildSoftware)minutes — so you can focus on the mission, not the prep work.
+HakPak delivers **a curated, fully-vetted security arsenal in minutes** — so you can focus on the mission, not the prep work.
 
 ---
 
 ## 🌟 Why HakPak?
+
 - **Corporate-Ready** — Stable, signed releases with enterprise-level reliability.
 - **Blazing Fast Setup** — Installs dozens of tools in a fraction of the time.
 - **No Bloat** — Every included tool is vetted for relevance and security.
-- **One-Time License** — No subscriptions, no surprises.
-- **Privacy First** — Offline-friendly activation, zero telemetry.
+- **Open Source** — MIT licensed. No paywalls, no feature locks.
+- **Privacy First** — No telemetry, no tracking.
 
 ---
 
-> **HakPak Pro** gives you the full arsenal.  
-> **HakPak Community** keeps you mission-capable for free.
+> As of September 2025 HakPak is **fully open source**. All former “Pro” features are now included. Legacy activation flags are inert and will be removed in a future major release.
 
-<div align="center">
-
-![HakPak Logo](https://img.shields.io/badge/HakPak-v1.0-blue?style=for-the-badge)
+![HakPak Logo](https://img.shields.io/badge/HakPak-v1.1.0-blue?style=for-the-badge)
 ![Platform](https://img.shields.io/badge/Platform-Ubuntu%2024.04-orange?style=for-the-badge)
 ![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
 [![GitHub](https://img.shields.io/badge/GitHub-PhanesGuildSoftware-black?style=for-the-badge&logo=github)](https://github.com/PhanesGuildSoftware)
 
-[🚀 Quick Start](#quick-start) • [📖 Documentation](#documentation) • [🛠️ Tools](#included-tools) • [💼 Enterprise](#enterprise-support) • [🔒 Legal](#legal-disclaimer)
-
-</div>
+[Quick Start](#quick-start) • [Documentation](#documentation) • [Included Tools](#included-tools) • [Legal](#important-legal-disclaimer)
 
 ---
 
-## ⚠️ **IMPORTANT LEGAL DISCLAIMER**
+## Important Legal Disclaimer
 
-**READ CAREFULLY BEFORE PROCEEDING**
+### Read Carefully Before Proceeding
 
 HakPak installs penetration testing and security assessment tools. By using this software, you acknowledge and agree that:
 
@@ -90,10 +76,11 @@ HakPak is a professional-grade security toolkit installer that brings essential 
 ### Simple Installation
 
 **Step 1:** Download and extract HakPak
+
 ```bash
 # Option A: Download release package
-wget https://releases.phanesguild.llc/hakpak-v1.0.zip
-unzip hakpak-v1.0.zip
+wget https://releases.phanesguild.llc/hakpak-v1.1.0.tar.gz
+tar -xzf hakpak-v1.1.0.tar.gz
 cd hakpak/
 
 # Option B: Clone from GitHub
@@ -102,16 +89,13 @@ cd hakpak/
 ```
 
 **Step 2:** Install HakPak to system
+
 ```bash
 sudo ./hakpak.sh --install
 ```
 
-**Step 3:** Activate your license
-```bash
-sudo hakpak --activate YOUR_LICENSE_KEY
-```
+**Step 3:** Start using HakPak
 
-**Step 4:** Start using HakPak
 ```bash
 sudo hakpak              # Interactive menu
 sudo hakpak --gui        # Graphical interface
@@ -140,22 +124,9 @@ sudo hakpak
 sudo hakpak --status
 ```
 
-### 🚀 Upgrade to HakPak Pro
+### Legacy Flags (Deprecated)
 
-Unlock enterprise-grade security features with HakPak Pro:
-
-```bash
-# Access Pro analytics dashboard
-sudo hakpak --pro-dashboard
-
-# Install enterprise security suite
-sudo hakpak --install-pro-suite
-
-# Check license status
-sudo hakpak --enterprise-status
-```
-
-> **💡 Need a license?** Contact [owner@phanesguild.llc](mailto:owner@phanesguild.llc), Discord: PhanesGuildSoftware, or visit [phanesguild.llc/hakpak](https://phanesguild.llc/hakpak)
+Historical flags (`--activate`, `--license-status`, `--pro-dashboard`, `--install-pro-suite`) now emit a warning only. Remove them from automation before the next major release.
 
 ---
 
@@ -206,12 +177,14 @@ sudo hakpak --remove-repo
 ## 🛠️ Included Tools
 
 ### Network Analysis & Scanning
+
 - **Nmap** - Advanced network discovery and security auditing
 - **Wireshark** - Network protocol analyzer with GUI
 - **Tcpdump** - Command-line packet analyzer
 - **Netcat** - Swiss Army knife for TCP/IP
 
 ### Web Application Testing
+
 - **SQLMap** - Automatic SQL injection and database takeover
 - **Nikto** - Web server scanner for vulnerabilities
 - **Dirb** - Web content scanner (directory brute forcer)
@@ -220,29 +193,35 @@ sudo hakpak --remove-repo
 - **FFUF** - Fast web fuzzer written in Go
 
 ### Password & Authentication
+
 - **Hydra** - Parallelized login cracker
 - **John the Ripper** - Fast password cracker
 - **Hashcat** - Advanced password recovery
 
 ### Exploitation & Research
+
 - **ExploitDB** - Archive of public exploits and vulnerabilities
 - **Searchsploit** - Command-line search tool for Exploit-DB
 
-### Enterprise Add-ons (Available)
-- **Burp Suite Professional** - Advanced web application security testing
-- **Metasploit Framework** - Penetration testing platform
-- **OWASP ZAP** - Web application security scanner
-- **Maltego** - Link analysis and data mining
-- **Recon-ng** - Web reconnaissance framework
+### External / Optional Tools
+
+Not bundled directly (licensing / size / scope) but compatible with the curated environment:
+
+- Burp Suite Professional
+- Metasploit Framework
+- OWASP ZAP
+- Maltego
+- Recon-ng
 
 ---
 
 ## 🖥️ Screenshots
 
 ### Interactive Menu
-```
+
+```text
 ╔══════════════════════════════════════════════════════════════╗
-║                        HAKPAK v1.0                          ║
+║                        HAKPAK v1.1.0                        ║
 ║            Universal Kali Tools Installer                   ║
 ║              Forge Wisely. Strike Precisely.                ║
 ╚══════════════════════════════════════════════════════════════╝
@@ -262,7 +241,21 @@ Your choice [1-7]:
 ```
 
 ### Status Report
+ 
+## 📦 Release Packaging
+
+Create a clean distributable archive (tar.gz + optional zip) using the provided script:
+
+```bash
+./scripts/package-release.sh        # auto-detects version from hakpak.sh
+./scripts/package-release.sh 1.1.0  # explicit version
+ls dist/
 ```
+
+Contents exclude deprecated licensing artifacts. Use the generated archive for publishing on external download portals.
+
+
+```text
 ╔══════════════════════════════════════════════════════════════╗
 ║                    SYSTEM STATUS REPORT                     ║
 ╚══════════════════════════════════════════════════════════════╝
@@ -291,12 +284,14 @@ Installed Security Tools: (8/15)
 ## 🔧 System Requirements
 
 ### Minimum Requirements
+
 - **OS**: Ubuntu 20.04+ or Debian 11+
 - **RAM**: 2GB (4GB recommended)
 - **Storage**: 5GB free space
 - **Network**: Broadband internet connection
 
 ### Recommended Specifications
+
 - **OS**: Ubuntu 24.04 LTS
 - **RAM**: 8GB+
 - **Storage**: 20GB+ free space
@@ -317,43 +312,25 @@ Installed Security Tools: (8/15)
 
 ---
 
-## �️ HakPak Editions & Pricing
+## 🔄 Open Source Transition
 
-## 💰 Pricing
+In September 2025 HakPak was relicensed as **fully open source (MIT)**. All previously gated features are now available without activation. The decision was driven by:
 
-🔑 **HakPak** - $49.99 (License Required)
-- 15+ essential security tools
-- Advanced tool collections  
-- Extended Kali metapackages
-- System overview dashboard
-- Priority email support (24-48hr)
-- Commercial use license
-- Multi-machine deployment rights
+- Lowering adoption friction for defenders & researchers
+- Encouraging community contributions & third-party audits
+- Simplifying maintenance by removing license edge cases
 
-⚠️ **License Required**: HakPak requires a valid license for all operations. No free tier available.
+## 🧩 Legacy License System (Deprecated)
 
----
+HakPak still contains vestigial license handling code to avoid breaking older automation scripts. Current behavior:
 
-### 🔑 How Licensing Works
+- Activation commands are no-ops (exit 0, no stored state)
+- Status commands report "Open Source Mode"
+- No feature restrictions are enforced
 
-HakPak uses an **offline-friendly license key system** to prevent unauthorized use while keeping privacy in mind.
+Planned removal: A future major version (≥2.0) will purge inactive licensing code. If you have a use case for preserving a lightweight attribution token, open an issue to discuss before removal.
 
-1. After purchasing HakPak, you will receive:
-   - Your **unique license key**
-   - Instructions for offline activation
-
-2. To activate, run:
-
-   ```bash
-   sudo hakpak --activate <your-license-key>
-   ```
-
-3. **License Features**:
-   - ✅ **Offline validation** - No internet required after activation
-   - ✅ **Privacy focused** - No telemetry or phone-home
-   - ✅ **RSA 4096-bit signatures** - Military-grade security
-
-Contact: [owner@phanesguild.llc](mailto:owner@phanesguild.llc)
+If you encounter a prompt or message referring to “license” please file an issue so we can finish scrubbing the reference.
 
 ---
 
@@ -373,13 +350,14 @@ cd hakpak
 
 - 🐛 **Bug Reports**: Use GitHub Issues with the bug template
 - 💡 **Feature Requests**: Submit enhancement proposals
-- 🔒 **Security Issues**: Email owner@phanesguild.llc
+- 🔒 **Security Issues**: Email [owner@phanesguild.llc](mailto:owner@phanesguild.llc)
 
 ---
 
 ## 📝 Changelog
 
-### v1.0 (Current)
+### v1.1.0 (Current)
+
 - Initial release with 15 essential security tools
 - Ubuntu 24.04 LTS support
 - Intelligent dependency resolution
@@ -418,19 +396,33 @@ By downloading, installing, or using HakPak, you agree to the following terms:
 ## 📞 Support & Contact
 
 ### Community Support
+
 - 📖 **Documentation**: [Wiki](https://github.com/PhanesGuildSoftware/hakpak/wiki)
 - 💬 **Discussions**: [GitHub Discussions](https://github.com/PhanesGuildSoftware/hakpak/discussions)
 - 🐛 **Issues**: [GitHub Issues](https://github.com/PhanesGuildSoftware/hakpak/issues)
 
 ### Professional Support
+
 - 🌐 **Website**: [phanesguild.llc](https://www.phanesguild.llc)
 - 📧 **Email**: [owner@phanesguild.llc](mailto:owner@phanesguild.llc)
-- � **Discord**: PhanesGuildSoftware
-- �💼 **Enterprise**: [owner@phanesguild.llc](mailto:owner@phanesguild.llc)
+- 💬 **Discord**: PhanesGuildSoftware
+- 💼 **Enterprise**: [owner@phanesguild.llc](mailto:owner@phanesguild.llc)
 
 ### Author
-**Teyvone Wells**  
-*PhanesGuild Software LLC*  
+
+**Teyvone Wells ("Phanes")**  
+*Founder & Principal Engineer – PhanesGuild Software LLC*
+
+Building HakPak to eliminate the grind between intent and execution in security operations. I focus on:
+
+- Frictionless operational tooling for defenders & red teams
+- Repeatable, stable installs on production-friendly distros
+- Open ecosystem sustainability (community-driven)
+- Pragmatic curation: fewer, sharper tools over noisy bloat
+
+If something in HakPak adds drag instead of leverage, I want to know. Reach out, challenge assumptions, or propose improvements—collaborators welcome.
+
+Contact: [owner@phanesguild.llc](mailto:owner@phanesguild.llc) (or open a Discussion / Issue)
 
 ---
 
@@ -438,16 +430,12 @@ By downloading, installing, or using HakPak, you agree to the following terms:
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-**Copyright © 2025 PhanesGuild Software LLC**
+Copyright © 2025 PhanesGuild Software LLC
 
 ---
 
-<div align="center">
+Made with ❤️ by PhanesGuild Software LLC
 
-**Made with ❤️ by PhanesGuild Software LLC**
-
-*Empowering cybersecurity professionals with enterprise-grade tools*
+Empowering cybersecurity professionals with enterprise-grade tools
 
 [⭐ Star this repository](https://github.com/PhanesGuildSoftware/hakpak) if HakPak helps you!
-
-</div>

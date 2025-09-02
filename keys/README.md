@@ -1,38 +1,17 @@
-# HakPak Pro Keys Directory
+# HakPak Legacy License Keys (Deprecated)
 
-This directory contains the cryptographic keys for HakPak Pro license verification.
+HakPak is now fully open source (MIT). The prior license verification system has been **deprecated** and will be removed in a future major release (≥2.0). This directory persists only to avoid breaking older automation that still expects a `public.pem`.
 
-## For License Vendors
+## Status
+- Activation commands are now no-ops.
+- `public.pem` is ignored by the runtime (kept only for backward compatibility).
+- Any existing license files are disregarded.
 
-If you're selling HakPak Pro licenses, you'll need to:
+## For Users
+You no longer need a key or license file. Just install and use HakPak.
 
-1. **Generate your own key pair:**
-   ```bash
-   cd tools/
-   ./generate_keys.sh
-   ```
-
-2. **Move the public key:**
-   ```bash
-   mv keys/public.pem keys/public.pem
-   ```
-
-3. **Keep private key secure:**
-   - Store `keys/private.pem` in a secure location
-   - Never commit private keys to version control
-   - Use the private key to sign customer licenses
-
-## For End Users
-
-After purchasing HakPak Pro, you'll receive:
-- A license key to activate with `hakpak --activate <key>`
-- The public key will be automatically installed during HakPak installation
-
-## Security Notes
-
-- Public keys are safe to distribute
-- Private keys must be kept secure and never shared
-- License verification happens offline using these keys
+## Future
+This directory (and associated scripts) will be removed once the deprecation period ends. If you have a strong use case for retaining a signed attribution token, open an issue explaining the workflow.
 
 ---
 

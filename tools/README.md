@@ -1,207 +1,106 @@
-# HakPak Tools Directory
+# HakPak Tools Directory (Open Source Edition)
 
-This directory contains utility scripts for HakPak enterprise licensing and development.
+This directory previously contained enterprise licensing utilities. HakPak is now fully open source (MIT) and licensing has been deprecated. Remaining scripts are legacy artifacts and will be removed ≥2.0.
 
-## � **User Types**
+## User Types
 
-### **For License Vendors (PhanesGuild Software LLC)**
-These tools are for creating and managing customer licenses:
-- Generate cryptographic keys
-- Create signed customer licenses  
-- Validate license integrity
+### For Maintainers
+Historical scripts (`generate_keys.sh`, `generate_license.sh`, `validate_license.sh`) are no longer required for normal operation.
 
-### **For End Customers**
-Customers don't need these tools directly. Instead:
-- Purchase HakPak Pro license
-- Receive license key via email
-- Activate with: `sudo hakpak --activate <license-key>`
+### For Users
+You do **not** need anything in this directory to use HakPak.
 
-### **For Developers/Contributors**
-Use these tools for testing and development of license features.
+### For Contributors
+If removing these scripts, ensure any CI or docs references are scrubbed.
 
 ---
 
-## �🔐 Licensing Tools
+## Deprecated Scripts
 
 ### Key Management
 
-#### `generate_keys.sh`
-Generates RSA 4096-bit keypair for signing enterprise licenses.
-
-```bash
-./tools/generate_keys.sh
-```
-
-**Important**: 
-- Keep `keys/private.pem` secure and never commit to version control
-- Only `keys/public.pem` should be committed to the repository
-- Private key is used by PhanesGuild Software LLC for license generation
+#### generate_keys.sh (Deprecated)
+Formerly generated RSA keypair. Not needed.
 
 ### License Generation
 
-#### `generate_license.sh`
-Creates signed enterprise licenses for HakPak Pro features.
+#### generate_license.sh (Deprecated)
+Previously emitted license payload + signature. No longer used.
 
-```bash
-# Interactive mode (recommended)
-./tools/generate_license.sh
-
-# Command-line mode
-./tools/generate_license.sh --cli "Company Name" "Enterprise" \
-  "2025-01-01" "2026-01-01" 100 "24/7 Priority" \
-  '"Advanced Reporting", "API Access"'
-```
-
-**License Types**:
-- **Professional**: Small teams, business hours support
-- **Enterprise**: Large organizations, 24/7 priority support  
-- **Educational**: Academic institutions, community support
-- **Trial**: 30-day evaluation, self-service
-
-**Features Available**:
-- Advanced Reporting
-- Centralized Management
-- Custom Tool Bundles
-- API Access
-- SSO Integration
-- Compliance Reporting
+Obsolete generation examples removed.
 
 ### License Validation
 
-#### `validate_license.sh`
-Validates enterprise license signatures and displays license information.
+#### validate_license.sh (Deprecated)
 
-```bash
-# Validate default license
-./tools/validate_license.sh
+Previously validated license signature. No runtime integration now.
 
-# Validate specific license file
-./tools/validate_license.sh /path/to/license.lic
-```
+Validation examples removed.
 
-## 🛡️ Security Considerations
+## Security Considerations (Historical)
 
 ### Key Security
+
 - Private keys must be stored securely
 - Use hardware security modules (HSM) for production environments
 - Regularly rotate keys according to security policy
 - Maintain secure backup of private keys
 
 ### License Security
+
 - Licenses contain customer information and should be treated as confidential
 - Use encrypted communication channels for license delivery
 - Maintain audit trail of license generation and distribution
 - Implement license revocation procedures if needed
 
 ### Access Control
+
 - Restrict access to license generation tools to authorized personnel only
 - Use role-based access control for different license operations
 - Log all license generation activities for audit purposes
 
-## 📋 Enterprise Workflow
+## Historical Enterprise Workflow (Removed)
 
-### License Generation Process
+Historical generation workflow removed.
 
-1. **Customer Onboarding**
-   - Verify customer information and purchase
-   - Determine appropriate license type and features
-   - Document in CRM system
+## Development Notes
 
-2. **License Creation**
-   ```bash
-   ./tools/generate_license.sh
-   ```
-   - Use interactive mode for accuracy
-   - Verify all details before generation
-   - Save license file securely
+Legacy test script examples removed.
 
-3. **License Delivery**
-   - Encrypt license file for transmission
-   - Use secure delivery method (encrypted email, secure portal)
-   - Provide installation instructions
-   - Document delivery in customer records
+Integration hooks have been removed; status now always reflects open source mode.
 
-4. **License Validation**
-   - Customer validates license after installation
-   - Verify license functionality
-   - Provide support for any issues
-
-### License Management
-
-- **Renewal Process**: Generate new license before expiration
-- **Upgrade Process**: Generate new license with additional features
-- **Support Incidents**: Validate customer license status
-- **Compliance Audits**: Provide license verification capabilities
-
-## 🔧 Development Tools
-
-### Testing License System
-
-```bash
-# Generate test keys
-./tools/generate_keys.sh
-
-# Create test license
-./tools/generate_license.sh --cli "Test Company" "Trial" \
-  "$(date +%Y-%m-%d)" "$(date -d '+30 days' +%Y-%m-%d)" 5 \
-  "Self-Service" '"Advanced Reporting"'
-
-# Validate test license
-./tools/validate_license.sh licenses/test_company_*.lic
-```
-
-### Integration Testing
-
-Ensure license validation is properly integrated into HakPak main script:
-
-```bash
-# Test enterprise feature access
-sudo hakpak --status
-# Should show license status and available features
-
-# Test feature restrictions
-sudo hakpak --enterprise-feature
-# Should check license before allowing access
-```
-
-## 📞 Support and Troubleshooting
+## Support and Troubleshooting
 
 ### Common Issues
 
-**Missing Dependencies**
+### Missing Dependencies
+
 ```bash
-# Install required packages
 sudo apt-get install openssl jq
 ```
 
-**Key Generation Failures**
+### Key Generation Failures (Legacy)
+
 - Ensure sufficient entropy for key generation
 - Check file system permissions
 - Verify OpenSSL installation
 
-**License Validation Failures**
-- Verify public key is present and readable
-- Check license file format and integrity
-- Ensure system clock is synchronized
+### Legacy License Validation
+
+No longer applicable; remove old automation referencing these scripts.
 
 ### Contact Information
 
-- **Technical Support**: owner@phanesguild.llc
-- **Enterprise Sales**: owner@phanesguild.llc
-- **Security Issues**: owner@phanesguild.llc
+- **Technical Support**: [owner@phanesguild.llc](mailto:owner@phanesguild.llc)
+- **Enterprise Sales**: [owner@phanesguild.llc](mailto:owner@phanesguild.llc)
+- **Security Issues**: [owner@phanesguild.llc](mailto:owner@phanesguild.llc)
 - **Discord**: PhanesGuildSoftware
 - **GitHub**: [PhanesGuildSoftware](https://github.com/PhanesGuildSoftware)
 
-## 📄 License and Legal
+## License
 
-These tools are part of HakPak and subject to the same MIT license. However:
-
-- Enterprise licenses generated by these tools are subject to separate commercial terms
-- Private keys and license files are proprietary to PhanesGuild Software LLC
-- Unauthorized use of license generation tools is strictly prohibited
+MIT. Prior commercial licensing terms are sunset.
 
 ---
 
-**For internal PhanesGuild Software LLC use only**
-
-*Last Updated: August 11, 2025*
+Last Updated: 2025-09-01 (Open Source Transition)
