@@ -128,6 +128,16 @@ sudo hakpak --status
 
 Historical flags (`--activate`, `--license-status`, `--pro-dashboard`, `--install-pro-suite`) now emit a warning only. Remove them from automation before the next major release.
 
+### Cleanup / Reset Utility
+
+To fully remove a prior install (repo, pins, binaries, state) and optionally reinstall:
+
+```bash
+sudo scripts/clean-reset.sh --help
+sudo scripts/clean-reset.sh --force                    # cleanup only
+sudo scripts/clean-reset.sh --auto-install --force     # cleanup + fetch release + reinstall
+```
+
 ---
 
 ## 📖 Documentation
@@ -301,14 +311,16 @@ Installed Security Tools: (8/15)
 
 | Distribution | Version | Status |
 |--------------|---------|--------|
-| Ubuntu | 24.04 LTS | ✅ Fully Tested |
-| Ubuntu | 22.04 LTS | ✅ Supported |
-| Ubuntu | 20.04 LTS | ✅ Supported |
-| Debian | 12 (Bookworm) | ✅ Supported |
-| Debian | 11 (Bullseye) | ✅ Supported |
-| Pop!_OS | 22.04+ | ✅ Supported |
-| Linux Mint | 21+ | ✅ Supported |
-| Parrot OS | 5.0+ | ✅ Supported |
+| Ubuntu | 24.04 LTS | ✅ Fully Tested (Primary) |
+| Ubuntu | 22.04 LTS | ✅ Baseline Tested |
+| Ubuntu | 20.04 LTS | ✅ Baseline Tested |
+| Debian | 12 (Bookworm) | ✅ Baseline Tested |
+| Debian | 11 (Bullseye) | ✅ Baseline Tested |
+| Pop!_OS | 22.04+ | ⚠️ Experimental |
+| Linux Mint | 21+ | ⚠️ Experimental |
+| Parrot OS | 5.0+ | ⚠️ Experimental |
+
+Experimental: passes distro detection + basic logic; advanced pinning and conflict mitigation not fully validated. Use snapshots/VM and review pin file before large installs.
 
 ---
 

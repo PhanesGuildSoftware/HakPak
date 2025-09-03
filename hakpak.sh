@@ -133,8 +133,12 @@ initialize_hakpak() {
     echo "  sudo hakpak --init                       # Initialize with mode detection"
     echo ""
     echo -e "${BOLD}SUPPORTED DISTRIBUTIONS:${NC}"
-    echo "  • Ubuntu 24.04 LTS (Tested & Verified)"
-    echo "  • Other Debian-based distributions (Untested - Use at own risk)"
+    echo "  • Ubuntu 24.04 LTS (Primary / Fully Tested)"
+    echo "  • Ubuntu 22.04 / 20.04 (Baseline Tested)"
+    echo "  • Debian 11+ (Baseline Tested)"
+    echo "  • Experimental: Pop!_OS, Linux Mint, Parrot OS (not fully validated)"
+    echo ""
+    echo -e "${BOLD}NOTE:${NC} Experimental distributions pass only basic safety checks. Pinning protections may be incomplete. Use snapshots/VMs when evaluating."
     echo ""
     echo -e "${BOLD}AVAILABLE TOOLS (15 Essential Security Tools):${NC}"
     echo "  • Network: nmap, sqlmap, nikto"
@@ -164,7 +168,8 @@ print_version() {
     echo "Universal Kali Tools Installer for Debian-Based Systems"
     echo "Copyright © 2025 PhanesGuild Software LLC"
     echo ""
-    echo "Supported distributions: Ubuntu, Debian, Pop!_OS, Linux Mint, Parrot OS"
+    echo "Supported: Ubuntu (24.04 primary, 22.04/20.04 baseline), Debian 11+"
+    echo "Experimental: Pop!_OS, Linux Mint, Parrot OS (reduced guarantees)"
     echo "This program installs Kali Linux security tools with proper repository management."
     echo ""
 }
@@ -235,19 +240,27 @@ detect_distribution() {
             print_success "Debian $DISTRO_VERSION detected and supported"
             ;;
         pop)
-            print_success "Pop!_OS $DISTRO_VERSION detected and supported"
+            print_warning "Pop!_OS detected (experimental support)"
+            print_info "Proceeding with Ubuntu-derived assumptions; verify pinning manually via 'apt-cache policy'."
             ;;
         linuxmint)
-            print_success "Linux Mint $DISTRO_VERSION detected and supported"
+            print_warning "Linux Mint detected (experimental support)"
+            print_info "Proceeding with Ubuntu-derived assumptions; verify pinning manually."
             ;;
         parrot)
-            print_success "Parrot OS detected and supported"
+            print_warning "Parrot OS detected (experimental support)"
+            print_info "Parrot includes many security tools already; duplication/conflicts possible."
             ;;
         *)
             print_error "Unsupported distribution: $DISTRO_NAME"
-            print_info "Hakpak supports: Ubuntu, Debian, Pop!_OS, Linux Mint, Parrot OS"
-            print_info "For support requests, contact PhanesGuild Software LLC"
-            exit 1
+            print_info "Supported: Ubuntu (24.04 primary, 22.04/20.04 baseline), Debian 11+"
+            print_info "Experimental: Pop!_OS, Linux Mint, Parrot OS"
+            print_info "Override with HAKPAK_FORCE=1 to proceed at your own risk."
+            if [[ "${HAKPAK_FORCE:-}" != "1" ]]; then
+                exit 1
+            else
+                print_warning "Force override enabled (HAKPAK_FORCE=1). Continuing despite unsupported distro."
+            fi
             ;;
     esac
 }
@@ -392,8 +405,18 @@ setup_kali_repository() {
     
     # Add Kali repository
     echo "deb $KALI_REPO_URL kali-rolling main contrib non-free non-free-firmware" | tee /etc/apt/sources.list.d/kali.list > /dev/null
-    
-    # Set up pinning preferences with higher priorities for security tools
+
+    # Determine base origin name for pinning (APT 'o=' field)
+    local base_origin="Ubuntu"
+    case "$DISTRO_ID" in
+        ubuntu) base_origin="Ubuntu" ;;
+        debian) base_origin="Debian" ;;
+        pop) base_origin="Pop!_OS" ;;
+        linuxmint) base_origin="Linux Mint" ;;
+        parrot) base_origin="Parrot" ;;
+    esac
+
+    # Set up pinning preferences with higher priorities for security tools, while protecting core system packages
     cat <<EOF | tee /etc/apt/preferences.d/kali.pref > /dev/null
 # Prevent automatic installation from Kali repository for system packages
 Package: *
@@ -482,7 +505,12 @@ Package: maltego
 Pin: release o=Kali
 Pin-Priority: 500
 
-# Allow all security tools from Kali
+# Protect base distribution core components
+Package: base-files systemd* libc6 libssl* openssh-server openssh-client
+Pin: release o=${base_origin}
+Pin-Priority: 700
+
+# Allow all security/security-adjacent tools from Kali (pattern)
 Package: *cracker* *scan* *exploit* *sec* *hack* *pen* *vuln*
 Pin: release o=Kali
 Pin-Priority: 500
@@ -2606,7 +2634,49 @@ self_test() {
     done
     echo
     print_info "(Legacy license system retired – no checks required)"
+    # Pin verification if Kali repo present
+    if [[ -f /etc/apt/sources.list.d/kali.list ]]; then
+        echo
+        print_info "Verifying pin priorities (sample: openssh-client)..."
+        local policy
+        policy=$(apt-cache policy openssh-client 2>/dev/null || true)
+        if echo "$policy" | grep -q "release.o=Kali" && echo "$policy" | grep -q "700"; then
+            print_success "Pinning detected (base origin priority higher than Kali)."
+        else
+            print_warning "Could not confirm protective pinning for openssh-client. Review /etc/apt/preferences.d/kali.pref"
+        fi
+    fi
     print_info "Self-test complete."
+}
+
+# Verify pin priorities explicitly (separate from broader self-test)
+verify_pins() {
+    detect_distribution
+    if [[ ! -f /etc/apt/sources.list.d/kali.list ]]; then
+        print_warning "Kali repository not configured; nothing to verify."
+        return 0
+    fi
+    if [[ ! -f /etc/apt/preferences.d/kali.pref ]]; then
+        print_warning "Pin file missing: /etc/apt/preferences.d/kali.pref"
+        return 1
+    fi
+    print_info "Checking pin priorities for core packages (openssh-client, libc6)..."
+    local failed=0
+    for pkg in openssh-client libc6; do
+        local policy
+        policy=$(apt-cache policy "$pkg" 2>/dev/null || true)
+        if echo "$policy" | grep -q "release.o=Kali" && echo "$policy" | grep -q "700"; then
+            print_success "Pin OK: $pkg (base origin higher than Kali)"
+        else
+            print_warning "Pin weak or not detected for $pkg. Review policy: apt-cache policy $pkg"
+            failed=1
+        fi
+    done
+    if [[ $failed -eq 0 ]]; then
+        print_success "All sampled core package pins look protective."
+    else
+        print_warning "One or more pins may be ineffective. Adjust /etc/apt/preferences.d/kali.pref."
+    fi
 }
 
 ## (Removed) interactive license paste handler (deprecated)
@@ -2691,6 +2761,11 @@ main() {
         --self-test)
             touch "$LOG_FILE" 2>/dev/null || LOG_FILE="/tmp/hakpak.log"
             self_test
+            exit 0
+            ;;
+        --verify-pins)
+            touch "$LOG_FILE" 2>/dev/null || LOG_FILE="/tmp/hakpak.log"
+            verify_pins
             exit 0
             ;;
         --license-status|--enterprise-status|--validate-license|--enterprise-validate|--activate|--paste-license|--activate-paste|--pro-dashboard|--install-pro-suite)
