@@ -9,7 +9,7 @@
 # Options:
 #   --auto-install            After cleanup, fetch and install HakPak automatically
 #   --source <release|git>    When auto-installing: choose release tarball or git clone (default: release)
-#   --version <X.Y.Z>         Release version to fetch (default: 1.1.0)
+#   --version <X.Y.Z>         Release version to fetch (default: 1.0.0)
 #   --purge-cache             Run apt autoremove/autoclean/clean after removal
 #   --remove-toolkits         Delete any custom toolkits under /var/lib/hakpak/toolkits
 #   --keep-logs               Preserve /var/log/hakpak.log (default is remove)
@@ -20,11 +20,11 @@
 # Examples:
 #   sudo scripts/clean-reset.sh --force
 #   sudo scripts/clean-reset.sh --auto-install --source git --force
-#   sudo scripts/clean-reset.sh --auto-install --version 1.1.0 --purge-cache --remove-toolkits --force
+#   sudo scripts/clean-reset.sh --auto-install --version 1.0.0 --purge-cache --remove-toolkits --force
 #
 set -euo pipefail
 
-VERSION_DEFAULT="1.1.0"
+VERSION_DEFAULT="1.0.0"
 CHOICE_SOURCE="release"
 CHOICE_VERSION="$VERSION_DEFAULT"
 AUTO_INSTALL=0

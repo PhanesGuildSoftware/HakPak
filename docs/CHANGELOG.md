@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Additional distribution self-test coverage
 - Packaging refinements (deb/rpm exploration)
 
-## [1.1.0] - 2025-09-01
+## [1.0.0] - 2025-09-01
 
 ### Changed
 
@@ -21,7 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Simplified dashboard (formerly Pro dashboard) now universally available
 - Updated help text and CLI to mark legacy flags as deprecated no-ops
 
-### Added (1.1.0)
+### Added (1.0.0)
 
 - Release packaging script: `scripts/package-release.sh` for clean distributable archives
 - Deprecation notice in `lib/README.md`
@@ -40,23 +40,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Any automation invoking legacy flags (`--activate`, `--license-status`, `--pro-dashboard`, `--install-pro-suite`) will still succeed but perform no action and emit a warning. Plan to remove these flags in the next major release.
 
 
-### Added (1.0.0)
-- Terms of use acceptance prompt for legal compliance
-- Comprehensive README.md with screenshots and documentation
-- Contributing guidelines for community development
-- Enterprise support contact information
-
-### Changed (1.0.0)
-- Enhanced legal disclaimers throughout application
-- Improved professional presentation and branding
-
-### Security (1.0.0)
-- Added mandatory terms acceptance before tool installation
-- Enhanced legal liability protection measures
-
 ## [1.0.0] - 2025-01-11
 
 ### Added
+
 - Initial release of HakPak Professional Security Toolkit
 - Support for Ubuntu 24.04 LTS (primary platform)
 - Support for Debian 11+ and other Debian-based distributions
@@ -69,12 +56,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - System safety checks and environment validation
 
 #### Security Tools Included
+
 - **Network Analysis**: nmap, wireshark, tcpdump, netcat
 - **Web Testing**: sqlmap, nikto, dirb, gobuster, wfuzz, ffuf
 - **Password Tools**: hydra, john, hashcat
 - **Exploitation**: exploitdb, searchsploit
 
 #### Command-Line Features
+
 - `--help` - Comprehensive help documentation
 - `--version` - Version and system information
 - `--status` - Detailed system and package status
@@ -86,6 +75,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `--interactive` - Interactive menu (default mode)
 
 #### Enterprise Features
+
 - Professional branding and presentation
 - Comprehensive error handling and logging
 - Support for corporate environments
@@ -93,6 +83,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Repository pinning for system stability
 
 ### Technical Implementation
+
 - Bash scripting with strict error handling (`set -euo pipefail`)
 - Modular function design for maintainability
 - APT preference pinning for repository management
@@ -101,12 +92,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Color-coded output for better user experience
 
 ### Security & Legal
+
 - MIT License for open-source compatibility
 - Legal disclaimers for responsible use
 - Professional author attribution
 - Corporate liability protection
 
 ### System Requirements
+
 - Ubuntu 24.04 LTS (fully tested)
 - Debian 11+ (supported)
 - Root/sudo privileges required
@@ -115,11 +108,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - amd64 architecture support
 
 ### Known Issues
+
 - Some Kali packages may have dependency conflicts on certain systems
 - Network connectivity required for all operations
 - Limited to Debian-based distributions only
 
 ### Compatibility
+
 - **Fully Tested**: Ubuntu 24.04 LTS
 - **Supported**: Ubuntu 22.04+, Debian 11+, Pop!_OS 22.04+
 - **Community Tested**: Linux Mint 21+, Parrot OS 5.0+
@@ -130,16 +125,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Version | Release Date | Key Features | Status |
 |---------|--------------|--------------|---------|
-| 1.0.0 | 2025-01-11 | Initial release, 15 tools, Ubuntu 24.04 support | Current |
+| 1.0.0 | 2025-09-01 | Open source transition, licensing removed, packaging script | Current |
+| 1.0.0 | 2025-01-11 | Initial release, 15 tools, Ubuntu 24.04 support | Deprecated (Superseded) |
 
 ---
 
 ## Upgrade Notes
 
 ### From Pre-Release to 1.0.0
+
 This is the initial stable release. No upgrade path needed.
 
 ### Future Upgrades
+
 - Backup your system before major version upgrades
 - Check compatibility with your distribution version
 - Review changelog for breaking changes
@@ -151,6 +149,7 @@ This is the initial stable release. No upgrade path needed.
 
 | Version | Release Date | End of Support | Security Fixes |
 |---------|--------------|----------------|----------------|
+| 1.1.x | 2025-09-01 | 2026-09-01 | Yes |
 | 1.0.x | 2025-01-11 | 2026-01-11 | Yes |
 
 ---
@@ -162,11 +161,12 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on contributing to HakPak 
 ## Security Advisories
 
 Security issues are tracked separately. For security-related concerns:
-- Email: security@phanesguild.llc
+
+- Email: [security@phanesguild.llc](mailto:security@phanesguild.llc)
 - GPG Key: Available on request
 - Response Time: 72 hours maximum
 
 ---
 
 *HakPak is developed and maintained by PhanesGuild Software LLC*  
-*For enterprise support and professional services: enterprise@phanesguild.llc*
+*For enterprise support and professional services: [enterprise@phanesguild.llc](mailto:enterprise@phanesguild.llc)*

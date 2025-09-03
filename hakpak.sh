@@ -6,7 +6,7 @@
 set -euo pipefail
 
 # Version and branding
-readonly HAKPAK_VERSION="1.1.0"
+readonly HAKPAK_VERSION="1.0.0"
 readonly SCRIPT_NAME="HakPak"
 
 # Colors

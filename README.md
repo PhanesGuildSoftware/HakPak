@@ -19,7 +19,7 @@ HakPak delivers **a curated, fully-vetted security arsenal in minutes** — so y
 
 > As of September 2025 HakPak is **fully open source**. All former “Pro” features are now included. Legacy activation flags are inert and will be removed in a future major release.
 
-![HakPak Logo](https://img.shields.io/badge/HakPak-v1.1.0-blue?style=for-the-badge)
+![HakPak Logo](https://img.shields.io/badge/HakPak-v1.0.0-blue?style=for-the-badge)
 ![Platform](https://img.shields.io/badge/Platform-Ubuntu%2024.04-orange?style=for-the-badge)
 ![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
 [![GitHub](https://img.shields.io/badge/GitHub-PhanesGuildSoftware-black?style=for-the-badge&logo=github)](https://github.com/PhanesGuildSoftware)
@@ -79,8 +79,8 @@ HakPak is a professional-grade security toolkit installer that brings essential 
 
 ```bash
 # Option A: Download release package
-wget https://releases.phanesguild.llc/hakpak-v1.1.0.tar.gz
-tar -xzf hakpak-v1.1.0.tar.gz
+wget https://releases.phanesguild.llc/hakpak-v1.0.0.tar.gz
+tar -xzf hakpak-v1.0.0.tar.gz
 cd hakpak/
 
 # Option B: Clone from GitHub
@@ -88,10 +88,66 @@ git clone https://github.com/PhanesGuildSoftware/hakpak.git
 cd hakpak/
 ```
 
+### Direct Forum Download (Single File)
+
+If you're downloading from the community forum where a single self-extracting `.run` file is posted:
+
+```bash
+wget https://releases.phanesguild.llc/hakpak-v1.0.0.run
+sha256sum -c hakpak-v1.0.0.run.sha256  # (optional integrity check if .sha256 posted)
+chmod +x hakpak-v1.0.0.run
+./hakpak-v1.0.0.run
+cd hakpak-v1.0.0
+sudo ./hakpak.sh --install
+```
+
+One-liner (trust on first use – verify checksum separately if possible):
+
+```bash
+bash <(curl -fsSL https://releases.phanesguild.llc/hakpak-v1.0.0.run) || ./hakpak-v1.0.0.run
+```
+
+If the above streaming execution fails due to shell restrictions, just download and execute manually as shown first. Always prefer verifying the accompanying `.sha256` file:
+
+```bash
+curl -fsSLO https://releases.phanesguild.llc/hakpak-v1.0.0.run{,.sha256}
+sha256sum -c hakpak-v1.0.0.run.sha256
+```
+
+Expected output:
+
+```text
+hakpak-v1.0.0.run: OK
+```
+
+If the checksum does NOT match, do **not** run the installer—re-download or notify maintainers.
+
 **Step 2:** Install HakPak to system
 
 ```bash
 sudo ./hakpak.sh --install
+```
+
+### One-Line (Fetch + Install Latest Release)
+
+Recommended for most users who just want it set up quickly:
+
+```bash
+bash <(curl -fsSL https://raw.githubusercontent.com/PhanesGuildSoftware/hakpak/main/scripts/quick-install.sh)
+```
+
+This will:
+
+- Detect latest release tag
+- Clone (or update) into /opt/hakpak
+- Run the installer
+
+
+Afterwards:
+
+```bash
+hakpak --status
+hakpak            # interactive menu
 ```
 
 **Step 3:** Start using HakPak
@@ -231,7 +287,7 @@ Not bundled directly (licensing / size / scope) but compatible with the curated 
 
 ```text
 ╔══════════════════════════════════════════════════════════════╗
-║                        HAKPAK v1.1.0                        ║
+║                        HAKPAK v1.0.0                        ║
 ║            Universal Kali Tools Installer                   ║
 ║              Forge Wisely. Strike Precisely.                ║
 ╚══════════════════════════════════════════════════════════════╝
@@ -258,11 +314,73 @@ Create a clean distributable archive (tar.gz + optional zip) using the provided 
 
 ```bash
 ./scripts/package-release.sh        # auto-detects version from hakpak.sh
-./scripts/package-release.sh 1.1.0  # explicit version
+./scripts/package-release.sh 1.0.0  # explicit version
 ls dist/
 ```
 
 Contents exclude deprecated licensing artifacts. Use the generated archive for publishing on external download portals.
+
+### Authenticity & Verification
+
+You should always verify what you download:
+
+```bash
+# 1. Validate checksum
+sha256sum -c hakpak-v1.0.0.tar.gz.sha256
+sha256sum -c hakpak-v1.0.0.run.sha256
+
+# 2. (If signatures provided)
+curl -fsSLO https://releases.phanesguild.llc/PGSOFTWARE-PUBLIC.asc
+gpg --import PGSOFTWARE-PUBLIC.asc
+gpg --verify hakpak-v1.0.0.tar.gz.sig hakpak-v1.0.0.tar.gz
+gpg --verify hakpak-v1.0.0.sha256.asc
+```
+
+If verification fails: DO NOT run the file—re-download or contact maintainers.
+
+---
+
+## 🧵 Forum Release Post Template
+
+When posting to the community forum, you can use this template:
+
+```text
+Title: HakPak v1.0.0 – Open Source Security Toolkit (Ubuntu/Debian)
+
+HakPak 1.0.0 is now available as a single-file installer or standard archive.
+
+What’s Included:
+ - 15 essential, vetted security tools
+ - Safe Kali repository integration with pin protections
+ - Open source (MIT) – no activation, no telemetry
+ - Self-test & pin verification modes
+
+Download:
+ - Self-extracting: hakpak-v1.0.0.run
+ - Archive: hakpak-v1.0.0.tar.gz
+ - Checksums: hakpak-v1.0.0.sha256 / hakpak-v1.0.0.run.sha256
+ - SBOM: hakpak-v1.0.0-sbom.json
+
+Verify Integrity:
+ sha256sum -c hakpak-v1.0.0.run.sha256
+
+Quick Install:
+ chmod +x hakpak-v1.0.0.run && ./hakpak-v1.0.0.run
+ cd hakpak-v1.0.0 && sudo ./hakpak.sh --install
+
+CLI Examples:
+ hakpak --status
+ hakpak --self-test
+ hakpak --install-tool nmap
+
+Supported Distros:
+ Ubuntu 24.04 (primary), Ubuntu 22.04/20.04 + Debian 11/12 (baseline)
+ Experimental: Pop!_OS, Linux Mint, Parrot OS
+
+Legal Reminder: Use only with explicit authorization. Unauthorized testing may be illegal.
+
+Report Issues: https://github.com/PhanesGuildSoftware/hakpak/issues
+```
 
 
 ```text
