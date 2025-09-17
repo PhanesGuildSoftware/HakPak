@@ -47,14 +47,14 @@ fi
 
 cd "$INSTALL_DIR"
 
-if [[ -f hakpak.sh ]]; then
-  echo "[i] Running install..."
-  ./hakpak.sh --install || { echo "[✗] Install failed" >&2; exit 1; }
+if [[ -f bin/install-hakpak2.sh ]]; then
+  echo "[i] Running v2 system installer..."
+  bash bin/install-hakpak2.sh || { echo "[✗] Install failed" >&2; exit 1; }
 else
-  echo "[✗] hakpak.sh not found after clone" >&2
+  echo "[✗] v2 installer not found after clone" >&2
   exit 1
 fi
 
 echo "[✓] HakPak installed"
-echo "[i] Try: hakpak --status"
-[[ -z "${HAKPAK_NONINTERACTIVE:-}" ]] && echo "[i] Interactive menu: hakpak"
+echo "[i] Try: hakpak2 detect | hakpak2 list"
+[[ -z "${HAKPAK_NONINTERACTIVE:-}" ]] && echo "[i] Interactive menu: hakpak2"

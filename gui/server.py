@@ -4,10 +4,38 @@ import json
 import shutil
 import subprocess
 from pathlib import Path
+import logging
 from flask import Flask, jsonify, request, send_from_directory
+try:
+    from werkzeug.serving import WSGIRequestHandler  # type: ignore
+    _HAVE_WERKZEUG = True
+except Exception:  # pragma: no cover - optional at runtime
+    WSGIRequestHandler = None  # type: ignore
+    _HAVE_WERKZEUG = False
 
 ROOT = Path(__file__).resolve().parent
 APP = Flask(__name__, static_folder=str(ROOT / "static"), static_url_path="/static")
+APP.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0  # serve fresh static files
+
+
+if _HAVE_WERKZEUG:
+    class _QuietHandler(WSGIRequestHandler):
+        def log_request(self, code='-', size='-'):
+            try:
+                c = int(code)
+            except Exception:
+                c = None
+            if c is not None and 400 <= c < 500:
+                return
+            super().log_request(code, size)
+
+        def log_message(self, format, *args):
+            msg = format % args
+            if " 400, message " in msg or "Bad request" in msg:
+                return
+            return super().log_message(format, *args)
+else:
+    _QuietHandler = None  # type: ignore
 
 
 def _hakpak2_cmd():
@@ -36,14 +64,12 @@ def api_detect():
 
 @APP.get("/api/tools")
 def api_tools():
-    rc, out = _run(["hakpak2", "list"])  # text lines "name: methods=..."
-    tools = []
-    for line in out.splitlines():
-        if ":" in line:
-            name, rest = line.split(":", 1)
-            methods = rest.split("methods=")[-1].strip()
-            tools.append({"name": name.strip(), "methods": methods.split(",") if methods else []})
-    return jsonify({"ok": rc == 0, "tools": tools, "raw": out})
+    rc, out = _run(["hakpak2", "list", "--json"])  # JSON list with nativeAvailable
+    try:
+        data = json.loads(out)
+    except Exception:
+        data = {"tools": []}
+    return jsonify({"ok": rc == 0, **data})
 
 
 def _read_state() -> dict:
@@ -86,6 +112,14 @@ def api_uninstall():
     return jsonify({"ok": rc == 0, "output": out, "rc": rc})
 
 
+@APP.post("/api/update")
+def api_update():
+    data = request.get_json(force=True)
+    tool = data.get("tool", "all")
+    rc, out = _run(["hakpak2", "update", tool])
+    return jsonify({"ok": rc == 0, "output": out, "rc": rc})
+
+
 @APP.post("/api/repo")
 def api_repo():
     data = request.get_json(force=True)
@@ -99,7 +133,21 @@ def api_repo():
 def run():
     host = os.environ.get("HAKPAK2_GUI_HOST", "127.0.0.1")
     port = int(os.environ.get("HAKPAK2_GUI_PORT", "8787"))
-    APP.run(host=host, port=port, debug=False)
+    logging.getLogger('werkzeug').setLevel(logging.WARNING)
+    ssl_ctx = None
+    if os.environ.get("HAKPAK2_GUI_SSL", "").lower() in {"1", "true", "yes"}:
+        # Use adhoc self-signed TLS if available; fallback to HTTP if it fails
+        ssl_ctx = "adhoc"
+    try:
+        kwargs = {"host": host, "port": port, "debug": False}
+        if _QuietHandler:
+            kwargs["request_handler"] = _QuietHandler  # type: ignore
+        if ssl_ctx:
+            kwargs["ssl_context"] = ssl_ctx
+        APP.run(**kwargs)
+    except Exception:
+        # Last resort: run plain HTTP without custom handler
+        APP.run(host=host, port=port, debug=False)
 
 
 if __name__ == "__main__":

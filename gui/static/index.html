@@ -4,12 +4,19 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>HakPak v2 GUI</title>
-    <link rel="stylesheet" href="/static/style.css" />
+  <link rel="icon" href="/static/hakpak2.svg?v=20250917a" type="image/svg+xml" />
+    <link rel="stylesheet" href="/static/style.css?v=20250917" />
   </head>
   <body>
     <header>
-      <h1>HakPak <span>v2</span></h1>
-      <div id="detected"></div>
+      <div class="title">
+        <img class="logo" src="/static/hakpak2.svg?v=20250917a" alt="HakPak2" width="28" height="28" />
+      </div>
+      <section id="controls" class="controls">
+        <button id="refreshBtn">Refresh</button>
+        <button id="updateAllBtn" title="Update all installed tools">Update All</button>
+      </section>
+      <div id="detected" class="detected"></div>
     </header>
     <main>
       <section class="panel">
@@ -17,8 +24,34 @@
         <div id="tools" class="tools"></div>
       </section>
       <section class="panel">
+        <h2>Help</h2>
+        <ul>
+          <li><b>Install/Uninstall:</b> Use the buttons on each tool to install or remove it. Installed tools also get an <i>Update</i> button.</li>
+          <li><b>Update All:</b> Use the top <code>Update All</code> to refresh all installed tools.</li>
+          <li><b>Methods:</b> Default is <code>auto</code>. A <code>Native</code> badge means your package manager has that tool.</li>
+          <li><b>Run tools:</b> Open a terminal and run the tool by name (e.g., <code>nmap --help</code>, <code>gobuster --help</code>, <code>sqlmap --help</code>). Many tools provide usage guides via <code>--help</code> or their official docs.</li>
+          <li><b>Popular docs:</b>
+            <a href="https://nmap.org/book/" target="_blank" rel="noopener">Nmap</a> ·
+            <a href="https://github.com/sqlmapproject/sqlmap/wiki" target="_blank" rel="noopener">sqlmap</a> ·
+            <a href="https://github.com/OJ/gobuster" target="_blank" rel="noopener">Gobuster</a> ·
+            <a href="https://github.com/ffuf/ffuf" target="_blank" rel="noopener">ffuf</a> ·
+            <a href="https://www.wireshark.org/docs/" target="_blank" rel="noopener">Wireshark</a> ·
+            <a href="https://hashcat.net/wiki/" target="_blank" rel="noopener">hashcat</a> ·
+            <a href="https://github.com/sullo/nikto" target="_blank" rel="noopener">Nikto</a>
+          </li>
+          <li><b>Wireshark capture:</b> To capture without sudo: <code>sudo usermod -aG wireshark $USER && newgrp wireshark</code>.</li>
+          <li><b>Kali repo (apt):</b> Use Repo controls below to add/status/remove optional Kali repo with safe pinning.</li>
+          <li><b>CLI equivalents:</b> <code>hakpak2 list</code>, <code>hakpak2 install &lt;tools...&gt;</code>, <code>hakpak2 update [tool|all]</code>, <code>hakpak2 uninstall &lt;tools...&gt;</code>.</li>
+          <li><b>State & paths:</b> App lives in <code>/opt/hakpak2</code>; links in <code>/usr/local/bin</code>. See <code>hakpak2 doctor</code>.</li>
+        </ul>
+      </section>
+      <section class="panel">
         <h2>Status</h2>
         <pre id="status" class="status"></pre>
+      </section>
+      <section class="panel warn">
+        <h2>Safety</h2>
+        <p>Use only on systems you own or have explicit, written permission to test. Unauthorized use may be illegal. You accept full responsibility.</p>
       </section>
     </main>
     <footer>
@@ -26,6 +59,6 @@
       <button id="repo-status" class="secondary">Repo Status</button>
       <button id="repo-remove" class="danger">Remove Repo</button>
     </footer>
-    <script src="/static/main.js"></script>
+  <script src="/static/main.js?v=20250917"></script>
   </body>
   </html>

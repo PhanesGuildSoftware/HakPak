@@ -7,16 +7,29 @@ tools:
       pacman: nmap
       zypper: nmap
 
-  sqlmap:
-    binary: sqlmap.py
+  netcat:
+    binary: nc
     packages:
-      apt: sqlmap
-      dnf: sqlmap
-      pacman: sqlmap
-      zypper: sqlmap
-    source:
-      type: python-git
-      repo: https://github.com/sqlmapproject/sqlmap
+      apt: netcat-openbsd
+      dnf: nmap-ncat
+      pacman: openbsd-netcat
+      zypper: netcat-openbsd
+
+  hydra:
+    binary: hydra
+    packages:
+      apt: hydra
+      dnf: hydra
+      pacman: hydra
+      zypper: hydra
+
+  john:
+    binary: john
+    packages:
+      apt: john
+      dnf: john
+      pacman: john
+      zypper: john
 
   gobuster:
     binary: gobuster
@@ -40,53 +53,16 @@ tools:
       type: go
       module: github.com/ffuf/ffuf/v2
 
-  hydra:
-    binary: hydra
+  sqlmap:
+    binary: sqlmap
     packages:
-      apt: hydra
-      dnf: hydra
-      pacman: hydra
-      zypper: hydra
-
-  john:
-    binary: john
-    packages:
-      apt: john
-      dnf: john
-      pacman: john
-      zypper: john
-
-  hashcat:
-    binary: hashcat
-    packages:
-      apt: hashcat
-      dnf: hashcat
-      pacman: hashcat
-      zypper: hashcat
-
-  wireshark:
-    binary: wireshark
-    packages:
-      apt: wireshark
-      dnf: wireshark
-      pacman: wireshark-qt
-      zypper: wireshark
-
-  tcpdump:
-    binary: tcpdump
-    packages:
-      apt: tcpdump
-      dnf: tcpdump
-      pacman: tcpdump
-      zypper: tcpdump
-
-  netcat:
-    binary: nc
-    packages:
-      apt: netcat-openbsd
-      dnf: nmap-ncat
-      pacman: openbsd-netcat
-      zypper: netcat-openbsd
+      apt: sqlmap
+      dnf: sqlmap
+      pacman: sqlmap
+      zypper: sqlmap
+    source:
+      type: python-git
+      repo: https://github.com/sqlmapproject/sqlmap
 
   nikto:
     binary: nikto
@@ -104,6 +80,14 @@ tools:
       pacman: dirb
       zypper: dirb
 
+  tcpdump:
+    binary: tcpdump
+    packages:
+      apt: tcpdump
+      dnf: tcpdump
+      pacman: tcpdump
+      zypper: tcpdump
+
   wfuzz:
     binary: wfuzz
     packages:
@@ -119,3 +103,159 @@ tools:
       dnf: exploitdb
       pacman: exploitdb
       zypper: exploitdb
+    source:
+      type: git-bash
+      repo: https://github.com/offensive-security/exploitdb
+      entry: searchsploit
+
+  wireshark:
+    binary: wireshark
+    packages:
+      apt: wireshark
+      dnf: wireshark
+      pacman: wireshark-qt
+      zypper: wireshark
+
+  hashcat:
+    binary: hashcat
+    packages:
+      apt: hashcat
+      dnf: hashcat
+      pacman: hashcat
+      zypper: hashcat
+
+  aircrack-ng:
+    binary: aircrack-ng
+    packages:
+      apt: aircrack-ng
+      dnf: aircrack-ng
+      pacman: aircrack-ng
+      zypper: aircrack-ng
+
+  reaver:
+    binary: reaver
+    packages:
+      apt: reaver
+      dnf: reaver
+      pacman: reaver-wps-fork-t6x
+      zypper: reaver
+
+  wpscan:
+    binary: wpscan
+    packages:
+      apt: wpscan
+      dnf: wpscan
+      pacman: wpscan
+      zypper: wpscan
+    source:
+      type: ruby-git
+      repo: https://github.com/wpscanteam/wpscan
+      entry: wpscan
+
+  metasploit:
+    binary: msfconsole
+    packages:
+      apt: metasploit-framework
+      dnf: metasploit
+      pacman: metasploit
+      zypper: metasploit
+    source:
+      type: ruby-git
+      repo: https://github.com/rapid7/metasploit-framework
+      entry: msfconsole
+
+  burpsuite:
+    binary: burpsuite
+    packages:
+      apt: burpsuite
+    notes: Vendor/community installers vary; apt is available on Kali-based systems
+
+  fluxion:
+    binary: fluxion
+    source:
+      type: git-bash
+      repo: https://github.com/FluxionNetwork/fluxion
+      entry: fluxion.sh
+    test:
+      args: []
+      acceptReturnCodes: [0, 1]
+      successText: ["fluxion", "FLUXION"]
+
+  lynis:
+    binary: lynis
+    packages:
+      apt: lynis
+      dnf: lynis
+      pacman: lynis
+      zypper: lynis
+
+  tiger:
+    binary: tiger
+    packages:
+      apt: tiger
+      dnf: tiger
+      pacman: tiger
+      zypper: tiger
+
+  set:
+    binary: setoolkit
+    packages:
+      apt: set
+      dnf: setoolkit
+    source:
+      type: python-git
+      repo: https://github.com/trustedsec/social-engineer-toolkit
+
+  yersinia:
+    binary: yersinia
+    packages:
+      apt: yersinia
+      dnf: yersinia
+      pacman: yersinia
+      zypper: yersinia
+
+  beef:
+    binary: beef-xss
+    packages:
+      apt: beef-xss
+      dnf: beef
+      pacman: beef
+      zypper: beef
+    source:
+      type: ruby-git
+      repo: https://github.com/beefproject/beef
+      entry: beef
+
+  skipfish:
+    binary: skipfish
+    packages:
+      apt: skipfish
+      dnf: skipfish
+      pacman: skipfish
+      zypper: skipfish
+
+  autopsy:
+    binary: autopsy
+    packages:
+      apt: autopsy
+      dnf: autopsy
+      pacman: autopsy
+      zypper: autopsy
+
+  king-phisher:
+    binary: king-phisher
+    source:
+      type: python-git
+      repo: https://github.com/securestate/king-phisher
+    test:
+      args: ["--help"]
+      acceptReturnCodes: [0, 1]
+      successText: ["usage", "king-phisher"]
+
+  maltego:
+    binary: maltego
+    notes: Vendor installer required; not available in all repos
+
+  nessus:
+    binary: nessuscli
+    notes: Vendor installer (Tenable); manage outside HakPak2

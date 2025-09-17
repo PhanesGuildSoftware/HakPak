@@ -59,7 +59,7 @@ else
   mkdir -p "$TMP_DIR/assets/brand"
   cp assets/brand/hakpak-logo.* "$TMP_DIR/assets/brand/" 2>/dev/null || true
   cp assets/brand/hakpak-icon-64.png "$TMP_DIR/assets/brand/" 2>/dev/null || true
-  cp assets/brand/hakpak-icon-256.png "$TMP_DIR/assets/brand/" 2>/dev/null || true
+  # Legacy PNG omitted for v2 packages; SVG is canonical
 fi
 
 # Remove any accidental license remnants

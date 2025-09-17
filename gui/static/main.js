@@ -18,8 +18,17 @@ async function refresh(){
     const isInstalled = !!installed[t.name];
     const action = isInstalled ? 'Uninstall' : 'Install';
     const cls = isInstalled ? 'small danger' : 'small';
-    el.innerHTML = `<div><div class="name">${t.name}</div><div class="methods">${(t.methods||[]).join(', ')}</div></div>
-    <div><button class="${cls}" data-action="${action.toLowerCase()}" data-name="${t.name}" data-method="auto">${action}</button></div>`;
+    const nativeBadge = t.nativeAvailable ? '<div class="badges"><span class="badge native" title="Available via package manager">Native</span></div>' : '';
+    const updateBtn = isInstalled ? `<button class="small" data-action="update" data-name="${t.name}">Update</button>` : '';
+    el.innerHTML = `<div>
+        <div class="name">${t.name}</div>
+        ${nativeBadge}
+        <div class="methods">${(t.methods||[]).join(', ')}</div>
+      </div>
+      <div>
+        <button class="${cls}" data-action="${action.toLowerCase()}" data-name="${t.name}" data-method="auto">${action}</button>
+        ${updateBtn}
+      </div>`;
     c.appendChild(el);
   });
   c.onclick = async (e)=>{
@@ -27,15 +36,17 @@ async function refresh(){
     if(!b) return;
     const name = b.getAttribute('data-name');
     const act = b.getAttribute('data-action');
-    b.disabled = true; b.textContent = (act==='uninstall')? 'Uninstalling…' : 'Installing…';
+    b.disabled = true; b.textContent = (act==='uninstall')? 'Uninstalling…' : (act==='update' ? 'Updating…' : 'Installing…');
     let out;
     if(act==='uninstall'){
       out = await api('/api/uninstall', {method:'POST', body: JSON.stringify({tool:name})});
+    } else if(act==='update'){
+      out = await api('/api/update', {method:'POST', body: JSON.stringify({tool:name})});
     } else {
       const method = b.getAttribute('data-method')||'auto';
       out = await api('/api/install', {method:'POST', body: JSON.stringify({tool:name, method})});
     }
-    b.textContent = out.ok? (act==='uninstall'?'Uninstalled':'Installed') : 'Failed';
+    b.textContent = out.ok? (act==='uninstall'?'Uninstalled':(act==='update'?'Updated':'Installed')) : 'Failed';
     setTimeout(()=>{ refresh(); }, 900);
   };
 
@@ -59,5 +70,21 @@ document.getElementById('repo-remove').onclick = async ()=>{
   const r = await api('/api/repo', {method:'POST', body: JSON.stringify({action:'remove'})});
   alert((r.ok?'OK: ':'ERR: ')+ (r.output||''));
 };
+
+// Controls
+const refreshBtn = document.getElementById('refreshBtn');
+if (refreshBtn) refreshBtn.addEventListener('click', ()=>{ refresh(); });
+const updateAllBtn = document.getElementById('updateAllBtn');
+if (updateAllBtn) updateAllBtn.addEventListener('click', async ()=>{
+  updateAllBtn.disabled = true; const prev = updateAllBtn.textContent; updateAllBtn.textContent = 'Updating…';
+  try{
+    const out = await api('/api/update', {method:'POST', body: JSON.stringify({tool:'all'})});
+    alert(out.ok ? 'All tools updated' : (out.output || 'Update failed'));
+  } catch(e){
+    alert(e.message||String(e));
+  } finally {
+    updateAllBtn.disabled = false; updateAllBtn.textContent = prev; refresh();
+  }
+});
 
 refresh();

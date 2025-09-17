@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="HakPak2 Icon">
+  <defs>
+    <!-- Aerial marbling: warped gradient displaced by turbulence, blended subtly -->
+    <linearGradient id="aerialGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0E141A"/>
+      <stop offset="50%" stop-color="#1E2A33"/>
+      <stop offset="100%" stop-color="#0D1117"/>
+    </linearGradient>
+    <filter id="aerial" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.008 0.012" numOctaves="3" seed="11" result="noise"/>
+      <feGaussianBlur in="noise" stdDeviation="0.7" result="soft"/>
+      <feDisplacementMap in="SourceGraphic" in2="soft" scale="22" xChannelSelector="R" yChannelSelector="G" result="disp"/>
+      <feBlend in="disp" in2="SourceGraphic" mode="overlay"/>
+    </filter>
+    <!-- Subtle contour lines effect -->
+    <filter id="contours" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="2" seed="17" result="n"/>
+      <feColorMatrix in="n" type="matrix"
+        values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -8" result="hi"/>
+      <feGaussianBlur in="hi" stdDeviation="0.4"/>
+    </filter>
+  </defs>
+
+  <!-- Base plate -->
+  <rect x="24" y="24" width="464" height="464" rx="64" fill="#0D1117"/>
+  <rect x="24.5" y="24.5" width="463" height="463" rx="63.5" fill="none" stroke="#1A1F24" stroke-width="1"/>
+
+  <!-- Aerial marbled overlay -->
+  <g opacity="0.35" filter="url(#aerial)">
+    <rect x="24" y="24" width="464" height="464" rx="64" fill="url(#aerialGrad)"/>
+  </g>
+  <!-- Contour accents -->
+  <rect x="24" y="24" width="464" height="464" rx="64" fill="#FFFFFF" filter="url(#contours)" opacity="0.06"/>
+
+  <!-- Wordmark -->
+  <text x="256" y="285" text-anchor="middle" font-family="Inter,Segoe UI,Ubuntu,Arial,sans-serif" font-weight="900" font-size="96" fill="#EAF2F5" letter-spacing="0.5">HakPak<tspan fill="#FF4500">2</tspan></text>
+</svg>

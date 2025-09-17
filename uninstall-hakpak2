@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -euo pipefail
+if command -v uninstall-hakpak2 >/dev/null 2>&1; then
+  exec uninstall-hakpak2 "$@"
+else
+  exec "$(dirname "$0")/bin/uninstall-hakpak2.sh" "$@"
+fi

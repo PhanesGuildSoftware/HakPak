@@ -2,7 +2,7 @@
 
 ## 📁 Organized Folder Layout
 
-```
+```text
 HakPak/
 ├── 📖 README.md                 # Main project documentation
 ├── 📄 LICENSE                   # License file
@@ -13,7 +13,8 @@ HakPak/
 │   └── brand/                   # Brand assets
 │       ├── hakpak-logo.svg      # Vector logo
 │       ├── hakpak-logo.png      # High-res PNG logo (512x512)
-│       ├── hakpak-icon-256.png  # Medium icon
+│       ├── hakpak2-icon.svg     # Official HakPak2 logo (used for app icon & favicon)
+│       ├── hakpak-icon-256.png  # Legacy v1 icon (kept for reference)
 │       └── hakpak-icon-64.png   # Small icon
 │
 ├── 🔧 bin/                      # Installation & setup scripts
