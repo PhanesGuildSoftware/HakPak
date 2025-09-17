@@ -64,6 +64,21 @@ HakPak is a professional-grade security toolkit installer that brings essential 
 
 ---
 
+## v2 Preview — Cross‑Distro Dependency Handler
+
+HakPak v2 focuses on installing tools (prefer native packages, fall back to source) across multiple distros, not just Kali-on-Ubuntu. It’s like Katoolin + git‑source automation, but safer. See `docs/V2_OVERVIEW.md`.
+
+Quick try:
+
+```bash
+sudo ./bin/install-hakpak2.sh
+hakpak2 detect
+hakpak2 list
+sudo hakpak2 install ffuf --method auto
+```
+
+Contributors: tools are defined in `v2/tools-map.yaml`.
+
 ## 🚀 Quick Start
 
 ### Prerequisites

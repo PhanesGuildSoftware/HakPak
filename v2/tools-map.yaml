@@ -1,0 +1,121 @@
+tools:
+  nmap:
+    binary: nmap
+    packages:
+      apt: nmap
+      dnf: nmap
+      pacman: nmap
+      zypper: nmap
+
+  sqlmap:
+    binary: sqlmap.py
+    packages:
+      apt: sqlmap
+      dnf: sqlmap
+      pacman: sqlmap
+      zypper: sqlmap
+    source:
+      type: python-git
+      repo: https://github.com/sqlmapproject/sqlmap
+
+  gobuster:
+    binary: gobuster
+    packages:
+      apt: gobuster
+      dnf: gobuster
+      pacman: gobuster
+      zypper: gobuster
+    source:
+      type: go
+      module: github.com/OJ/gobuster/v3/cmd/gobuster
+
+  ffuf:
+    binary: ffuf
+    packages:
+      apt: ffuf
+      dnf: ffuf
+      pacman: ffuf
+      zypper: ffuf
+    source:
+      type: go
+      module: github.com/ffuf/ffuf/v2
+
+  hydra:
+    binary: hydra
+    packages:
+      apt: hydra
+      dnf: hydra
+      pacman: hydra
+      zypper: hydra
+
+  john:
+    binary: john
+    packages:
+      apt: john
+      dnf: john
+      pacman: john
+      zypper: john
+
+  hashcat:
+    binary: hashcat
+    packages:
+      apt: hashcat
+      dnf: hashcat
+      pacman: hashcat
+      zypper: hashcat
+
+  wireshark:
+    binary: wireshark
+    packages:
+      apt: wireshark
+      dnf: wireshark
+      pacman: wireshark-qt
+      zypper: wireshark
+
+  tcpdump:
+    binary: tcpdump
+    packages:
+      apt: tcpdump
+      dnf: tcpdump
+      pacman: tcpdump
+      zypper: tcpdump
+
+  netcat:
+    binary: nc
+    packages:
+      apt: netcat-openbsd
+      dnf: nmap-ncat
+      pacman: openbsd-netcat
+      zypper: netcat-openbsd
+
+  nikto:
+    binary: nikto
+    packages:
+      apt: nikto
+      dnf: nikto
+      pacman: nikto
+      zypper: nikto
+
+  dirb:
+    binary: dirb
+    packages:
+      apt: dirb
+      dnf: dirb
+      pacman: dirb
+      zypper: dirb
+
+  wfuzz:
+    binary: wfuzz
+    packages:
+      apt: wfuzz
+      dnf: wfuzz
+      pacman: wfuzz
+      zypper: wfuzz
+
+  exploitdb:
+    binary: searchsploit
+    packages:
+      apt: exploitdb
+      dnf: exploitdb
+      pacman: exploitdb
+      zypper: exploitdb

@@ -6,6 +6,32 @@
 HAKPAK_DIR="$(dirname "$(readlink -f "$0")")"
 HAKPAK_SCRIPT="${HAKPAK_DIR}/hakpak.sh"
 
+start_web_gui() {
+    if command -v python3 >/dev/null 2>&1; then
+        if python3 -c 'import flask' 2>/dev/null; then
+            echo "[i] Starting HakPak v2 web GUI on http://127.0.0.1:8787" >&2
+            (cd "$HAKPAK_DIR/gui" && exec python3 server.py) &
+            sleep 1
+            if command -v xdg-open >/dev/null 2>&1; then xdg-open http://127.0.0.1:8787 >/dev/null 2>&1; fi
+            wait
+            exit 0
+        else
+            echo "[i] Installing Flask for GUI... (requires pip)" >&2
+            if command -v pip3 >/dev/null 2>&1; then pip3 install flask >/dev/null 2>&1 || true; fi
+            if python3 -c 'import flask' 2>/dev/null; then
+                (cd "$HAKPAK_DIR/gui" && exec python3 server.py) &
+                sleep 1
+                if command -v xdg-open >/dev/null 2>&1; then xdg-open http://127.0.0.1:8787 >/dev/null 2>&1; fi
+                wait
+                exit 0
+            fi
+        fi
+    fi
+}
+
+# Prefer the web GUI; if unavailable, fall back to the original zenity dialogs
+start_web_gui
+
 # Check if zenity is available for GUI dialogs
 if ! command -v zenity >/dev/null 2>&1; then
     echo "Installing zenity for GUI support..."
@@ -16,7 +42,7 @@ fi
 show_main_menu() {
     local choice
     choice=$(zenity --list \
-        --title="HakPak Security Toolkit v1.0.0" \
+    --title="HakPak Security Toolkit" \
         --text="Select an action:" \
         --column="Action" \
         "List Available Tools" \

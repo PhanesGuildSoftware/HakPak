@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>HakPak v2 GUI</title>
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+  <body>
+    <header>
+      <h1>HakPak <span>v2</span></h1>
+      <div id="detected"></div>
+    </header>
+    <main>
+      <section class="panel">
+        <h2>Tools</h2>
+        <div id="tools" class="tools"></div>
+      </section>
+      <section class="panel">
+        <h2>Status</h2>
+        <pre id="status" class="status"></pre>
+      </section>
+    </main>
+    <footer>
+      <button id="repo-add">Add Kali Repo</button>
+      <button id="repo-status" class="secondary">Repo Status</button>
+      <button id="repo-remove" class="danger">Remove Repo</button>
+    </footer>
+    <script src="/static/main.js"></script>
+  </body>
+  </html>
