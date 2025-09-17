@@ -24,6 +24,7 @@ whitelist=(
   hakpak.sh
   hakpak-gui.sh
   scripts/quick-install.sh
+  scripts/uninstall-hakpak2.sh
   v2/hakpak2.py
   v2/tools-map.yaml
   docs/VENDOR_TOOLS.md
@@ -31,6 +32,12 @@ whitelist=(
   docs/EULA.md
   assets/brand/hakpak-logo.svg
   assets/brand/hakpak-icon-256.png
+  assets/brand/hakpak2-icon.svg
+  gui/server.py
+  gui/static/index.html
+  gui/static/style.css
+  gui/static/main.js
+  gui/static/favicon.svg
 )
 
 TMP_STAGE="$DIST_DIR/stage"
