@@ -67,3 +67,29 @@ __pycache__/
 *.deb
 *.rpm
 *.tar.gz
+
+# HakPak2 runtime/state artifacts (not tracked)
+backup-v*.tar.gz
+hakpak2-backup-*.tar.gz
+state.json
+/.state.json
+v2/state.json
+/v2/backup/
+/.python-version
+
+# Tool virtualenvs (created under /opt at runtime, but ignore if created locally during tests)
+venv/
+*/venv/
+v2/venv/
+
+# Local test/install outputs
+hakpak2-test-report.json
+*.coverage
+
+# Generated bin wrappers (installed system-wide, not source)
+opt_hakpak2_bin/
+
+# Release build staging
+release-build/
+release-dist/
+*.buildstamp
