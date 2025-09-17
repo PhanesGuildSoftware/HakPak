@@ -105,6 +105,16 @@ hakpak2 test --all --json | jq '.results | map(select(.ok==false))'
 
 Expected: Only vendor (burpsuite / maltego / nessus) show as not found.
 
+Install all non-vendor tools and re-test (optional full validation):
+
+```bash
+NON_VENDOR=$(hakpak2 list --json | jq -r '.tools[].name' | grep -v -E 'burpsuite|maltego|nessus')
+sudo hakpak2 install $NON_VENDOR --method auto
+hakpak2 test --all | grep -E 'FAIL' || echo "All non-vendor tools passed"
+```
+
+Expected after bulk install: FAIL lines limited to vendor-only tools.
+
 ---
 
 ## 7. Post-Release
