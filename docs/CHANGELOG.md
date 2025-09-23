@@ -170,3 +170,32 @@ Security issues are tracked separately. For security-related concerns:
 
 *HakPak is developed and maintained by PhanesGuild Software LLC*  
 *For enterprise support and professional services: [enterprise@phanesguild.llc](mailto:enterprise@phanesguild.llc)*
+
+## [2025.09.17] - 2025-09-17
+
+### Major
+- HakPak2 release: full cross-distro Kali tool dependency manager
+- Per-tool install: native package preferred, source fallback (Go, Python venv, Ruby Bundler, Git Bash)
+- No more global Python/Ruby pollution; all source installs isolated under /opt/hakpak2
+- Interactive CLI and Flask GUI (dark theme)
+- Bulk install, uninstall, and update flows
+- Automated Wireshark group/cap setup
+- Vendor/manual tools (burpsuite, maltego, nessus) documented separately
+
+### Tooling & Packaging
+- New build script: `scripts/build-dist.sh` for clean distributable tarballs
+- Uninstall/cleanup: `scripts/uninstall-hakpak2.sh` removes all symlinks, venvs, and state
+- Expanded `.gitignore` for venvs, state, build artifacts
+- Release documentation: `RELEASE.md` with packaging, validation, and rollback steps
+- Refactored README for HakPak2 positioning, migration, and quick start
+
+### Testing
+- `hakpak2 test` and `hakpak2 test --all --json` for CI/validation
+- Custom test profiles for tools with non-standard exit codes
+
+### Migration
+- v1 (legacy Bash) is deprecated; v2 is default
+- All legacy license/activation code removed
+
+### Contributors
+- See [CONTRIBUTING.md] for guidelines
