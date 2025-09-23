@@ -157,6 +157,28 @@ Menu-driven bulk (type `all` when prompted) is also supported.
 
 ---
 
+## ▶️ Using Installed Tools
+
+- Direct usage: After installing, run tools normally — no need to mention `hakpak2`.
+- Paths: Native packages land on your system PATH; source installs are linked into `/usr/local/bin`.
+- Examples:
+
+```bash
+sudo hakpak2 install gobuster --method auto
+gobuster -h
+nmap --version
+```
+
+- Troubleshooting PATH: If a tool isn’t found after install, ensure `/usr/local/bin` is in your PATH.
+
+```bash
+export PATH=/usr/local/bin:$PATH
+```
+
+- Vendor tools: Nessus, Maltego, and Burp Suite are vendor-delivered; use the GUI “Get” button to open the official download pages.
+
+---
+
 ## 🔐 Permissions (Wireshark Example)
 
 On installing `wireshark`, HakPak2 will:

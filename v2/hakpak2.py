@@ -8,6 +8,7 @@ import argparse
 import json
 from pathlib import Path
 from typing import Tuple
+from textwrap import dedent
 
 try:
     import yaml  # type: ignore
@@ -586,6 +587,21 @@ def ensure_wireshark_permissions(shell: 'Shell'):
         except Exception:
             pass
         sc = shell.which("setcap")
+        if not sc:
+            try:
+                pm = detect_pm(shell)
+                cap_pkg = {
+                    'apt': 'libcap2-bin',
+                    'dnf': 'libcap',
+                    'yum': 'libcap',
+                    'pacman': 'libcap',
+                    'zypper': 'libcap-progs',
+                }.get(pm)
+                if cap_pkg:
+                    PM_INSTALLERS[pm](shell, [cap_pkg])
+                    sc = shell.which("setcap")
+            except Exception:
+                sc = shell.which("setcap")
         if sc:
             try:
                 shell.run([sc, "cap_net_raw,cap_net_admin=eip", dumpcap], check=False)
@@ -827,7 +843,38 @@ def cmd_doctor(args):
 
 
 def build_parser():
-    p = argparse.ArgumentParser(prog="hakpak2", description="HakPak v2 — Cross-distro dependency handler")
+    p = argparse.ArgumentParser(
+        prog="hakpak2",
+        description="HakPak v2 — Cross-distro dependency handler",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=dedent(
+            f"""
+            Using installed tools
+            - Yes: you run tools directly, without mentioning hakpak2.
+              After install, binaries are on your PATH (native package) or symlinked into {BIN_LINK_DIR}.
+
+            Examples
+            - Install + run:
+                sudo hakpak2 install gobuster --method auto
+                gobuster -h
+                nmap --version
+
+            - Status & tests:
+                hakpak2 status
+                hakpak2 test            # only installed tools
+                hakpak2 test --all      # test every defined tool
+
+            - GUI:
+                hakpak2-gui             # launches the web UI (auto-elevates)
+
+            Notes
+            - Source installs live under /opt/hakpak2 with lightweight links in {BIN_LINK_DIR}.
+            - If a tool is not found after install, ensure {BIN_LINK_DIR} is in your PATH, e.g.:
+                export PATH={BIN_LINK_DIR}:$PATH
+            - Vendor tools (e.g., Nessus, Maltego, Burp): use the GUI “Get” button to download from the vendor site.
+            """
+        ),
+    )
     # Do not require subcommand; we'll route to menu by default
     sub = p.add_subparsers(dest="cmd", required=False)
 
