@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.0] - 2025-09-01
 
-### Changed
+### Changes
 
 - Project fully transitioned to Open Source edition (MIT) — all former "Pro" features unlocked
 - Removed legacy licensing subsystem (`lib/license.sh`, activation, validation code paths)
@@ -199,3 +199,25 @@ Security issues are tracked separately. For security-related concerns:
 
 ### Contributors
 - See [CONTRIBUTING.md] for guidelines
+
+## [2025.09.22] - 2025-09-22
+
+### Added
+
+- README: New "GUI Permissions & Troubleshooting" section with elevation, env vars, desktop entry, and diagnostics guidance.
+
+### Changed
+
+- GUI launcher (`hakpak2-gui`): Auto-elevate with `sudo -E`; improved browser opening from desktop sessions (opens under the invoking user when possible).
+- GUI server (`gui/server.py`): Privileged actions use `sudo` with askpass support; skips sudo when already root.
+- Desktop integration: `.desktop` now includes `TryExec`, `StartupNotify=true`, and uses the canonical SVG icon; icon cache refresh added to installer.
+- Startup UX: URL announced up-front; optional desktop notification; quieted "connection refused" noise during warmup.
+- UI: Modernized header with larger logo and subtitle; responsive tweaks.
+
+### Packaging
+
+- Release dist now includes the updated GUI launcher, server, and assets.
+
+### Integrity
+
+- Version bumped to `2025.09.22` in `v2/hakpak2.py` for packaging.

@@ -9,13 +9,19 @@
   </head>
   <body>
     <header>
-      <div class="title">
-        <img class="logo" src="/static/hakpak2.svg?v=20250917a" alt="HakPak2" width="28" height="28" />
+      <div class="header-inner">
+        <div class="brand">
+          <img class="logo" src="/static/hakpak2.svg?v=20250917a" alt="HakPak2" />
+          <div class="brand-text">
+            <h1>HakPak<span>2</span></h1>
+            <div class="subtitle">Cross‑distro security toolkit</div>
+          </div>
+        </div>
+        <section id="controls" class="controls">
+          <button id="refreshBtn">Refresh</button>
+          <button id="updateAllBtn" title="Update all installed tools">Update All</button>
+        </section>
       </div>
-      <section id="controls" class="controls">
-        <button id="refreshBtn">Refresh</button>
-        <button id="updateAllBtn" title="Update all installed tools">Update All</button>
-      </section>
       <div id="detected" class="detected"></div>
     </header>
     <main>
@@ -29,6 +35,11 @@
           <li><b>Install/Uninstall:</b> Use the buttons on each tool to install or remove it. Installed tools also get an <i>Update</i> button.</li>
           <li><b>Update All:</b> Use the top <code>Update All</code> to refresh all installed tools.</li>
           <li><b>Methods:</b> Default is <code>auto</code>. A <code>Native</code> badge means your package manager has that tool.</li>
+          <li><b>Vendor tools:</b> Tools marked <span class="badge vendor">Vendor</span> (e.g., Nessus, Maltego, Burp Suite) require downloading the installer from the vendor site. The <i>Get</i> button opens the official download page.
+            Quick links: <a href="https://www.tenable.com/products/nessus/nessus-essentials" target="_blank" rel="noopener">Nessus</a> ·
+            <a href="https://www.maltego.com/downloads/" target="_blank" rel="noopener">Maltego</a> ·
+            <a href="https://portswigger.net/burp/communitydownload" target="_blank" rel="noopener">Burp Suite</a>
+          </li>
           <li><b>Run tools:</b> Open a terminal and run the tool by name (e.g., <code>nmap --help</code>, <code>gobuster --help</code>, <code>sqlmap --help</code>). Many tools provide usage guides via <code>--help</code> or their official docs.</li>
           <li><b>Popular docs:</b>
             <a href="https://nmap.org/book/" target="_blank" rel="noopener">Nmap</a> ·

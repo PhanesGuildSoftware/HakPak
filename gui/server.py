@@ -43,12 +43,52 @@ def _hakpak2_cmd():
     return os.environ.get("HAKPAK2_BIN", "hakpak2") if shutil.which("hakpak2") else str(Path(__file__).parents[1] / "hakpak2")
 
 
-def _run(cmd: list[str]) -> tuple[int, str]:
+def _run(cmd: list[str], env: dict | None = None) -> tuple[int, str]:
     try:
-        p = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, check=False, text=True)
+        p = subprocess.run(
+            cmd,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            check=False,
+            text=True,
+            env=env or os.environ,
+        )
         return p.returncode, p.stdout
     except Exception as e:
         return 1, f"error: {e}"
+
+
+def _sudo_prefix() -> tuple[list[str], dict]:
+    # Prefer GUI password prompt if available
+    askpass = None
+    for ap in ("ssh-askpass", "ksshaskpass", "lxqt-sudo"):  # common askpass helpers
+        p = shutil.which(ap)
+        if p:
+            askpass = p
+            break
+    if askpass and os.environ.get("DISPLAY"):
+        env = dict(os.environ)
+        env["SUDO_ASKPASS"] = askpass
+        return ["sudo", "-A"], env
+    # Non-interactive fallback (will fail if password is required)
+    return ["sudo", "-n"], os.environ
+
+
+def _run_priv(cmd: list[str]) -> tuple[int, str]:
+    # If already root (launcher auto-elevates), run directly
+    if os.geteuid() == 0:
+        rc, out = _run(cmd)
+        return rc, out
+    sudo_prefix, env = _sudo_prefix()
+    rc, out = _run(sudo_prefix + cmd, env=env)
+    low = (out or "").lower()
+    if rc != 0 and ("password is required" in low or "no tty present" in low or "permission denied" in low):
+        out = (out or "").rstrip() + (
+            "\n\nHint: This action requires elevated privileges. "
+            "Run the GUI with sudo (sudo -E hakpak2-gui), install a sudo askpass helper (e.g. ssh-askpass), "
+            "or configure NOPASSWD for hakpak2 in sudoers."
+        )
+    return rc, out
 
 
 @APP.route("/")
@@ -98,7 +138,7 @@ def api_install():
     cmd = ["hakpak2", "install", tool, "--method", method]
     if data.get("dryRun"):
         cmd.append("--dry-run")
-    rc, out = _run(cmd)
+    rc, out = _run_priv(cmd)
     return jsonify({"ok": rc == 0, "output": out, "rc": rc})
 
 
@@ -108,7 +148,7 @@ def api_uninstall():
     tool = data.get("tool")
     if not tool:
         return jsonify({"ok": False, "error": "tool required"}), 400
-    rc, out = _run(["hakpak2", "uninstall", tool])
+    rc, out = _run_priv(["hakpak2", "uninstall", tool])
     return jsonify({"ok": rc == 0, "output": out, "rc": rc})
 
 
@@ -116,7 +156,7 @@ def api_uninstall():
 def api_update():
     data = request.get_json(force=True)
     tool = data.get("tool", "all")
-    rc, out = _run(["hakpak2", "update", tool])
+    rc, out = _run_priv(["hakpak2", "update", tool])
     return jsonify({"ok": rc == 0, "output": out, "rc": rc})
 
 
@@ -126,7 +166,8 @@ def api_repo():
     action = data.get("action")
     if action not in ("add", "remove", "status"):
         return jsonify({"ok": False, "error": "action must be add|remove|status"}), 400
-    rc, out = _run(["hakpak2", "repo", action])
+    # Repo operations often require root; always try privileged
+    rc, out = _run_priv(["hakpak2", "repo", action])
     return jsonify({"ok": rc == 0, "output": out, "rc": rc})
 
 

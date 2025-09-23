@@ -70,12 +70,54 @@ bash <(curl -fsSL https://raw.githubusercontent.com/PhanesGuildSoftware/hakpak/m
 
 ---
 
+## 🖥️ GUI Permissions & Troubleshooting
+
+- Launch: Use the desktop icon “HakPak2” or run `hakpak2-gui`. The launcher auto-elevates with `sudo -E` so privileged actions (install/update/uninstall, repo add/remove) work without additional prompts.
+- Manual: If you prefer a terminal, run:
+
+```bash
+sudo -E hakpak2-gui
+```
+
+- URL: The GUI serves at `http://127.0.0.1:8787` by default and prints the URL up front. If a browser doesn’t open automatically, copy that URL into your browser.
+- Env vars: Tune host/port/TLS if needed:
+  - `HAKPAK2_GUI_HOST` (default `127.0.0.1`)
+  - `HAKPAK2_GUI_PORT` (default `8787`)
+  - `HAKPAK2_GUI_SSL=1` to enable ad‑hoc HTTPS (self‑signed)
+
+Example:
+
+```bash
+HAKPAK2_GUI_PORT=8888 sudo -E hakpak2-gui
+```
+
+- Browser opening under sudo: The launcher tries to re‑use your user session to open the browser (even when elevated). If nothing opens, it’s safe to open your browser manually to the printed URL.
+- Venv: The GUI uses `/opt/hakpak2/.venv-gui` when available; otherwise it creates a user‑space venv at `~/.local/share/hakpak2/.venv-gui` and installs Flask as needed.
+- Logs: Start from a terminal to see startup messages. For extra detail:
+
+```bash
+bash -x /usr/local/bin/hakpak2-gui 2>&1 | tee /tmp/hakpak2-gui.log
+```
+
+- Desktop entry: File is at `/usr/share/applications/hakpak2.desktop` pointing to `/usr/local/bin/hakpak2-gui`. If the icon/menu entry doesn’t appear, refresh caches:
+
+```bash
+sudo update-desktop-database /usr/share/applications || true
+sudo gtk-update-icon-cache -q /usr/share/icons/hicolor || true
+```
+
+- Sudo prompts: The backend prefers to run privileged operations without re‑prompt when launched via the auto‑elevating launcher. If you intentionally run the GUI without elevation, install an askpass helper (e.g., `ssh-askpass`) or configure `sudoers` for passwordless execution of `hakpak2` subcommands.
+
+---
+
 ## 🧠 How It Works
 
 1. Detects your package manager.
 2. For each requested tool:
-	- If a native package mapping exists for your PM → install it.
-	- If native fails (or no mapping) → invoke the source strategy (Go / Python Git / Ruby Git / Git Bash wrapper).
+
+    - If a native package mapping exists for your PM → install it.
+    - If native fails (or no mapping) → invoke the source strategy (Go / Python Git / Ruby Git / Git Bash wrapper).
+
 3. Records install metadata (method + binary path) into `state.json`.
 4. Provides a lightweight runtime test using `hakpak2 test`.
 

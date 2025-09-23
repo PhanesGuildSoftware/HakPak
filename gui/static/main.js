@@ -4,6 +4,11 @@ async function api(path, opts={}){
 }
 
 async function refresh(){
+  const vendorUrls = {
+    'nessus': 'https://www.tenable.com/products/nessus/nessus-essentials',
+    'maltego': 'https://www.maltego.com/downloads/',
+    'burpsuite': 'https://portswigger.net/burp/communitydownload'
+  };
   const det = await api('/api/detect');
   document.getElementById('detected').textContent = det.output?.trim() || '';
 
@@ -16,13 +21,17 @@ async function refresh(){
     const el = document.createElement('div');
     el.className='tool';
     const isInstalled = !!installed[t.name];
-    const action = isInstalled ? 'Uninstall' : 'Install';
+    const isVendor = !!vendorUrls[t.name];
+    const action = isInstalled ? 'Uninstall' : (isVendor ? 'Get' : 'Install');
     const cls = isInstalled ? 'small danger' : 'small';
-    const nativeBadge = t.nativeAvailable ? '<div class="badges"><span class="badge native" title="Available via package manager">Native</span></div>' : '';
+    const badges = [];
+    if (t.nativeAvailable) badges.push('<span class="badge native" title="Available via package manager">Native</span>');
+    if (isVendor) badges.push('<span class="badge vendor" title="Vendor download required">Vendor</span>');
+    const badgeHtml = badges.length ? `<div class="badges">${badges.join(' ')}</div>` : '';
     const updateBtn = isInstalled ? `<button class="small" data-action="update" data-name="${t.name}">Update</button>` : '';
     el.innerHTML = `<div>
         <div class="name">${t.name}</div>
-        ${nativeBadge}
+        ${badgeHtml}
         <div class="methods">${(t.methods||[]).join(', ')}</div>
       </div>
       <div>
@@ -36,6 +45,14 @@ async function refresh(){
     if(!b) return;
     const name = b.getAttribute('data-name');
     const act = b.getAttribute('data-action');
+    if(act==='install' && vendorUrls[name]){
+      try{
+        window.open(vendorUrls[name], '_blank', 'noopener');
+      } catch(err){
+        alert('Open this URL to download: '+vendorUrls[name]);
+      }
+      return; // Do not attempt an install via API for vendor tools
+    }
     b.disabled = true; b.textContent = (act==='uninstall')? 'Uninstalling…' : (act==='update' ? 'Updating…' : 'Installing…');
     let out;
     if(act==='uninstall'){

@@ -1,6 +1,16 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Auto-elevate the GUI for privileged operations when not root
+if [ "${EUID:-$(id -u)}" -ne 0 ]; then
+  if command -v sudo >/dev/null 2>&1; then
+    exec sudo -E "$0" "$@"
+  else
+    echo "[!] sudo is required. Install sudo or run as root." >&2
+    exit 1
+  fi
+fi
+
 # HakPak v2 GUI Launcher (Web UI)
 SELF_DIR="$(dirname "$(readlink -f "$0")")"
 # Prefer installed location
@@ -24,6 +34,11 @@ fi
 
 GUI_URL="http://127.0.0.1:8787"
 SERVER_PID=""
+
+echo "[i] HakPak2 GUI will be available at: $GUI_URL" >&2
+if command -v notify-send >/dev/null 2>&1; then
+  notify-send -a "HakPak2" "Starting HakPak2 GUI" "$GUI_URL" || true
+fi
 
 if ! command -v python3 >/dev/null 2>&1; then
   echo "[!] Python3 is required for the HakPak2 GUI." >&2
@@ -107,11 +122,6 @@ wait_for_server() {
       return 0
     fi
     if command -v wget >/dev/null 2>&1 && wget -qO- "$url" >/dev/null 2>&1; then
-      return 0
-    fi
-    # Bash TCP check
-    if exec 3<>"/dev/tcp/127.0.0.1/$port" 2>/dev/null; then
-      exec 3>&-
       return 0
     fi
     sleep 0.25

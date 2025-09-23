@@ -17,7 +17,7 @@ except Exception:
 HAKPAK2_ROOT = Path(os.environ.get("HAKPAK2_ROOT", "/opt/hakpak2")).resolve()
 TOOLS_MAP_PATH = Path(__file__).parent / "tools-map.yaml"
 BIN_LINK_DIR = Path(os.environ.get("HAKPAK2_BIN", "/usr/local/bin"))
-VERSION = "2025.09.17"
+VERSION = "2025.09.22"
 
 
 class Shell:

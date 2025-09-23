@@ -4,13 +4,15 @@
 *{box-sizing:border-box}
 html,body{height:100%}
 body{margin:0;background:var(--bg);color:var(--text);font:14px/1.5 system-ui,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif}
-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--outline);background:linear-gradient(180deg,#0e1317,#0b0f12)}
-.title{display:flex;align-items:center;gap:10px}
-.title .logo{display:inline-block;border-radius:6px;box-shadow:0 2px 6px rgba(0,0,0,.25)}
-.title .meta{color:var(--muted);font-size:12px;margin-top:4px}
-.detected{color:var(--muted)}
-h1{margin:0;font-size:18px;letter-spacing:.5px}
+header{padding:14px 20px;border-bottom:1px solid var(--outline);background:linear-gradient(180deg,#0e1317,#0b0f12)}
+.header-inner{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{display:flex;align-items:center;gap:14px}
+.brand .logo{display:block;width:44px;height:44px;border-radius:10px;box-shadow:0 3px 10px rgba(0,0,0,.35)}
+.brand-text{display:flex;flex-direction:column;gap:2px}
+h1{margin:0;font-size:22px;letter-spacing:.6px}
 h1 span{color:var(--accent)}
+.subtitle{color:var(--muted);font-size:12px}
+.detected{color:var(--muted);margin-top:8px}
 main{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:16px}
 .panel{background:var(--panel);border:1px solid var(--outline);border-radius:10px;padding:12px 14px;box-shadow:0 4px 14px rgba(0,0,0,.3)}
 .panel.warn{border-color:#3a2a2a;background:#131012}
@@ -24,9 +26,16 @@ main{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:16px}
 .tool .badges{display:inline-flex;gap:6px;margin-top:4px}
 .badge{display:inline-block;font-size:11px;padding:2px 6px;border-radius:6px;border:1px solid #234;border-color:var(--outline);color:var(--muted);background:#0c1216}
 .badge.native{color:#6ce5a2;border-color:#24553b;background:#0f1a15}
+.badge.vendor{color:#f3d17a;border-color:#5a4a21;background:#1a160d}
 button{appearance:none;background:var(--accent);color:#1a0b05;border:0;border-radius:8px;padding:8px 12px;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(255,69,0,.25)}
 button.secondary{background:#1f1410;color:var(--accent);border:1px solid #2b150a}
 button.danger{background:transparent;color:var(--red);border:1px solid #3a2020}
 button.small{padding:6px 10px;font-size:12px}
 pre.status{white-space:pre-wrap;background:#0f151a;border:1px solid var(--outline);border-radius:8px;padding:10px;min-height:220px}
 footer{display:flex;gap:8px;align-items:center;justify-content:flex-end;padding:12px 16px;border-top:1px solid var(--outline)}
+
+/* Responsive tweaks */
+@media (max-width: 920px){
+  main{grid-template-columns:1fr}
+  .header-inner{flex-direction:column;align-items:flex-start}
+}
