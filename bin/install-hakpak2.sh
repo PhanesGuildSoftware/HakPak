@@ -167,11 +167,13 @@ Type=Application
 Name=HakPak2
 Comment=HakPak2 GUI
 Exec=/usr/local/bin/hakpak2-gui
+TryExec=/usr/local/bin/hakpak2-gui
 Icon=/usr/share/pixmaps/hakpak2-icon.svg
 Terminal=false
 Categories=Security;Utility;
 Keywords=HakPak;Security;Tools;
-StartupNotify=false
+StartupNotify=true
+X-GNOME-UsesNotifications=true
 DESK
 
 echo "[✓] hakpak2 installed. Try: hakpak2 (menu) | hakpak2-gui (web UI)"

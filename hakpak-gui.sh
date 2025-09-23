@@ -11,7 +11,17 @@ else
   ROOT_DIR="$SELF_DIR"
 fi
 GUI_DIR="$ROOT_DIR/gui"
-VENV_DIR="$ROOT_DIR/.venv-gui"
+
+# Select a writable venv location: use /opt if writable, else per-user data dir
+DEFAULT_VENV_DIR="$ROOT_DIR/.venv-gui"
+USER_DATA_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/hakpak2"
+if [ -w "$ROOT_DIR" ] || [ -w "$(dirname "$DEFAULT_VENV_DIR")" ]; then
+  VENV_DIR="$DEFAULT_VENV_DIR"
+else
+  mkdir -p "$USER_DATA_DIR" >/dev/null 2>&1 || true
+  VENV_DIR="$USER_DATA_DIR/.venv-gui"
+fi
+
 GUI_URL="http://127.0.0.1:8787"
 SERVER_PID=""
 
@@ -44,28 +54,67 @@ install_system_flask() {
 
 open_in_browser() {
   local url="$1"
-  echo "[i] Open your browser to: $url" >&2
-  command -v xdg-open >/dev/null 2>&1 || return 0
-  if [ "${EUID:-$(id -u)}" -eq 0 ] && [ -n "${SUDO_USER:-}" ]; then
-    # Try preserving display/runtime for the invoking user
-    U_UID=$(id -u "$SUDO_USER")
-    # Derive the user's DISPLAY if not present
-    USER_DISPLAY=$(sudo -u "$SUDO_USER" sh -lc 'printf "%s" "${DISPLAY:-:0}"')
-    sudo -u "$SUDO_USER" DISPLAY="$USER_DISPLAY" XDG_RUNTIME_DIR="/run/user/$U_UID" xdg-open "$url" >/dev/null 2>&1 || \
-    su -l "$SUDO_USER" -c "xdg-open '$url'" >/dev/null 2>&1 || \
-    sudo -u "$SUDO_USER" xdg-open "$url" >/dev/null 2>&1 || true
-  else
-    xdg-open "$url" >/dev/null 2>&1 || true
+  # Try multiple launchers to maximize compatibility from .desktop environments
+  for opener in \
+    "xdg-open" \
+    "gio open" \
+    "gnome-open" \
+    "kde-open" \
+    "sensible-browser"; do
+    if [ "$opener" = "xdg-open" ] && command -v xdg-open >/dev/null 2>&1; then
+      if [ "${EUID:-$(id -u)}" -eq 0 ] && [ -n "${SUDO_USER:-}" ]; then
+        U_UID=$(id -u "$SUDO_USER")
+        USER_DISPLAY=$(sudo -u "$SUDO_USER" sh -lc 'printf "%s" "${DISPLAY:-:0}"')
+        sudo -u "$SUDO_USER" DISPLAY="$USER_DISPLAY" XDG_RUNTIME_DIR="/run/user/$U_UID" xdg-open "$url" >/dev/null 2>&1 && return 0 || true
+        su -l "$SUDO_USER" -c "xdg-open '$url'" >/dev/null 2>&1 && return 0 || true
+        sudo -u "$SUDO_USER" xdg-open "$url" >/dev/null 2>&1 && return 0 || true
+      else
+        xdg-open "$url" >/dev/null 2>&1 && return 0 || true
+      fi
+    elif [ "$opener" = "gio open" ] && command -v gio >/dev/null 2>&1; then
+      gio open "$url" >/dev/null 2>&1 && return 0 || true
+    elif [ "$opener" = "gnome-open" ] && command -v gnome-open >/dev/null 2>&1; then
+      gnome-open "$url" >/dev/null 2>&1 && return 0 || true
+    elif [ "$opener" = "kde-open" ] && command -v kde-open >/dev/null 2>&1; then
+      kde-open "$url" >/dev/null 2>&1 && return 0 || true
+    elif [ "$opener" = "sensible-browser" ] && command -v sensible-browser >/dev/null 2>&1; then
+      sensible-browser "$url" >/dev/null 2>&1 && return 0 || true
+    fi
+  done
+  # As a last resort, print the URL (may be unseen if Terminal=false)
+  if command -v python3 >/dev/null 2>&1; then
+    python3 - <<PY
+import webbrowser,sys
+url=sys.argv[1]
+try:
+    webbrowser.open(url)
+except Exception:
+    pass
+PY
   fi
+  echo "[i] Open your browser to: $url" >&2
 }
 
 wait_for_server() {
   local url="$1"
-  for i in $(seq 1 30); do
-    if curl -fsS "$url" >/dev/null 2>&1; then
+  local host="${url#http://}"
+  host="${host#https://}"
+  host="${host%%/*}"
+  local port="${host#*:}"
+  if [ "$host" = "$port" ]; then port=80; fi
+  for i in $(seq 1 40); do
+    if command -v curl >/dev/null 2>&1 && curl -fsS "$url" >/dev/null 2>&1; then
       return 0
     fi
-    sleep 0.3
+    if command -v wget >/dev/null 2>&1 && wget -qO- "$url" >/dev/null 2>&1; then
+      return 0
+    fi
+    # Bash TCP check
+    if exec 3<>"/dev/tcp/127.0.0.1/$port" 2>/dev/null; then
+      exec 3>&-
+      return 0
+    fi
+    sleep 0.25
   done
   return 1
 }
@@ -142,40 +191,19 @@ PY
   then
     echo "[i] Starting HakPak2 web GUI on $GUI_URL (venv)" >&2
     (cd "$GUI_DIR" && exec "$VENV_DIR/bin/python" server.py) &
+    SERVER_PID=$!
   else
     install_system_flask
     if python3 -c 'import flask' >/dev/null 2>&1; then
-  echo "[i] Starting HakPak v2 web GUI on $GUI_URL" >&2
-  (cd "$GUI_DIR" && exec python3 server.py) &
-  SERVER_PID=$!
+      echo "[i] Starting HakPak v2 web GUI on $GUI_URL" >&2
+      (cd "$GUI_DIR" && exec python3 server.py) &
+      SERVER_PID=$!
     else
       echo "[!] Flask is not available. Try: pip3 install flask" >&2
       exit 1
     fi
   fi
-else
-  # Fallback: install Flask via pip. If running as root, avoid --user.
-  if ! python3 -c 'import flask' 2>/dev/null; then
-    echo "[i] Installing Flask for GUI (fallback)..." >&2
-    if command -v pip3 >/dev/null 2>&1; then
-      if [ "${EUID:-$(id -u)}" -eq 0 ]; then
-        pip3 install -q flask --break-system-packages || true
-      else
-        pip3 install -q --user flask || true
-      fi
-    fi
-    # If Flask still missing (e.g., PEP 668), try system package
-    if ! python3 -c 'import flask' 2>/dev/null; then
-      install_system_flask
-    fi
-    if ! python3 -c 'import flask' 2>/dev/null; then
-      echo "[!] Flask is not available. Install via: sudo apt install python3-flask" >&2
-      exit 1
-    fi
-  fi
-  echo "[i] Starting HakPak v2 web GUI on $GUI_URL" >&2
-  (cd "$GUI_DIR" && exec python3 server.py) &
-  SERVER_PID=$!
+fi
 fi
 
 wait_for_server "$GUI_URL" || true

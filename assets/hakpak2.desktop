@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=HakPak2
+Comment=HakPak2 GUI
+Exec=/usr/local/bin/hakpak2-gui
+Icon=/usr/share/pixmaps/hakpak2-icon.svg
+Terminal=false
+Categories=Security;Utility;
+Keywords=HakPak;Security;Tools;
+StartupNotify=true
+X-GNOME-UsesNotifications=true
