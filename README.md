@@ -197,16 +197,55 @@ sudo usermod -aG wireshark "$USER" && newgrp wireshark
 
 ## 📦 Included & Supported Tools
 
-See definitive mapping in `v2/tools-map.yaml`. Highlights:
+See definitive mapping in `v2/tools-map.yaml`. Below are the tools organized by purpose:
 
-| Category | Tools |
-|----------|-------|
-| Network / Capture | nmap, tcpdump, wireshark, netcat, yersinia |
-| Web Fuzz / Recon | gobuster, ffuf, dirb, wfuzz, skipfish, sqlmap, nikto |
-| Password / Auth | hydra, john, hashcat, reaver |
-| Exploitation / Research | exploitdb / searchsploit, metasploit, set, beef, wpscan, king-phisher, fluxion |
+### Network Scanning & Reconnaissance
+- **nmap** - Network scanner, port scanning, service detection
+- **tcpdump** - Network packet analyzer and sniffer
+- **wireshark** - GUI network protocol analyzer
 
-Vendor / manual (documented, not auto-installed): **burpsuite**, **maltego**, **nessus** (see `docs/VENDOR_TOOLS.md`).
+### Web Application Testing
+- **gobuster** - Directory/file/DNS brute-forcing
+- **ffuf** - Fast web fuzzer for discovering hidden files/directories
+- **nikto** - Web server scanner
+- **dirb** - Web content scanner
+- **wfuzz** - Web application fuzzer
+- **sqlmap** - Automated SQL injection detection & exploitation
+- **wpscan** - WordPress vulnerability scanner
+- **skipfish** - Web application security scanner
+
+### Password Cracking & Authentication
+- **hydra** - Network login cracker (brute force)
+- **john** - John the Ripper password cracker
+- **hashcat** - Advanced password recovery/cracking
+
+### Wireless Attacks
+- **aircrack-ng** - WiFi security auditing suite
+- **reaver** - WPS brute-force attack tool
+- **fluxion** - Wireless security testing toolkit
+
+### Exploitation & Frameworks
+- **metasploit** - Penetration testing framework
+- **exploitdb** - Searchable exploit database (searchsploit)
+- **beef** - Browser Exploitation Framework
+- **set** - Social Engineering Toolkit
+
+### Security Auditing
+- **lynis** - Security auditing tool for Unix systems
+- **tiger** - Security audit & intrusion detection system
+- **yersinia** - Network protocol security testing
+
+### Utilities
+- **netcat** - Network utility for reading/writing network connections
+- **autopsy** - Digital forensics platform
+- **king-phisher** - Phishing campaign toolkit
+
+### Vendor Tools (Manual Install Required)
+- **burpsuite** - Web app security testing (PortSwigger)
+- **maltego** - Data mining/link analysis (Paterva)
+- **nessus** - Vulnerability scanner (Tenable)
+
+For vendor tool installation guides, see `docs/VENDOR_TOOLS.md`.
 
 ---
 

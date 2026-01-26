@@ -1,0 +1,1175 @@
+# HakPak3 Comprehensive Kali Linux Tools Database
+# Organized by Kali metapackages and security categories
+# Each tool includes compatibility, dependencies, and resource metrics
+
+# Information Gathering Tools
+information_gathering:
+  nmap:
+    binary: nmap
+    description: "Network exploration and security auditing"
+    packages:
+      apt: nmap
+      dnf: nmap
+      pacman: nmap
+      zypper: nmap
+    kali_metapackage: kali-tools-information-gathering
+    tags: [network, scanner, port-scanner]
+    metrics:
+      estimated_size_mb: 8.5
+      dependencies_size_mb: 12.0
+      ram_required_mb: 128
+    dependencies: []
+
+  masscan:
+    binary: masscan
+    description: "Fast TCP port scanner"
+    packages:
+      apt: masscan
+      dnf: masscan
+      pacman: masscan
+      zypper: masscan
+    kali_metapackage: kali-tools-information-gathering
+    tags: [network, scanner, fast-scanner]
+    metrics:
+      estimated_size_mb: 2.5
+      dependencies_size_mb: 5.0
+      ram_required_mb: 256
+    dependencies: []
+
+  unicornscan:
+    binary: unicornscan
+    description: "User-land distributed TCP/IP stack scanner"
+    packages:
+      apt: unicornscan
+      dnf: unicornscan
+      pacman: unicornscan
+    kali_metapackage: kali-tools-information-gathering
+    tags: [network, scanner]
+    metrics:
+      estimated_size_mb: 1.8
+      dependencies_size_mb: 3.5
+      ram_required_mb: 128
+    dependencies: []
+
+  dnsenum:
+    binary: dnsenum
+    description: "DNS enumeration tool"
+    packages:
+      apt: dnsenum
+      dnf: dnsenum
+      pacman: dnsenum
+    kali_metapackage: kali-tools-information-gathering
+    tags: [dns, enumeration, recon]
+    metrics:
+      estimated_size_mb: 0.5
+      dependencies_size_mb: 15.0
+      ram_required_mb: 64
+    dependencies: [perl]
+
+  dnsmap:
+    binary: dnsmap
+    description: "DNS domain name brute forcing"
+    packages:
+      apt: dnsmap
+      dnf: dnsmap
+      pacman: dnsmap
+    kali_metapackage: kali-tools-information-gathering
+    tags: [dns, brute-force]
+    metrics:
+      estimated_size_mb: 0.3
+      dependencies_size_mb: 2.0
+      ram_required_mb: 64
+    dependencies: []
+
+  dnsrecon:
+    binary: dnsrecon
+    description: "DNS enumeration and scanning tool"
+    packages:
+      apt: dnsrecon
+      dnf: dnsrecon
+      pacman: dnsrecon
+    kali_metapackage: kali-tools-information-gathering
+    tags: [dns, enumeration, python]
+    metrics:
+      estimated_size_mb: 1.2
+      dependencies_size_mb: 25.0
+      ram_required_mb: 128
+    dependencies: [python3]
+
+  dnswalk:
+    binary: dnswalk
+    description: "DNS debugger"
+    packages:
+      apt: dnswalk
+      dnf: dnswalk
+      pacman: dnswalk
+    kali_metapackage: kali-tools-information-gathering
+    tags: [dns, debugging]
+    metrics:
+      estimated_size_mb: 0.2
+      dependencies_size_mb: 8.0
+      ram_required_mb: 64
+    dependencies: [perl]
+
+  fierce:
+    binary: fierce
+    description: "DNS reconnaissance tool"
+    packages:
+      apt: fierce
+      dnf: fierce
+      pacman: fierce
+    kali_metapackage: kali-tools-information-gathering
+    tags: [dns, recon, python]
+    metrics:
+      estimated_size_mb: 0.8
+      dependencies_size_mb: 20.0
+      ram_required_mb: 128
+    dependencies: [python3]
+
+  dmitry:
+    binary: dmitry
+    description: "Deepmagic Information Gathering Tool"
+    packages:
+      apt: dmitry
+      dnf: dmitry
+      pacman: dmitry
+    kali_metapackage: kali-tools-information-gathering
+    tags: [info-gathering, recon]
+    metrics:
+      estimated_size_mb: 0.4
+      dependencies_size_mb: 2.5
+      ram_required_mb: 64
+    dependencies: []
+
+  netdiscover:
+    binary: netdiscover
+    description: "Active/passive ARP reconnaissance tool"
+    packages:
+      apt: netdiscover
+      dnf: netdiscover
+      pacman: netdiscover
+    kali_metapackage: kali-tools-information-gathering
+    tags: [network, arp, discovery]
+    metrics:
+      estimated_size_mb: 0.3
+      dependencies_size_mb: 1.5
+      ram_required_mb: 64
+    dependencies: []
+
+  theharvester:
+    binary: theHarvester
+    description: "E-mail, subdomain and people names harvester"
+    packages:
+      apt: theharvester
+      dnf: theharvester
+      pacman: theharvester
+    kali_metapackage: kali-tools-information-gathering
+    tags: [osint, email, recon, python]
+    metrics:
+      estimated_size_mb: 2.5
+      dependencies_size_mb: 35.0
+      ram_required_mb: 256
+    dependencies: [python3]
+
+  maltego:
+    binary: maltego
+    description: "Open source intelligence and forensics application"
+    packages:
+      apt: maltego
+    kali_metapackage: kali-tools-information-gathering
+    tags: [osint, gui, java]
+    metrics:
+      estimated_size_mb: 180.0
+      dependencies_size_mb: 250.0
+      ram_required_mb: 2048
+    dependencies: [java]
+
+  recon-ng:
+    binary: recon-ng
+    description: "Web reconnaissance framework"
+    packages:
+      apt: recon-ng
+      dnf: recon-ng
+      pacman: recon-ng
+    kali_metapackage: kali-tools-information-gathering
+    tags: [osint, framework, python]
+    metrics:
+      estimated_size_mb: 5.0
+      dependencies_size_mb: 40.0
+      ram_required_mb: 256
+    dependencies: [python3]
+
+  shodan:
+    binary: shodan
+    description: "CLI for Shodan search engine"
+    packages:
+      apt: python3-shodan
+      dnf: python3-shodan
+    source:
+      type: pip
+      package: shodan
+    kali_metapackage: kali-tools-information-gathering
+    tags: [osint, api, python]
+    metrics:
+      estimated_size_mb: 1.5
+      dependencies_size_mb: 15.0
+      ram_required_mb: 128
+    dependencies: [python3, python3-pip]
+
+  spiderfoot:
+    binary: spiderfoot
+    description: "OSINT automation tool"
+    packages:
+      apt: spiderfoot
+    source:
+      type: python-git
+      repo: https://github.com/smicallef/spiderfoot
+    kali_metapackage: kali-tools-information-gathering
+    tags: [osint, automation, python]
+    metrics:
+      estimated_size_mb: 25.0
+      dependencies_size_mb: 60.0
+      ram_required_mb: 512
+    dependencies: [python3]
+
+# Vulnerability Analysis
+vulnerability_analysis:
+  nikto:
+    binary: nikto
+    description: "Web server scanner"
+    packages:
+      apt: nikto
+      dnf: nikto
+      pacman: nikto
+      zypper: nikto
+    kali_metapackage: kali-tools-vulnerability
+    tags: [web, scanner, perl]
+    metrics:
+      estimated_size_mb: 2.8
+      dependencies_size_mb: 25.0
+      ram_required_mb: 256
+    dependencies: [perl]
+
+  openvas:
+    binary: openvas
+    description: "Open Vulnerability Assessment System"
+    packages:
+      apt: openvas
+      dnf: openvas
+    kali_metapackage: kali-tools-vulnerability
+    tags: [vulnerability, scanner, comprehensive]
+    metrics:
+      estimated_size_mb: 150.0
+      dependencies_size_mb: 300.0
+      ram_required_mb: 2048
+    dependencies: []
+
+  lynis:
+    binary: lynis
+    description: "Security auditing tool for Unix/Linux systems"
+    packages:
+      apt: lynis
+      dnf: lynis
+      pacman: lynis
+      zypper: lynis
+    kali_metapackage: kali-tools-vulnerability
+    tags: [audit, security, bash]
+    metrics:
+      estimated_size_mb: 1.5
+      dependencies_size_mb: 5.0
+      ram_required_mb: 128
+    dependencies: []
+
+  unix-privesc-check:
+    binary: unix-privesc-check
+    description: "Privilege escalation checker"
+    packages:
+      apt: unix-privesc-check
+    kali_metapackage: kali-tools-vulnerability
+    tags: [privilege-escalation, audit]
+    metrics:
+      estimated_size_mb: 0.3
+      dependencies_size_mb: 1.0
+      ram_required_mb: 64
+    dependencies: []
+
+  yersinia:
+    binary: yersinia
+    description: "Layer 2 attack framework"
+    packages:
+      apt: yersinia
+      dnf: yersinia
+      pacman: yersinia
+      zypper: yersinia
+    kali_metapackage: kali-tools-vulnerability
+    tags: [layer2, attack, network]
+    metrics:
+      estimated_size_mb: 1.2
+      dependencies_size_mb: 8.0
+      ram_required_mb: 128
+    dependencies: []
+
+# Web Application Analysis
+web_application:
+  burpsuite:
+    binary: burpsuite
+    description: "Web vulnerability scanner"
+    packages:
+      apt: burpsuite
+    kali_metapackage: kali-tools-web
+    tags: [web, proxy, scanner, java, gui]
+    metrics:
+      estimated_size_mb: 350.0
+      dependencies_size_mb: 200.0
+      ram_required_mb: 2048
+    dependencies: [java]
+
+  sqlmap:
+    binary: sqlmap
+    description: "Automatic SQL injection tool"
+    packages:
+      apt: sqlmap
+      dnf: sqlmap
+      pacman: sqlmap
+      zypper: sqlmap
+    source:
+      type: python-git
+      repo: https://github.com/sqlmapproject/sqlmap
+    kali_metapackage: kali-tools-web
+    tags: [web, sql-injection, python]
+    metrics:
+      estimated_size_mb: 15.0
+      dependencies_size_mb: 30.0
+      ram_required_mb: 256
+    dependencies: [python3]
+
+  wpscan:
+    binary: wpscan
+    description: "WordPress security scanner"
+    packages:
+      apt: wpscan
+      dnf: wpscan
+      pacman: wpscan
+      zypper: wpscan
+    source:
+      type: ruby-git
+      repo: https://github.com/wpscanteam/wpscan
+    kali_metapackage: kali-tools-web
+    tags: [web, wordpress, ruby]
+    metrics:
+      estimated_size_mb: 8.0
+      dependencies_size_mb: 45.0
+      ram_required_mb: 256
+    dependencies: [ruby]
+
+  dirb:
+    binary: dirb
+    description: "Web content scanner"
+    packages:
+      apt: dirb
+      dnf: dirb
+      pacman: dirb
+      zypper: dirb
+    kali_metapackage: kali-tools-web
+    tags: [web, directory, brute-force]
+    metrics:
+      estimated_size_mb: 2.5
+      dependencies_size_mb: 5.0
+      ram_required_mb: 128
+    dependencies: []
+
+  dirbuster:
+    binary: dirbuster
+    description: "Multi-threaded web directory brute forcer"
+    packages:
+      apt: dirbuster
+      dnf: dirbuster
+    kali_metapackage: kali-tools-web
+    tags: [web, directory, brute-force, java, gui]
+    metrics:
+      estimated_size_mb: 12.0
+      dependencies_size_mb: 150.0
+      ram_required_mb: 512
+    dependencies: [java]
+
+  gobuster:
+    binary: gobuster
+    description: "Directory/file & DNS busting tool"
+    packages:
+      apt: gobuster
+      dnf: gobuster
+      pacman: gobuster
+      zypper: gobuster
+    source:
+      type: go
+      module: github.com/OJ/gobuster/v3/cmd/gobuster
+    kali_metapackage: kali-tools-web
+    tags: [web, directory, dns, go]
+    metrics:
+      estimated_size_mb: 8.0
+      dependencies_size_mb: 15.0
+      ram_required_mb: 256
+    dependencies: []
+
+  ffuf:
+    binary: ffuf
+    description: "Fast web fuzzer"
+    packages:
+      apt: ffuf
+      dnf: ffuf
+      pacman: ffuf
+      zypper: ffuf
+    source:
+      type: go
+      module: github.com/ffuf/ffuf/v2
+    kali_metapackage: kali-tools-web
+    tags: [web, fuzzer, go]
+    metrics:
+      estimated_size_mb: 6.0
+      dependencies_size_mb: 10.0
+      ram_required_mb: 256
+    dependencies: []
+
+  wfuzz:
+    binary: wfuzz
+    description: "Web application fuzzer"
+    packages:
+      apt: wfuzz
+      dnf: wfuzz
+      pacman: wfuzz
+      zypper: wfuzz
+    kali_metapackage: kali-tools-web
+    tags: [web, fuzzer, python]
+    metrics:
+      estimated_size_mb: 3.5
+      dependencies_size_mb: 35.0
+      ram_required_mb: 256
+    dependencies: [python3]
+
+  skipfish:
+    binary: skipfish
+    description: "Active web application security scanner"
+    packages:
+      apt: skipfish
+      dnf: skipfish
+      pacman: skipfish
+      zypper: skipfish
+    kali_metapackage: kali-tools-web
+    tags: [web, scanner]
+    metrics:
+      estimated_size_mb: 1.5
+      dependencies_size_mb: 4.0
+      ram_required_mb: 256
+    dependencies: []
+
+  commix:
+    binary: commix
+    description: "Command injection exploiter"
+    packages:
+      apt: commix
+      dnf: commix
+      pacman: commix
+    kali_metapackage: kali-tools-web
+    tags: [web, command-injection, python]
+    metrics:
+      estimated_size_mb: 2.0
+      dependencies_size_mb: 25.0
+      ram_required_mb: 256
+    dependencies: [python3]
+
+  zaproxy:
+    binary: zaproxy
+    description: "OWASP ZAP web application security scanner"
+    packages:
+      apt: zaproxy
+      dnf: zaproxy
+    kali_metapackage: kali-tools-web
+    tags: [web, proxy, scanner, java, gui]
+    metrics:
+      estimated_size_mb: 280.0
+      dependencies_size_mb: 180.0
+      ram_required_mb: 1024
+    dependencies: [java]
+
+# Password Attacks
+password_attacks:
+  john:
+    binary: john
+    description: "John the Ripper password cracker"
+    packages:
+      apt: john
+      dnf: john
+      pacman: john
+      zypper: john
+    kali_metapackage: kali-tools-passwords
+    tags: [password, cracker]
+    metrics:
+      estimated_size_mb: 45.0
+      dependencies_size_mb: 25.0
+      ram_required_mb: 512
+    dependencies: []
+
+  hashcat:
+    binary: hashcat
+    description: "Advanced password recovery"
+    packages:
+      apt: hashcat
+      dnf: hashcat
+      pacman: hashcat
+      zypper: hashcat
+    kali_metapackage: kali-tools-passwords
+    tags: [password, cracker, gpu]
+    metrics:
+      estimated_size_mb: 35.0
+      dependencies_size_mb: 40.0
+      ram_required_mb: 1024
+    dependencies: []
+
+  hydra:
+    binary: hydra
+    description: "Network logon cracker"
+    packages:
+      apt: hydra
+      dnf: hydra
+      pacman: hydra
+      zypper: hydra
+    kali_metapackage: kali-tools-passwords
+    tags: [password, brute-force, network]
+    metrics:
+      estimated_size_mb: 2.5
+      dependencies_size_mb: 12.0
+      ram_required_mb: 256
+    dependencies: []
+
+  medusa:
+    binary: medusa
+    description: "Speedy, parallel, modular login bruter"
+    packages:
+      apt: medusa
+      dnf: medusa
+      pacman: medusa
+    kali_metapackage: kali-tools-passwords
+    tags: [password, brute-force]
+    metrics:
+      estimated_size_mb: 1.8
+      dependencies_size_mb: 8.0
+      ram_required_mb: 256
+    dependencies: []
+
+  ncrack:
+    binary: ncrack
+    description: "High-speed network authentication cracker"
+    packages:
+      apt: ncrack
+      dnf: ncrack
+      pacman: ncrack
+    kali_metapackage: kali-tools-passwords
+    tags: [password, brute-force, network]
+    metrics:
+      estimated_size_mb: 1.5
+      dependencies_size_mb: 6.0
+      ram_required_mb: 256
+    dependencies: []
+
+  ophcrack:
+    binary: ophcrack
+    description: "Windows password cracker using rainbow tables"
+    packages:
+      apt: ophcrack
+      dnf: ophcrack
+    kali_metapackage: kali-tools-passwords
+    tags: [password, windows, rainbow-tables]
+    metrics:
+      estimated_size_mb: 2.0
+      dependencies_size_mb: 15.0
+      ram_required_mb: 512
+    dependencies: []
+
+  crunch:
+    binary: crunch
+    description: "Wordlist generator"
+    packages:
+      apt: crunch
+      dnf: crunch
+      pacman: crunch
+    kali_metapackage: kali-tools-passwords
+    tags: [wordlist, generator]
+    metrics:
+      estimated_size_mb: 0.5
+      dependencies_size_mb: 1.0
+      ram_required_mb: 256
+    dependencies: []
+
+  cewl:
+    binary: cewl
+    description: "Custom wordlist generator"
+    packages:
+      apt: cewl
+      dnf: cewl
+      pacman: cewl
+    kali_metapackage: kali-tools-passwords
+    tags: [wordlist, generator, ruby]
+    metrics:
+      estimated_size_mb: 0.8
+      dependencies_size_mb: 35.0
+      ram_required_mb: 256
+    dependencies: [ruby]
+
+# Wireless Attacks
+wireless_attacks:
+  aircrack-ng:
+    binary: aircrack-ng
+    description: "WiFi security auditing tools suite"
+    packages:
+      apt: aircrack-ng
+      dnf: aircrack-ng
+      pacman: aircrack-ng
+      zypper: aircrack-ng
+    kali_metapackage: kali-tools-wireless
+    tags: [wireless, wifi, cracking]
+    metrics:
+      estimated_size_mb: 5.5
+      dependencies_size_mb: 12.0
+      ram_required_mb: 256
+    dependencies: []
+
+  reaver:
+    binary: reaver
+    description: "Brute force attack against WPS"
+    packages:
+      apt: reaver
+      dnf: reaver
+      pacman: reaver-wps-fork-t6x
+      zypper: reaver
+    kali_metapackage: kali-tools-wireless
+    tags: [wireless, wps, brute-force]
+    metrics:
+      estimated_size_mb: 0.8
+      dependencies_size_mb: 4.0
+      ram_required_mb: 128
+    dependencies: []
+
+  bully:
+    binary: bully
+    description: "WPS brute force attack tool"
+    packages:
+      apt: bully
+      dnf: bully
+      pacman: bully
+    kali_metapackage: kali-tools-wireless
+    tags: [wireless, wps, brute-force]
+    metrics:
+      estimated_size_mb: 0.6
+      dependencies_size_mb: 3.0
+      ram_required_mb: 128
+    dependencies: []
+
+  wifite:
+    binary: wifite
+    description: "Automated wireless attack tool"
+    packages:
+      apt: wifite
+      dnf: wifite
+      pacman: wifite
+    kali_metapackage: kali-tools-wireless
+    tags: [wireless, automated, python]
+    metrics:
+      estimated_size_mb: 1.5
+      dependencies_size_mb: 25.0
+      ram_required_mb: 256
+    dependencies: [python3, aircrack-ng]
+
+  kismet:
+    binary: kismet
+    description: "Wireless network detector and sniffer"
+    packages:
+      apt: kismet
+      dnf: kismet
+      pacman: kismet
+    kali_metapackage: kali-tools-wireless
+    tags: [wireless, sniffer, detector]
+    metrics:
+      estimated_size_mb: 12.0
+      dependencies_size_mb: 35.0
+      ram_required_mb: 512
+    dependencies: []
+
+  pixiewps:
+    binary: pixiewps
+    description: "Offline WPS brute force tool"
+    packages:
+      apt: pixiewps
+      dnf: pixiewps
+      pacman: pixiewps
+    kali_metapackage: kali-tools-wireless
+    tags: [wireless, wps, offline]
+    metrics:
+      estimated_size_mb: 0.3
+      dependencies_size_mb: 1.5
+      ram_required_mb: 128
+    dependencies: []
+
+  fern-wifi-cracker:
+    binary: fern-wifi-cracker
+    description: "Wireless security auditing tool (GUI)"
+    packages:
+      apt: fern-wifi-cracker
+    kali_metapackage: kali-tools-wireless
+    tags: [wireless, gui, python]
+    metrics:
+      estimated_size_mb: 3.0
+      dependencies_size_mb: 45.0
+      ram_required_mb: 512
+    dependencies: [python3, aircrack-ng]
+
+# Exploitation Tools
+exploitation:
+  metasploit-framework:
+    binary: msfconsole
+    description: "Penetration testing framework"
+    packages:
+      apt: metasploit-framework
+      dnf: metasploit
+      pacman: metasploit
+      zypper: metasploit
+    source:
+      type: ruby-git
+      repo: https://github.com/rapid7/metasploit-framework
+    kali_metapackage: kali-tools-exploitation
+    tags: [exploitation, framework, ruby]
+    metrics:
+      estimated_size_mb: 450.0
+      dependencies_size_mb: 350.0
+      ram_required_mb: 2048
+    dependencies: [ruby, postgresql]
+
+  beef-xss:
+    binary: beef-xss
+    description: "Browser Exploitation Framework"
+    packages:
+      apt: beef-xss
+      dnf: beef
+      pacman: beef
+      zypper: beef
+    source:
+      type: ruby-git
+      repo: https://github.com/beefproject/beef
+    kali_metapackage: kali-tools-exploitation
+    tags: [exploitation, browser, xss, ruby]
+    metrics:
+      estimated_size_mb: 25.0
+      dependencies_size_mb: 80.0
+      ram_required_mb: 512
+    dependencies: [ruby]
+
+  armitage:
+    binary: armitage
+    description: "GUI for Metasploit"
+    packages:
+      apt: armitage
+      dnf: armitage
+    kali_metapackage: kali-tools-exploitation
+    tags: [exploitation, gui, java, metasploit]
+    metrics:
+      estimated_size_mb: 35.0
+      dependencies_size_mb: 200.0
+      ram_required_mb: 1024
+    dependencies: [java, metasploit-framework]
+
+  exploitdb:
+    binary: searchsploit
+    description: "Exploit database"
+    packages:
+      apt: exploitdb
+      dnf: exploitdb
+      pacman: exploitdb
+      zypper: exploitdb
+    source:
+      type: git-bash
+      repo: https://github.com/offensive-security/exploitdb
+    kali_metapackage: kali-tools-exploitation
+    tags: [exploitation, database]
+    metrics:
+      estimated_size_mb: 180.0
+      dependencies_size_mb: 5.0
+      ram_required_mb: 128
+    dependencies: []
+
+  social-engineer-toolkit:
+    binary: setoolkit
+    description: "Social engineering framework"
+    packages:
+      apt: set
+      dnf: setoolkit
+    source:
+      type: python-git
+      repo: https://github.com/trustedsec/social-engineer-toolkit
+    kali_metapackage: kali-tools-exploitation
+    tags: [social-engineering, python]
+    metrics:
+      estimated_size_mb: 15.0
+      dependencies_size_mb: 45.0
+      ram_required_mb: 512
+    dependencies: [python3]
+
+# Sniffing & Spoofing
+sniffing_spoofing:
+  wireshark:
+    binary: wireshark
+    description: "Network protocol analyzer"
+    packages:
+      apt: wireshark
+      dnf: wireshark
+      pacman: wireshark-qt
+      zypper: wireshark
+    kali_metapackage: kali-tools-sniffing-spoofing
+    tags: [network, sniffer, analyzer, gui]
+    metrics:
+      estimated_size_mb: 85.0
+      dependencies_size_mb: 120.0
+      ram_required_mb: 512
+    dependencies: []
+
+  tcpdump:
+    binary: tcpdump
+    description: "Command-line packet analyzer"
+    packages:
+      apt: tcpdump
+      dnf: tcpdump
+      pacman: tcpdump
+      zypper: tcpdump
+    kali_metapackage: kali-tools-sniffing-spoofing
+    tags: [network, sniffer, cli]
+    metrics:
+      estimated_size_mb: 1.5
+      dependencies_size_mb: 3.0
+      ram_required_mb: 128
+    dependencies: []
+
+  ettercap:
+    binary: ettercap
+    description: "Man-in-the-middle attack tool"
+    packages:
+      apt: ettercap-text-only
+      dnf: ettercap
+      pacman: ettercap
+    kali_metapackage: kali-tools-sniffing-spoofing
+    tags: [network, mitm, sniffer]
+    metrics:
+      estimated_size_mb: 3.5
+      dependencies_size_mb: 15.0
+      ram_required_mb: 256
+    dependencies: []
+
+  bettercap:
+    binary: bettercap
+    description: "Swiss army knife for network attacks"
+    packages:
+      apt: bettercap
+      pacman: bettercap
+    source:
+      type: go
+      module: github.com/bettercap/bettercap
+    kali_metapackage: kali-tools-sniffing-spoofing
+    tags: [network, mitm, go]
+    metrics:
+      estimated_size_mb: 15.0
+      dependencies_size_mb: 20.0
+      ram_required_mb: 512
+    dependencies: []
+
+  dsniff:
+    binary: dsniff
+    description: "Collection of network auditing tools"
+    packages:
+      apt: dsniff
+      dnf: dsniff
+      pacman: dsniff
+    kali_metapackage: kali-tools-sniffing-spoofing
+    tags: [network, sniffer, suite]
+    metrics:
+      estimated_size_mb: 2.0
+      dependencies_size_mb: 8.0
+      ram_required_mb: 256
+    dependencies: []
+
+  mitmproxy:
+    binary: mitmproxy
+    description: "Interactive HTTPS proxy"
+    packages:
+      apt: mitmproxy
+      dnf: mitmproxy
+      pacman: mitmproxy
+    kali_metapackage: kali-tools-sniffing-spoofing
+    tags: [proxy, https, mitm, python]
+    metrics:
+      estimated_size_mb: 18.0
+      dependencies_size_mb: 55.0
+      ram_required_mb: 512
+    dependencies: [python3]
+
+  responder:
+    binary: responder
+    description: "LLMNR, NBT-NS and MDNS poisoner"
+    packages:
+      apt: responder
+      dnf: responder
+    kali_metapackage: kali-tools-sniffing-spoofing
+    tags: [network, poisoner, python]
+    metrics:
+      estimated_size_mb: 2.5
+      dependencies_size_mb: 30.0
+      ram_required_mb: 256
+    dependencies: [python3]
+
+# Post Exploitation
+post_exploitation:
+  powersploit:
+    binary: powersploit
+    description: "PowerShell post-exploitation framework"
+    source:
+      type: git
+      repo: https://github.com/PowerShellMafia/PowerSploit
+    kali_metapackage: kali-tools-post-exploitation
+    tags: [post-exploitation, powershell, windows]
+    metrics:
+      estimated_size_mb: 8.0
+      dependencies_size_mb: 2.0
+      ram_required_mb: 256
+    dependencies: []
+
+  mimikatz:
+    binary: mimikatz
+    description: "Windows credential extraction tool"
+    notes: "Windows binary - requires Wine on Linux"
+    kali_metapackage: kali-tools-post-exploitation
+    tags: [post-exploitation, windows, credentials]
+    metrics:
+      estimated_size_mb: 5.0
+      dependencies_size_mb: 150.0
+      ram_required_mb: 512
+    dependencies: [wine]
+
+  weevely:
+    binary: weevely
+    description: "Weaponized web shell"
+    packages:
+      apt: weevely
+      dnf: weevely
+    kali_metapackage: kali-tools-post-exploitation
+    tags: [post-exploitation, webshell, python]
+    metrics:
+      estimated_size_mb: 1.5
+      dependencies_size_mb: 28.0
+      ram_required_mb: 256
+    dependencies: [python3]
+
+# Forensics
+forensics:
+  autopsy:
+    binary: autopsy
+    description: "Digital forensics platform"
+    packages:
+      apt: autopsy
+      dnf: autopsy
+      pacman: autopsy
+      zypper: autopsy
+    kali_metapackage: kali-tools-forensics
+    tags: [forensics, gui, java]
+    metrics:
+      estimated_size_mb: 250.0
+      dependencies_size_mb: 300.0
+      ram_required_mb: 2048
+    dependencies: [java]
+
+  binwalk:
+    binary: binwalk
+    description: "Firmware analysis tool"
+    packages:
+      apt: binwalk
+      dnf: binwalk
+      pacman: binwalk
+    kali_metapackage: kali-tools-forensics
+    tags: [forensics, firmware, python]
+    metrics:
+      estimated_size_mb: 2.0
+      dependencies_size_mb: 35.0
+      ram_required_mb: 512
+    dependencies: [python3]
+
+  bulk-extractor:
+    binary: bulk_extractor
+    description: "Fast file carving tool"
+    packages:
+      apt: bulk-extractor
+      dnf: bulk-extractor
+    kali_metapackage: kali-tools-forensics
+    tags: [forensics, carving]
+    metrics:
+      estimated_size_mb: 8.0
+      dependencies_size_mb: 25.0
+      ram_required_mb: 1024
+    dependencies: []
+
+  volatility:
+    binary: volatility
+    description: "Memory forensics framework"
+    packages:
+      apt: volatility
+      dnf: volatility
+    kali_metapackage: kali-tools-forensics
+    tags: [forensics, memory, python]
+    metrics:
+      estimated_size_mb: 12.0
+      dependencies_size_mb: 45.0
+      ram_required_mb: 1024
+    dependencies: [python3]
+
+# Reverse Engineering
+reverse_engineering:
+  radare2:
+    binary: radare2
+    description: "Reverse engineering framework"
+    packages:
+      apt: radare2
+      dnf: radare2
+      pacman: radare2
+    kali_metapackage: kali-tools-reverse-engineering
+    tags: [reverse-engineering, disassembler]
+    metrics:
+      estimated_size_mb: 45.0
+      dependencies_size_mb: 20.0
+      ram_required_mb: 512
+    dependencies: []
+
+  ghidra:
+    binary: ghidra
+    description: "Software reverse engineering suite"
+    packages:
+      apt: ghidra
+    kali_metapackage: kali-tools-reverse-engineering
+    tags: [reverse-engineering, gui, java]
+    metrics:
+      estimated_size_mb: 380.0
+      dependencies_size_mb: 220.0
+      ram_required_mb: 2048
+    dependencies: [java]
+
+  ollydbg:
+    binary: ollydbg
+    description: "Windows debugger (via Wine)"
+    notes: "Windows binary - requires Wine"
+    kali_metapackage: kali-tools-reverse-engineering
+    tags: [reverse-engineering, debugger, windows]
+    metrics:
+      estimated_size_mb: 15.0
+      dependencies_size_mb: 150.0
+      ram_required_mb: 512
+    dependencies: [wine]
+
+  edb-debugger:
+    binary: edb
+    description: "Cross-platform debugger"
+    packages:
+      apt: edb-debugger
+      pacman: edb-debugger
+    kali_metapackage: kali-tools-reverse-engineering
+    tags: [reverse-engineering, debugger]
+    metrics:
+      estimated_size_mb: 8.0
+      dependencies_size_mb: 45.0
+      ram_required_mb: 512
+    dependencies: []
+
+# Reporting Tools
+reporting:
+  cutycapt:
+    binary: cutycapt
+    description: "Capture WebKit's rendering of a web page"
+    packages:
+      apt: cutycapt
+      dnf: cutycapt
+    kali_metapackage: kali-tools-reporting
+    tags: [reporting, screenshot]
+    metrics:
+      estimated_size_mb: 1.5
+      dependencies_size_mb: 85.0
+      ram_required_mb: 256
+    dependencies: []
+
+  pipal:
+    binary: pipal
+    description: "Password analyzer"
+    packages:
+      apt: pipal
+    kali_metapackage: kali-tools-reporting
+    tags: [reporting, password, analysis, ruby]
+    metrics:
+      estimated_size_mb: 0.5
+      dependencies_size_mb: 35.0
+      ram_required_mb: 128
+    dependencies: [ruby]
+
+# Additional Tools
+netcat:
+  binary: nc
+  description: "TCP/IP Swiss army knife"
+  packages:
+    apt: netcat-openbsd
+    dnf: nmap-ncat
+    pacman: openbsd-netcat
+    zypper: netcat-openbsd
+  kali_metapackage: kali-linux-core
+  tags: [network, utility]
+  metrics:
+    estimated_size_mb: 0.3
+    dependencies_size_mb: 1.0
+    ram_required_mb: 64
+  dependencies: []
+
+socat:
+  binary: socat
+  description: "Multipurpose relay (SOcket CAT)"
+  packages:
+    apt: socat
+    dnf: socat
+    pacman: socat
+    zypper: socat
+  kali_metapackage: kali-linux-core
+  tags: [network, utility]
+  metrics:
+    estimated_size_mb: 0.8
+    dependencies_size_mb: 2.5
+    ram_required_mb: 64
+  dependencies: []
+
+proxychains:
+  binary: proxychains4
+  description: "Redirect connections through proxy servers"
+  packages:
+    apt: proxychains4
+    dnf: proxychains-ng
+    pacman: proxychains-ng
+  kali_metapackage: kali-linux-core
+  tags: [proxy, anonymity]
+  metrics:
+    estimated_size_mb: 0.5
+    dependencies_size_mb: 2.0
+    ram_required_mb: 64
+  dependencies: []
+
+tor:
+  binary: tor
+  description: "Anonymity network"
+  packages:
+    apt: tor
+    dnf: tor
+    pacman: tor
+    zypper: tor
+  kali_metapackage: kali-linux-core
+  tags: [anonymity, proxy]
+  metrics:
+    estimated_size_mb: 12.0
+    dependencies_size_mb: 25.0
+    ram_required_mb: 256
+  dependencies: []
