@@ -51,6 +51,22 @@ information_gathering:
       ram_required_mb: 128
     dependencies: []
 
+  hping3:
+    binary: hping3
+    description: "Network packet crafting and testing tool"
+    packages:
+      apt: hping3
+      dnf: hping3
+      pacman: hping3
+      zypper: hping3
+    kali_metapackage: kali-tools-information-gathering
+    tags: [network, packet-crafting, firewall-testing, ping]
+    metrics:
+      estimated_size_mb: 0.5
+      dependencies_size_mb: 2.0
+      ram_required_mb: 128
+    dependencies: []
+
   dnsenum:
     binary: dnsenum
     description: "DNS enumeration tool"
@@ -163,6 +179,10 @@ information_gathering:
       apt: theharvester
       dnf: theharvester
       pacman: theharvester
+    source:
+      type: python-git
+      repo: https://github.com/laramies/theHarvester
+      entry: theHarvester.py
     kali_metapackage: kali-tools-information-gathering
     tags: [osint, email, recon, python]
     metrics:
@@ -174,8 +194,10 @@ information_gathering:
   maltego:
     binary: maltego
     description: "Open source intelligence and forensics application"
-    packages:
-      apt: maltego
+    source:
+      type: deb
+      url: https://downloads.maltego.com/maltego-v4/linux/Maltego.v4.6.0.deb
+      file: maltego-4.6.0.deb
     kali_metapackage: kali-tools-information-gathering
     tags: [osint, gui, java]
     metrics:
@@ -232,6 +254,22 @@ information_gathering:
       ram_required_mb: 512
     dependencies: [python3]
 
+  ipcalc:
+    binary: ipcalc
+    description: "IP subnet calculator"
+    packages:
+      apt: ipcalc
+      dnf: ipcalc
+      pacman: ipcalc
+      zypper: ipcalc
+    kali_metapackage: kali-tools-information-gathering
+    tags: [network, calculator, subnet]
+    metrics:
+      estimated_size_mb: 0.1
+      dependencies_size_mb: 0.5
+      ram_required_mb: 32
+    dependencies: []
+
 # Vulnerability Analysis
 vulnerability_analysis:
   nikto:
@@ -280,11 +318,29 @@ vulnerability_analysis:
       ram_required_mb: 128
     dependencies: []
 
+  gvm:
+    binary: gvm
+    description: "Greenbone Vulnerability Management (successor to OpenVAS)"
+    packages:
+      apt: gvm
+      dnf: gvm
+    kali_metapackage: kali-tools-vulnerability
+    tags: [vulnerability, scanner, comprehensive]
+    metrics:
+      estimated_size_mb: 200.0
+      dependencies_size_mb: 400.0
+      ram_required_mb: 2048
+    dependencies: []
+
   unix-privesc-check:
     binary: unix-privesc-check
     description: "Privilege escalation checker"
     packages:
       apt: unix-privesc-check
+    source:
+      type: git-bash
+      repo: https://github.com/pentestmonkey/unix-privesc-check
+      entry: unix-privesc-check
     kali_metapackage: kali-tools-vulnerability
     tags: [privilege-escalation, audit]
     metrics:
@@ -469,6 +525,10 @@ web_application:
       apt: commix
       dnf: commix
       pacman: commix
+    source:
+      type: python-git
+      repo: https://github.com/commixproject/commix
+      entry: commix.py
     kali_metapackage: kali-tools-web
     tags: [web, command-injection, python]
     metrics:
@@ -679,6 +739,22 @@ wireless_attacks:
       ram_required_mb: 256
     dependencies: [python3, aircrack-ng]
 
+  wifite2:
+    binary: wifite2
+    description: "Rewrite of wifite - automated wireless attack tool"
+    packages:
+      apt: wifite2
+    source:
+      type: python-git
+      repo: https://github.com/derv82/wifite2
+    kali_metapackage: kali-tools-wireless
+    tags: [wireless, automated, python, wpa, wep, wps]
+    metrics:
+      estimated_size_mb: 2.0
+      dependencies_size_mb: 30.0
+      ram_required_mb: 256
+    dependencies: [python3, aircrack-ng]
+
   kismet:
     binary: kismet
     description: "Wireless network detector and sniffer"
@@ -737,6 +813,25 @@ exploitation:
       repo: https://github.com/rapid7/metasploit-framework
     kali_metapackage: kali-tools-exploitation
     tags: [exploitation, framework, ruby]
+    metrics:
+      estimated_size_mb: 450.0
+      dependencies_size_mb: 350.0
+      ram_required_mb: 2048
+    dependencies: [ruby, postgresql]
+
+  msfconsole:
+    binary: msfconsole
+    description: "Metasploit console interface for penetration testing"
+    packages:
+      apt: metasploit-framework
+      dnf: metasploit
+      pacman: metasploit
+      zypper: metasploit
+    source:
+      type: ruby-git
+      repo: https://github.com/rapid7/metasploit-framework
+    kali_metapackage: kali-tools-exploitation
+    tags: [exploitation, console, interactive, ruby, metasploit]
     metrics:
       estimated_size_mb: 450.0
       dependencies_size_mb: 350.0
@@ -812,6 +907,22 @@ exploitation:
       ram_required_mb: 512
     dependencies: [python3]
 
+  slowloris:
+    binary: slowloris
+    description: "Low bandwidth DoS attack tool"
+    packages:
+      apt: slowloris
+    source:
+      type: python-git
+      repo: https://github.com/gkbrk/slowloris
+    kali_metapackage: kali-tools-exploitation
+    tags: [dos, denial-of-service, stress-testing, python]
+    metrics:
+      estimated_size_mb: 0.1
+      dependencies_size_mb: 15.0
+      ram_required_mb: 128
+    dependencies: [python3]
+
 # Sniffing & Spoofing
 sniffing_spoofing:
   wireshark:
@@ -845,6 +956,25 @@ sniffing_spoofing:
       dependencies_size_mb: 3.0
       ram_required_mb: 128
     dependencies: []
+
+  scapy:
+    binary: scapy
+    description: "Interactive packet manipulation program and library"
+    packages:
+      apt: python3-scapy
+      dnf: scapy
+      pacman: scapy
+      zypper: python3-scapy
+    source:
+      type: pip
+      module: scapy
+    kali_metapackage: kali-tools-sniffing-spoofing
+    tags: [network, packet-manipulation, sniffer, python]
+    metrics:
+      estimated_size_mb: 5.0
+      dependencies_size_mb: 25.0
+      ram_required_mb: 256
+    dependencies: [python3]
 
   ettercap:
     binary: ettercap
@@ -942,6 +1072,11 @@ post_exploitation:
     binary: mimikatz
     description: "Windows credential extraction tool"
     notes: "Windows binary - requires Wine on Linux"
+    source:
+      type: wine-binary
+      url: https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20220919/mimikatz_trunk.zip
+      file: mimikatz_trunk.zip
+      binary_path: x64/mimikatz.exe
     kali_metapackage: kali-tools-post-exploitation
     tags: [post-exploitation, windows, credentials]
     metrics:
@@ -1059,6 +1194,11 @@ reverse_engineering:
     binary: ollydbg
     description: "Windows debugger (via Wine)"
     notes: "Windows binary - requires Wine"
+    source:
+      type: wine-binary
+      url: http://www.ollydbg.de/odbg201.zip
+      file: odbg201.zip
+      binary_path: OLLYDBG.EXE
     kali_metapackage: kali-tools-reverse-engineering
     tags: [reverse-engineering, debugger, windows]
     metrics:
