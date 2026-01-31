@@ -80,6 +80,7 @@ class Tool:
     metrics: ToolMetrics
     kali_metapackage: Optional[str]
     tags: List[str]
+    gui: Optional[Dict[str, str]] = None
 
 
 @dataclass

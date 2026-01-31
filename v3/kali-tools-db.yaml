@@ -43,6 +43,10 @@ information_gathering:
       apt: unicornscan
       dnf: unicornscan
       pacman: unicornscan
+    source:
+      type: git-bash
+      repo: https://github.com/dneufeld/unicornscan
+      entry: src/unicornscan
     kali_metapackage: kali-tools-information-gathering
     tags: [network, scanner]
     metrics:
@@ -440,6 +444,12 @@ web_application:
     packages:
       apt: dirbuster
       dnf: dirbuster
+    source:
+      type: git-bash
+      repo: https://gitlab.com/kalilinux/packages/dirbuster
+      entry: DirBuster-1.0-RC1.sh
+    gui:
+      command: DirBuster-1.0-RC1.sh
     kali_metapackage: kali-tools-web
     tags: [web, directory, brute-force, java, gui]
     metrics:
@@ -543,6 +553,12 @@ web_application:
     packages:
       apt: zaproxy
       dnf: zaproxy
+    source:
+      type: git-bash
+      repo: https://github.com/zaproxy/zaproxy
+      entry: zap.sh
+    gui:
+      command: zap.sh
     kali_metapackage: kali-tools-web
     tags: [web, proxy, scanner, java, gui]
     metrics:
@@ -762,6 +778,12 @@ wireless_attacks:
       apt: kismet
       dnf: kismet
       pacman: kismet
+    source:
+      type: git-bash
+      repo: https://github.com/kismetwireless/kismet
+      entry: kismet
+    gui:
+      command: kismet
     kali_metapackage: kali-tools-wireless
     tags: [wireless, sniffer, detector]
     metrics:
@@ -790,6 +812,12 @@ wireless_attacks:
     description: "Wireless security auditing tool (GUI)"
     packages:
       apt: fern-wifi-cracker
+    source:
+      type: python-git
+      repo: https://github.com/savio-code/fern-wifi-cracker
+      entry: execute.py
+    gui:
+      command: execute.py
     kali_metapackage: kali-tools-wireless
     tags: [wireless, gui, python]
     metrics:
@@ -863,6 +891,12 @@ exploitation:
     packages:
       apt: armitage
       dnf: armitage
+    source:
+      type: git-bash
+      repo: https://github.com/rsmudge/armitage
+      entry: armitage
+    gui:
+      command: armitage
     kali_metapackage: kali-tools-exploitation
     tags: [exploitation, gui, java, metasploit]
     metrics:
@@ -1044,6 +1078,10 @@ sniffing_spoofing:
     packages:
       apt: responder
       dnf: responder
+    source:
+      type: python-git
+      repo: https://github.com/lgandx/Responder
+      entry: Responder.py
     kali_metapackage: kali-tools-sniffing-spoofing
     tags: [network, poisoner, python]
     metrics:
@@ -1138,6 +1176,12 @@ forensics:
     packages:
       apt: bulk-extractor
       dnf: bulk-extractor
+    source:
+      type: git-bash
+      repo: https://github.com/simsong/bulk_extractor
+      entry: src/bulk_extractor
+    gui:
+      command: python/bulk_extractor_gui.py
     kali_metapackage: kali-tools-forensics
     tags: [forensics, carving]
     metrics:
@@ -1152,6 +1196,10 @@ forensics:
     packages:
       apt: volatility
       dnf: volatility
+    source:
+      type: python-git
+      repo: https://github.com/volatilityfoundation/volatility3
+      entry: vol.py
     kali_metapackage: kali-tools-forensics
     tags: [forensics, memory, python]
     metrics:
@@ -1182,6 +1230,12 @@ reverse_engineering:
     description: "Software reverse engineering suite"
     packages:
       apt: ghidra
+    source:
+      type: git-bash
+      repo: https://github.com/NationalSecurityAgency/ghidra
+      entry: ghidraRun
+    gui:
+      command: ghidraRun
     kali_metapackage: kali-tools-reverse-engineering
     tags: [reverse-engineering, gui, java]
     metrics:
@@ -1242,6 +1296,10 @@ reporting:
     description: "Password analyzer"
     packages:
       apt: pipal
+    source:
+      type: ruby-git
+      repo: https://github.com/digininja/pipal
+      entry: pipal.rb
     kali_metapackage: kali-tools-reporting
     tags: [reporting, password, analysis, ruby]
     metrics:

@@ -478,13 +478,15 @@ def print_tool_list(tools: List[Tool], system_info: SystemInfo, title: str):
         return
 
     state = StateManager.load_state()
-    installed_state = state.get("installed", {})
+    installed_state = state.get("installed", {}")
+    installer = PackageInstaller(Shell(), system_info)
+    pm = system_info.package_manager
     
-    print(f"\n{'='*80}")
+    print(f"\n{'='*95}")
     print(f"  {title}")
-    print('='*80)
-    print(f"{'Tool':<20} {'Compat':<10} {'Size':<12} {'RAM':<10} {'Method':<10} {'Description':<25}")
-    print('-'*90)
+    print('='*95)
+    print(f"{'Tool':<20} {'Compat':<8} {'Size':<10} {'RAM':<10} {'Type':<15} {'Description':<30}")
+    print('-'*95)
     
     for tool in sorted(tools, key=lambda t: t.name):
         score = CompatibilityScorer.score_tool(tool, system_info)
@@ -494,12 +496,30 @@ def print_tool_list(tools: List[Tool], system_info: SystemInfo, title: str):
                           tool.metrics.dependencies_size_mb)
         ram = format_size(tool.metrics.ram_required_mb)
         compat = format_compatibility(score)
-        desc = tool.description[:25] + "..." if len(tool.description) > 25 else tool.description
+        desc = tool.description[:30] + "..." if len(tool.description) > 30 else tool.description
         
-        method = installed_state.get(tool.name, {}).get("method", "-")
-        print(f"{tool.name:<20} {compat:<18} {size:<12} {ram:<10} {method:<10} {desc:<25}")
+        # Determine install type and method
+        if tool.name in installed_state:
+            install_method = installed_state[tool.name].get("method", "unknown")
+            if install_method == "native":
+                install_type = "Native/APT"
+            elif install_method == "source":
+                install_type = "HakPak Wrapper"
+            else:
+                install_type = "Installed"
+        else:
+            # Show what method would be used
+            pkg = tool.packages.get(pm) if tool.packages else None
+            if pkg and installer.is_package_available(pkg):
+                install_type = "Native/APT"
+            elif tool.source:
+                install_type = "HakPak Wrapper"
+            else:
+                install_type = "N/A"
+        
+        print(f"{tool.name:<20} {compat:<8} {size:<10} {ram:<10} {install_type:<15} {desc:<30}")
     
-    print('='*90 + '\n')
+    print('='*95 + '\n')
 
 
 def menu_list_tools(system_info: SystemInfo):
@@ -923,10 +943,26 @@ def install_python_git_tool(tool: Tool, shell: Shell, system_info: SystemInfo):
     # Create wrapper script
     wrapper = BIN_LINK_DIR / tool.binary
     wrapper.parent.mkdir(parents=True, exist_ok=True)
-    wrapper.write_text(
-        f"#!/bin/bash\n"
-        f"exec {venv_dir}/bin/python {src_dir}/{entry} \"$@\"\n"
-    )
+    
+    # Check if tool has GUI
+    gui_cmd = None
+    if tool.gui and tool.gui.get("command"):
+        gui_cmd = tool.gui.get("command")
+    
+    if gui_cmd:
+        wrapper_content = (
+            f"#!/bin/bash\n"
+            f"export DISPLAY=\"${{DISPLAY:-:0}}\"\n"
+            f"cd {src_dir}\n"
+            f"exec {venv_dir}/bin/python {gui_cmd} \"$@\"\n"
+        )
+    else:
+        wrapper_content = (
+            f"#!/bin/bash\n"
+            f"exec {venv_dir}/bin/python {src_dir}/{entry} \"$@\"\n"
+        )
+    
+    wrapper.write_text(wrapper_content)
     wrapper.chmod(0o755)
 
 
@@ -951,11 +987,27 @@ def install_ruby_git_tool(tool: Tool, shell: Shell, system_info: SystemInfo):
     entry = source.get("entry") or tool.binary
     wrapper = BIN_LINK_DIR / tool.binary
     wrapper.parent.mkdir(parents=True, exist_ok=True)
-    wrapper.write_text(
-        f"#!/bin/bash\n"
-        f"cd {src_dir}\n"
-        f"exec bundle exec {entry} \"$@\"\n"
-    )
+    
+    # Check if tool has GUI
+    gui_cmd = None
+    if tool.gui and tool.gui.get("command"):
+        gui_cmd = tool.gui.get("command")
+    
+    if gui_cmd:
+        wrapper_content = (
+            f"#!/bin/bash\n"
+            f"export DISPLAY=\"${{DISPLAY:-:0}}\"\n"
+            f"cd {src_dir}\n"
+            f"exec bundle exec {gui_cmd} \"$@\"\n"
+        )
+    else:
+        wrapper_content = (
+            f"#!/bin/bash\n"
+            f"cd {src_dir}\n"
+            f"exec bundle exec {entry} \"$@\"\n"
+        )
+    
+    wrapper.write_text(wrapper_content)
     wrapper.chmod(0o755)
 
 
@@ -978,10 +1030,26 @@ def install_git_bash_tool(tool: Tool, shell: Shell, system_info: SystemInfo):
     # Create wrapper
     wrapper = BIN_LINK_DIR / tool.binary
     wrapper.parent.mkdir(parents=True, exist_ok=True)
-    wrapper.write_text(
-        f"#!/bin/bash\n"
-        f"exec bash {src_dir}/{entry} \"$@\"\n"
-    )
+    
+    # Check if tool has GUI
+    gui_cmd = None
+    if tool.gui and tool.gui.get("command"):
+        gui_cmd = tool.gui.get("command")
+    
+    if gui_cmd:
+        wrapper_content = (
+            f"#!/bin/bash\n"
+            f"export DISPLAY=\"${{DISPLAY:-:0}}\"\n"
+            f"cd {src_dir}\n"
+            f"exec bash {gui_cmd} \"$@\"\n"
+        )
+    else:
+        wrapper_content = (
+            f"#!/bin/bash\n"
+            f"exec bash {src_dir}/{entry} \"$@\"\n"
+        )
+    
+    wrapper.write_text(wrapper_content)
     wrapper.chmod(0o755)
 
 
@@ -1002,11 +1070,27 @@ def install_git_repo(tool: Tool, shell: Shell, system_info: SystemInfo):
     if entry:
         wrapper = BIN_LINK_DIR / tool.binary
         wrapper.parent.mkdir(parents=True, exist_ok=True)
-        wrapper.write_text(
-            f"#!/bin/bash\n"
-            f"cd {src_dir}\n"
-            f"exec bash {src_dir}/{entry} \"$@\"\n"
-        )
+        
+        # Check if tool has GUI
+        gui_cmd = None
+        if tool.gui and tool.gui.get("command"):
+            gui_cmd = tool.gui.get("command")
+        
+        if gui_cmd:
+            wrapper_content = (
+                f"#!/bin/bash\n"
+                f"export DISPLAY=\"${{DISPLAY:-:0}}\"\n"
+                f"cd {src_dir}\n"
+                f"exec bash {gui_cmd} \"$@\"\n"
+            )
+        else:
+            wrapper_content = (
+                f"#!/bin/bash\n"
+                f"cd {src_dir}\n"
+                f"exec bash {src_dir}/{entry} \"$@\"\n"
+            )
+        
+        wrapper.write_text(wrapper_content)
         wrapper.chmod(0o755)
     else:
         print(f"  Installed repo to {src_dir}. No entry point provided; wrapper not created.")
@@ -1092,22 +1176,89 @@ def install_wine_binary(tool: Tool, shell: Shell, system_info: SystemInfo):
     print(f"  Created Wine wrapper: {wrapper}")
 
 
+def run_tool(tool_name: str, tool_args: List[str], system_info: SystemInfo, shell: Shell):
+    """Auto-install and run a tool via HakPak wrapper"""
+    all_tools = ToolLoader.load_kali_tools()
+    
+    if tool_name not in all_tools:
+        print(f"ERROR: Unknown tool '{tool_name}'")
+        print(f"Run 'hakpak3' to see available tools")
+        return 1
+    
+    tool = all_tools[tool_name]
+    
+    # Check if tool is installed
+    installed_names = StateManager.get_installed_tools()
+    
+    if tool_name not in installed_names:
+        print(f"\n{tool.name} is not installed. Installing now...")
+        install_tool(tool, system_info, shell)
+        
+        if tool_name not in StateManager.get_installed_tools():
+            print(f"\nERROR: Failed to install {tool.name}")
+            return 1
+    
+    # Find the binary
+    binary_path = shell.which(tool.binary)
+    wrapper_path = BIN_LINK_DIR / tool.binary
+    
+    if binary_path:
+        cmd = [binary_path] + tool_args
+    elif wrapper_path.exists():
+        cmd = [str(wrapper_path)] + tool_args
+    else:
+        print(f"\nERROR: Binary '{tool.binary}' not found")
+        print(f"Expected at: {wrapper_path}")
+        return 1
+    
+    # Execute tool
+    print(f"\n{'='*70}")
+    print(f"  Running: {tool.name}")
+    print('='*70)
+    print(f"Command: {' '.join(cmd)}\n")
+    
+    try:
+        result = subprocess.run(cmd)
+        return result.returncode
+    except KeyboardInterrupt:
+        print("\n\nInterrupted by user")
+        return 130
+    except Exception as e:
+        print(f"\nERROR: Failed to run {tool.name}: {e}")
+        return 1
+
+
 def main():
     """Main entry point"""
     parser = argparse.ArgumentParser(
-        description="HakPak3 - Ultimate Cross-Distro Hacking Tool Installer"
+        description="HakPak3 - Ultimate Cross-Distro Hacking Tool Installer & Launcher",
+        epilog="Examples:\n"
+               "  hakpak3                    # Interactive menu\n"
+               "  hakpak3 -t responder       # Run responder (auto-install if needed)\n"
+               "  hakpak3 -t nikto -h target.com  # Run nikto with arguments\n",
+        formatter_class=argparse.RawDescriptionHelpFormatter
     )
     parser.add_argument("--version", action="store_true", 
                        help="Show version information")
+    parser.add_argument("-t", "--tool", metavar="TOOL",
+                       help="Run a tool (auto-install if not present)")
+    parser.add_argument("tool_args", nargs="*",
+                       help="Arguments to pass to the tool")
     
     args = parser.parse_args()
     
     if args.version:
         print(f"HakPak3 v{VERSION}")
-        return
+        return 0
     
-    # Start interactive menu
-    cmd_menu()
+    # Tool execution mode
+    if args.tool:
+        shell = Shell()
+        system_info = OSDetector.get_system_info(shell)
+        return run_tool(args.tool, args.tool_args, system_info, shell)
+    
+    # Interactive menu mode
+    return cmd_menu()
 
 
 def cmd_menu():
@@ -1180,6 +1331,8 @@ def cmd_menu():
         else:
             print("ERROR: Invalid option")
             input("\nPress Enter to continue...")
+    
+    return 0
 
 
 if __name__ == "__main__":
