@@ -50,12 +50,22 @@ Set these in Railway → HakPak4 service → Variables:
 | `SHOPIFY_WEBHOOK_SECRET` | From Shopify after webhook is created (unique per URL) |
 | `SHOPIFY_SKU_TIER_MAP` | `{"HPAK-PRO":"pro"}` |
 
+## Deploy
+
+```bash
+cd v4/services/licensing_api
+railway link   # select HakPak project + production + service
+railway up     # upload and deploy
+```
+
+Service URL: `https://hakpak-production.up.railway.app`
+
 ## Local Development
 
 ```bash
 cd v4/services/licensing_api
-python3 -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
+# .venv already created — just activate it:
+source .venv/bin/activate
 cp .env.example .env   # fill in real values
 uvicorn app:app --host 127.0.0.1 --port 8089
 ```
