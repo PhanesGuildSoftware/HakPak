@@ -1,16 +1,14 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# build-dist.sh
-# create a clean distribution archive for HakPak3.
-# The archive contains only the files required to install and run hakpak3.
+# build-dist-v4.sh
+# Create a clean distribution archive for HakPak4.
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-DIST_DIR="$ROOT_DIR/release-dist"
-VERSION_FILE="$ROOT_DIR/v3/hakpak3.py"
-VERSION="$(grep -E '^VERSION =' "$VERSION_FILE" | sed -E "s/.*'([0-9.]+)'.*/\1/;s/.*\"([0-9.]+)\".*/\1/")"
-STAMP="$(date -u +%Y%m%d%H%M%S)"
-ARCHIVE_NAME="hakpak3-${VERSION}.tar.gz"
+DIST_DIR="$ROOT_DIR/release-dist-v4"
+VERSION_FILE="$ROOT_DIR/v4/VERSION"
+VERSION="$(tr -d '[:space:]' < "$VERSION_FILE")"
+ARCHIVE_NAME="hakpak4-${VERSION}.tar.gz"
 
 mkdir -p "$DIST_DIR"
 rm -rf "$DIST_DIR"/* || true
@@ -20,26 +18,21 @@ whitelist=(
   LICENSE
   README.md
   CONTRIBUTING.md
-  bin/install-hakpak2.sh
-  hakpak.sh
-  hakpak-gui.sh
-  scripts/quick-install.sh
-  scripts/uninstall-hakpak2.sh
-  v3/hakpak3.py
-  v3/hakpak3.sh
-  v3/install-hakpak3.sh
-  v3/kali-tools-db.yaml
+  v4/README.md
+  v4/QUICKSTART.md
+  v4/CHANGELOG.md
+  v4/hakpak4.py
+  v4/hakpak4_core.py
+  v4/version.py
+  v4/VERSION
+  v4/hakpak4.sh
+  v4/install-hakpak4.sh
+  v4/kali-tools-db.yaml
   docs/VENDOR_TOOLS.md
   docs/SECURITY.md
   docs/EULA.md
   assets/brand/hakpak-logo.svg
   assets/brand/hakpak-icon-256.png
-  assets/brand/hakpak2-icon.svg
-  gui/server.py
-  gui/static/index.html
-  gui/static/style.css
-  gui/static/main.js
-  gui/static/favicon.svg
 )
 
 TMP_STAGE="$DIST_DIR/stage"
@@ -55,8 +48,8 @@ done
 
 # Fail packaging if the staged tool DB diverges from source.
 "$ROOT_DIR/scripts/check-tool-db-sync.sh" \
-  "$ROOT_DIR/v3/kali-tools-db.yaml" \
-  "$TMP_STAGE/v3/kali-tools-db.yaml"
+  "$ROOT_DIR/v4/kali-tools-db.yaml" \
+  "$TMP_STAGE/v4/kali-tools-db.yaml"
 
 # Generate checksum manifest (sha256)
 (

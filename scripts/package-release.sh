@@ -22,6 +22,12 @@ OUT_DIR="${ROOT_DIR}/dist"
 mkdir -p "$OUT_DIR"
 TMP_DIR="$(mktemp -d)" 
 
+if [[ -f "$ROOT_DIR/v3/kali-tools-db.yaml" && -f "$ROOT_DIR/release-dist/stage/v3/kali-tools-db.yaml" ]]; then
+  "$ROOT_DIR/scripts/check-tool-db-sync.sh" \
+    "$ROOT_DIR/v3/kali-tools-db.yaml" \
+    "$ROOT_DIR/release-dist/stage/v3/kali-tools-db.yaml"
+fi
+
 copy_root() {
   local path="$1"; shift
   install -Dm644 "$path" "$TMP_DIR/$path"

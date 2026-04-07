@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """
-HakPak3 Core Functionality - Installation, Dependency Resolution, and Menu System
+HakPak4 Core Functionality - Installation, Dependency Resolution, and Menu System
 """
 
 from dataclasses import dataclass
 
-from hakpak3 import *
+from hakpak4 import *
 
 
 class DependencyResolver:
@@ -918,7 +918,7 @@ def install_python_git_tool(tool: Tool, shell: Shell, system_info: SystemInfo):
     repo = source.get("repo")
     if not repo:
         raise ValueError("Missing repo for python-git source install")
-    src_dir = HAKPAK3_ROOT / "src" / tool.name
+    src_dir = HAKPAK4_ROOT / "src" / tool.name
     entry = source.get("entry") or tool.binary
     
     # Clone repository
@@ -928,7 +928,7 @@ def install_python_git_tool(tool: Tool, shell: Shell, system_info: SystemInfo):
         shell.run(["git", "clone", "--depth", "1", repo, str(src_dir)])
     
     # Create virtual environment
-    venv_dir = HAKPAK3_ROOT / "venv" / tool.name
+    venv_dir = HAKPAK4_ROOT / "venv" / tool.name
     venv_dir.parent.mkdir(parents=True, exist_ok=True)
     shell.run(["python3", "-m", "venv", str(venv_dir)])
     
@@ -973,7 +973,7 @@ def install_ruby_git_tool(tool: Tool, shell: Shell, system_info: SystemInfo):
     repo = source.get("repo")
     if not repo:
         raise ValueError("Missing repo for ruby-git source install")
-    src_dir = HAKPAK3_ROOT / "src" / tool.name
+    src_dir = HAKPAK4_ROOT / "src" / tool.name
     
     if src_dir.exists():
         shell.run(["git", "-C", str(src_dir), "pull"])
@@ -1020,7 +1020,7 @@ def install_git_bash_tool(tool: Tool, shell: Shell, system_info: SystemInfo):
         raise ValueError("Missing repo for git-bash source install")
     if not entry:
         raise ValueError("Missing entry for git-bash source install")
-    src_dir = HAKPAK3_ROOT / "src" / tool.name
+    src_dir = HAKPAK4_ROOT / "src" / tool.name
     
     if src_dir.exists():
         shell.run(["git", "-C", str(src_dir), "pull"])
@@ -1060,7 +1060,7 @@ def install_git_repo(tool: Tool, shell: Shell, system_info: SystemInfo):
     entry = source.get("entry")
     if not repo:
         raise ValueError("Missing repo for git source install")
-    src_dir = HAKPAK3_ROOT / "src" / tool.name
+    src_dir = HAKPAK4_ROOT / "src" / tool.name
 
     if src_dir.exists():
         shell.run(["git", "-C", str(src_dir), "pull"])
@@ -1112,7 +1112,7 @@ def install_deb_package(tool: Tool, shell: Shell, system_info: SystemInfo):
     if not url:
         raise ValueError("Missing URL for deb source install")
     deb_file = source.get("file") or f"{tool.name}.deb"
-    download_path = HAKPAK3_ROOT / "downloads" / deb_file
+    download_path = HAKPAK4_ROOT / "downloads" / deb_file
     
     # Create downloads directory
     download_path.parent.mkdir(parents=True, exist_ok=True)
@@ -1141,8 +1141,8 @@ def install_wine_binary(tool: Tool, shell: Shell, system_info: SystemInfo):
     binary_path = source.get("binary_path")
     if not url or not archive_file or not binary_path:
         raise ValueError("Missing fields for wine-binary source install")
-    download_path = HAKPAK3_ROOT / "downloads" / archive_file
-    extract_dir = HAKPAK3_ROOT / "wine-apps" / tool.name
+    download_path = HAKPAK4_ROOT / "downloads" / archive_file
+    extract_dir = HAKPAK4_ROOT / "wine-apps" / tool.name
     
     # Create directories
     download_path.parent.mkdir(parents=True, exist_ok=True)
@@ -1182,7 +1182,7 @@ def run_tool(tool_name: str, tool_args: List[str], system_info: SystemInfo, shel
     
     if tool_name not in all_tools:
         print(f"ERROR: Unknown tool '{tool_name}'")
-        print(f"Run 'hakpak3' to see available tools")
+        print(f"Run 'hakpak4' to see available tools")
         return 1
     
     tool = all_tools[tool_name]
@@ -1231,11 +1231,11 @@ def run_tool(tool_name: str, tool_args: List[str], system_info: SystemInfo, shel
 def main():
     """Main entry point"""
     parser = argparse.ArgumentParser(
-        description="HakPak3 - Ultimate Cross-Distro Hacking Tool Installer & Launcher",
+        description="HakPak4 - Ultimate Cross-Distro Hacking Tool Installer & Launcher",
         epilog="Examples:\n"
-               "  hakpak3                    # Interactive menu\n"
-               "  hakpak3 -t responder       # Run responder (auto-install if needed)\n"
-               "  hakpak3 -t nikto -h target.com  # Run nikto with arguments\n",
+               "  hakpak4                    # Interactive menu\n"
+               "  hakpak4 -t responder       # Run responder (auto-install if needed)\n"
+               "  hakpak4 -t nikto -h target.com  # Run nikto with arguments\n",
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
     parser.add_argument("--version", action="store_true", 
@@ -1248,7 +1248,7 @@ def main():
     args = parser.parse_args()
     
     if args.version:
-        print(f"HakPak3 v{VERSION}")
+        print(f"HakPak4 v{VERSION}")
         return 0
     
     # Tool execution mode
@@ -1279,7 +1279,7 @@ def cmd_menu():
         print("  4) Uninstall Tools")
         print("  5) Status & Installed Tools")
         print("  6) Repository Management (APT)")
-        print("  7) About HakPak3")
+        print("  7) About HakPak4")
         print("  0) Exit")
         print("="*70)
         
@@ -1325,7 +1325,7 @@ def cmd_menu():
             input("\nPress Enter to continue...")
         
         elif choice == '0':
-            print("\nThank you for using HakPak3!")
+            print("\nThank you for using HakPak4!")
             return 0
         
         else:
