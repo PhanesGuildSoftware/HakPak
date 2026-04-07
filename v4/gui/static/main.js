@@ -1731,6 +1731,35 @@ async function runRepoTest(repoName) {
   }
 }
 
+function renderScriptTestResults(res) {
+  const levelIcon  = { ok: '✔', warning: '⚠', error: '✘', info: 'ℹ' };
+  const levelClass = { ok: 'rtr-ok', warning: 'rtr-warn', error: 'rtr-err', info: 'rtr-info' };
+
+  let html = '<div class="rtr-header">';
+  if (res.passed) {
+    html += '<span class="rtr-summary rtr-ok">✔ Script checks passed.</span>';
+  } else {
+    html += '<span class="rtr-summary rtr-err">✘ Script checks found issues.</span>';
+  }
+  html += '</div>';
+
+  if (res.results && res.results.length) {
+    for (const chk of res.results) {
+      const cls  = levelClass[chk.level] || 'rtr-info';
+      const icon = levelIcon[chk.level]  || 'ℹ';
+      html += '<div class="rtr-check ' + cls + '">';
+      html += '<div class="rtr-check-tool">' + icon + ' ' + esc(chk.tool) + '</div>';
+      if (chk.output) {
+        html += '<pre class="rtr-check-output">' + esc(chk.output) + '</pre>';
+      }
+      html += '</div>';
+    }
+  }
+
+  const body = document.getElementById('test-results-body');
+  if (body) body.innerHTML = html;
+}
+
 function renderRepoTestResults(data) {
   const levelIcon = { ok: '\u2714', warning: '\u26a0', error: '\u2718', info: '\u2139' };
   const levelClass = { ok: 'rtr-ok', warning: 'rtr-warn', error: 'rtr-err', info: 'rtr-info' };
