@@ -1312,6 +1312,11 @@ html, body {
   color: #fff;
   border: 1px solid var(--accent-dim);
 }
+.tier-master {
+  background: linear-gradient(135deg, #7928ca 0%, #bc8cff 100%);
+  color: #fff;
+  border: 1px solid #7928ca;
+}
 
 /* ── License modal feature comparison ───────────────────────────────────── */
 .license-hint {

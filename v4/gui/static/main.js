@@ -34,9 +34,9 @@ let _nextRow     = 0;            // auto-placement grid row
 
 // ── License tier ──────────────────────────────────────────────────────────────
 const FREE_BLOCK_LIMIT = 3;
-let _tier = 'free';  // 'free' | 'pro'  — set by loadLicense()
+let _tier = 'free';  // 'free' | 'pro' | 'master'  — set by loadLicense()
 
-function isPro() { return _tier === 'pro'; }
+function isPro() { return _tier === 'pro' || _tier === 'master'; }
 
 function proGate(featureName) {
   showLicenseModal('Upgrade to Pro to use ' + featureName + '.');
@@ -46,7 +46,8 @@ function proGate(featureName) {
 async function loadLicense() {
   try {
     const data = await api('/api/license/status');
-    _tier = (data && data.tier === 'pro') ? 'pro' : 'free';
+    const t = data && data.tier;
+    _tier = (t === 'master' || t === 'pro') ? t : 'free';
   } catch {
     _tier = 'free';
   }
@@ -56,7 +57,11 @@ async function loadLicense() {
 function updateTierBadge() {
   const badge = document.getElementById('tier-badge');
   if (!badge) return;
-  if (isPro()) {
+  if (_tier === 'master') {
+    badge.textContent = 'MASTER';
+    badge.className = 'tier-badge tier-master';
+    badge.title = 'Master license — all features unlocked';
+  } else if (_tier === 'pro') {
     badge.textContent = 'PRO';
     badge.className = 'tier-badge tier-pro';
     badge.title = 'Pro license active';
@@ -1770,9 +1775,12 @@ function bindEvents() {
           body: JSON.stringify({ key }),
         });
         if (res.success) {
-          _tier = 'pro';
+          _tier = res.is_master ? 'master' : 'pro';
           updateTierBadge();
-          showStatus('license-activate-status', '\u2714 Pro license activated! Enjoy full access.', 'ok');
+          const msg = res.is_master
+            ? '\u2714 Master license accepted! All features unlocked.'
+            : '\u2714 Pro license activated! Enjoy full access.';
+          showStatus('license-activate-status', msg, 'ok');
           setTimeout(function() { hideModal('modal-license'); }, 1800);
         } else {
           showStatus('license-activate-status', '\u2718 ' + (res.message || 'Invalid key.'), 'err');

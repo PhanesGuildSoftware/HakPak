@@ -1236,6 +1236,13 @@ def api_license_deactivate():
     return jsonify({"success": True})
 
 
+@APP.get("/api/license/hwid")
+def api_license_hwid():
+    if _lm is None:
+        return jsonify({"hardware_id": "unavailable"})
+    return jsonify({"hardware_id": _lm.get_hwid()})
+
+
 # ── Entry point ───────────────────────────────────────────────────────────────
 
 def run() -> None:

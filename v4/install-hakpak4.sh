@@ -114,6 +114,18 @@ command -v update-desktop-database >/dev/null 2>&1 && update-desktop-database -q
 command -v gtk-update-icon-cache   >/dev/null 2>&1 && gtk-update-icon-cache -q /usr/share/icons/hicolor 2>/dev/null || true
 echo -e "  ${GREEN}✓ Desktop icon and launcher entry installed${NC}"
 
+# Write master key hash for license verification
+mkdir -p "$HOME/.hakpak4"
+python3 - "$INSTALL_DIR" <<'PY' 2>/dev/null || true
+import sys, os
+sys.path.insert(0, sys.argv[1])
+try:
+    from gui.lib.license_manager import write_master_hash_file
+    write_master_hash_file()
+except Exception:
+    pass
+PY
+
 # Verify installation
 echo -e "${GREEN}[6/6]${NC} Verifying installation..."
 if command -v hakpak4 &> /dev/null; then
