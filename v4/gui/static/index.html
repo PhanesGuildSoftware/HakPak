@@ -19,6 +19,7 @@
       <span class="topbar-title">Script Builder</span>
     </div>
     <div class="topbar-actions">
+      <span id="tier-badge" class="tier-badge tier-free" title="Free tier" onclick="showLicenseModal()">FREE</span>
       <button id="btn-advisor" class="btn btn-ghost" title="Local script advisor">
         Advisor
       </button>
@@ -359,6 +360,57 @@
       <div class="modal-footer">
         <button class="btn btn-ghost" data-close="modal-gitclone">Close</button>
         <button class="btn btn-primary" id="btn-clone-confirm">Clone &amp; Scan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- License activation modal -->
+  <div class="modal-overlay hidden" id="modal-license">
+    <div class="modal modal-sm">
+      <div class="modal-header">
+        <span>Activate Pro License</span>
+        <button class="modal-close" data-close="modal-license">✕</button>
+      </div>
+      <div class="modal-body">
+        <p id="license-modal-hint" class="license-hint"></p>
+        <div class="license-tier-compare">
+          <div class="license-tier-col">
+            <div class="license-tier-name">Free</div>
+            <ul class="license-tier-features">
+              <li>✔ Up to 3 canvas blocks</li>
+              <li>✔ Script preview &amp; test</li>
+              <li>✔ Local advisor</li>
+              <li class="license-locked">✘ Export .sh</li>
+              <li class="license-locked">✘ Save to disk</li>
+              <li class="license-locked">✘ Secure Git Clone</li>
+              <li class="license-locked">✘ Unlimited blocks</li>
+              <li class="license-locked">✘ Advanced edge types</li>
+            </ul>
+          </div>
+          <div class="license-tier-col license-tier-col-pro">
+            <div class="license-tier-name">Pro</div>
+            <ul class="license-tier-features">
+              <li>✔ Unlimited blocks</li>
+              <li>✔ Export .sh</li>
+              <li>✔ Save to disk</li>
+              <li>✔ Secure Git Clone</li>
+              <li>✔ All edge types</li>
+              <li>✔ Script preview &amp; test</li>
+              <li>✔ Local advisor</li>
+              <li>✔ Priority support</li>
+            </ul>
+          </div>
+        </div>
+        <label class="field-label">License Key <span style="color:var(--text-muted)">(HPAK-XXXX-XXXX-XXXX-XXXX)</span></label>
+        <input id="license-key-input" class="field-input" type="text"
+               placeholder="HPAK-XXXX-XXXX-XXXX-XXXX" maxlength="24"
+               autocomplete="off" spellcheck="false" />
+        <p id="license-activate-status" class="save-status"></p>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-license-deactivate" class="btn btn-ghost" style="color:var(--text-muted);margin-right:auto">Remove license</button>
+        <button class="btn btn-ghost" data-close="modal-license">Cancel</button>
+        <button id="btn-license-activate" class="btn btn-primary">Activate</button>
       </div>
     </div>
   </div>

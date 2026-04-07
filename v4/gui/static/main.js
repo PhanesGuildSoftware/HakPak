@@ -32,9 +32,54 @@ let _connectFrom = null;         // source block id when connecting
 let _nextCol     = 0;            // auto-placement grid column
 let _nextRow     = 0;            // auto-placement grid row
 
+// ── License tier ──────────────────────────────────────────────────────────────
+const FREE_BLOCK_LIMIT = 3;
+let _tier = 'free';  // 'free' | 'pro'  — set by loadLicense()
+
+function isPro() { return _tier === 'pro'; }
+
+function proGate(featureName) {
+  showLicenseModal('Upgrade to Pro to use ' + featureName + '.');
+  return false;
+}
+
+async function loadLicense() {
+  try {
+    const data = await api('/api/license/status');
+    _tier = (data && data.tier === 'pro') ? 'pro' : 'free';
+  } catch {
+    _tier = 'free';
+  }
+  updateTierBadge();
+}
+
+function updateTierBadge() {
+  const badge = document.getElementById('tier-badge');
+  if (!badge) return;
+  if (isPro()) {
+    badge.textContent = 'PRO';
+    badge.className = 'tier-badge tier-pro';
+    badge.title = 'Pro license active';
+  } else {
+    badge.textContent = 'FREE';
+    badge.className = 'tier-badge tier-free';
+    badge.title = 'Free tier — 3-block limit. Upgrade to Pro for full access.';
+  }
+}
+
+function showLicenseModal(hint) {
+  const h = document.getElementById('license-modal-hint');
+  if (h) h.textContent = hint || '';
+  const inp = document.getElementById('license-key-input');
+  if (inp) inp.value = '';
+  const st = document.getElementById('license-activate-status');
+  if (st) { st.textContent = ''; st.className = 'save-status'; }
+  showModal('modal-license');
+}
+
 // ── Init ──────────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', async () => {
-  await Promise.all([loadTools(), loadRepos()]);
+  await Promise.all([loadLicense(), loadTools(), loadRepos()]);
   bindEvents();
   bindCanvasPan();
 
@@ -261,11 +306,19 @@ function makeBlock(type, defaults) {
 }
 
 function addToolBlock(t) {
+  if (!isPro() && _blocks.length >= FREE_BLOCK_LIMIT) {
+    proGate('more than ' + FREE_BLOCK_LIMIT + ' blocks');
+    return;
+  }
   const blk = makeBlock('tool', { tool: t.name, _desc: t.description });
   pushBlock(blk);
 }
 
 function addBlock(type) {
+  if (!isPro() && _blocks.length >= FREE_BLOCK_LIMIT) {
+    proGate('more than ' + FREE_BLOCK_LIMIT + ' blocks');
+    return;
+  }
   pushBlock(makeBlock(type));
 }
 
@@ -526,6 +579,20 @@ function openEdgeModal(edgeId) {
   notesArea.value  = edge.pipe.notes   || '';
   descEl.textContent = _edgeDesc(typeSelect.value, varInput.value);
   varGroup.style.display = typeSelect.value === 'var' ? '' : 'none';
+
+  // Free tier: lock to pipe-only; disable advanced edge types
+  const proEdgeTypes = ['var', 'conditional', 'custom'];
+  proEdgeTypes.forEach(function(t) {
+    const opt = typeSelect.querySelector('option[value="' + t + '"]');
+    if (opt) {
+      opt.disabled = !isPro();
+      opt.textContent = isPro() ? opt.textContent.replace(' 🔒', '') : opt.textContent + (opt.textContent.includes('🔒') ? '' : ' 🔒');
+    }
+  });
+  if (!isPro() && proEdgeTypes.includes(typeSelect.value)) {
+    typeSelect.value = 'pipe';
+    edge.pipe.type = 'pipe';
+  }
 
   function onTypeChange() {
     const t = typeSelect.value;
@@ -1431,6 +1498,7 @@ function bindEvents() {
   });
 
   document.getElementById('btn-save').addEventListener('click', function() {
+    if (!isPro()) { proGate('Save'); return; }
     document.getElementById('save-name').value =
       document.getElementById('script-name').value.trim() || 'my_script';
     document.getElementById('save-status').textContent = '';
@@ -1481,6 +1549,7 @@ function bindEvents() {
   });
 
   document.getElementById('btn-export').addEventListener('click', async function() {
+    if (!isPro()) { proGate('Export'); return; }
     if (!_blocks.length) { alert('Canvas is empty.'); return; }
     const scriptName = document.getElementById('script-name').value.trim() || 'my_script';
     document.getElementById('export-name').value = scriptName;
@@ -1523,6 +1592,7 @@ function bindEvents() {
   });
 
   document.getElementById('btn-gitclone').addEventListener('click', function() {
+    if (!isPro()) { proGate('Secure Git Clone'); return; }
     document.getElementById('clone-url').value = '';
     const out = document.getElementById('clone-output');
     out.textContent = '';
@@ -1683,6 +1753,48 @@ function bindEvents() {
       if (e.target === overlay) hideModal(overlay.id);
     });
   });
+
+  // License activation
+  const btnActivate = document.getElementById('btn-license-activate');
+  if (btnActivate) {
+    btnActivate.addEventListener('click', async function() {
+      const inp = document.getElementById('license-key-input');
+      const st  = document.getElementById('license-activate-status');
+      const key = (inp ? inp.value : '').trim().toUpperCase();
+      if (!key) { showStatus('license-activate-status', 'Enter your license key.', 'err'); return; }
+      st.textContent = 'Activating\u2026'; st.className = 'save-status';
+      btnActivate.disabled = true;
+      try {
+        const res = await api('/api/license/activate', {
+          method: 'POST',
+          body: JSON.stringify({ key }),
+        });
+        if (res.success) {
+          _tier = 'pro';
+          updateTierBadge();
+          showStatus('license-activate-status', '\u2714 Pro license activated! Enjoy full access.', 'ok');
+          setTimeout(function() { hideModal('modal-license'); }, 1800);
+        } else {
+          showStatus('license-activate-status', '\u2718 ' + (res.message || 'Invalid key.'), 'err');
+        }
+      } catch (e) {
+        showStatus('license-activate-status', 'Activation failed: ' + String(e), 'err');
+      } finally {
+        btnActivate.disabled = false;
+      }
+    });
+  }
+
+  const btnDeactivate = document.getElementById('btn-license-deactivate');
+  if (btnDeactivate) {
+    btnDeactivate.addEventListener('click', async function() {
+      if (!confirm('Remove Pro license and revert to free tier?')) return;
+      await api('/api/license/deactivate', { method: 'POST', body: '{}' });
+      _tier = 'free';
+      updateTierBadge();
+      hideModal('modal-license');
+    });
+  }
 }
 
 // ── Repo test flow ────────────────────────────────────────────────────────────

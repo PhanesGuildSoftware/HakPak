@@ -1287,3 +1287,69 @@ html, body {
     grid-template-columns: 1fr;
   }
 }
+
+/* ── License tier badge ──────────────────────────────────────────────────── */
+.tier-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  cursor: pointer;
+  user-select: none;
+  transition: opacity .15s;
+}
+.tier-badge:hover { opacity: .8; }
+.tier-free {
+  background: var(--bg3);
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+}
+.tier-pro {
+  background: linear-gradient(135deg, #c94f00 0%, #ff7b1a 100%);
+  color: #fff;
+  border: 1px solid var(--accent-dim);
+}
+
+/* ── License modal feature comparison ───────────────────────────────────── */
+.license-hint {
+  color: var(--accent);
+  font-size: 13px;
+  margin-bottom: 12px;
+  min-height: 16px;
+}
+.license-tier-compare {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.license-tier-col {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px;
+}
+.license-tier-col-pro {
+  border-color: var(--accent-dim);
+  background: color-mix(in srgb, var(--bg2) 85%, var(--accent-dim) 15%);
+}
+.license-tier-name {
+  font-weight: 700;
+  font-size: 13px;
+  margin-bottom: 8px;
+  color: var(--text);
+}
+.license-tier-col-pro .license-tier-name { color: var(--accent); }
+.license-tier-features {
+  list-style: none;
+  font-size: 12px;
+  color: var(--text-muted);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.license-tier-features li { color: var(--green); }
+.license-tier-features li.license-locked { color: var(--text-muted); }
