@@ -295,7 +295,7 @@ def tier_max_devices(tier: str) -> int:
 
 @app.get("/v1/health")
 def health() -> Dict[str, Any]:
-    return {"ok": True, "time": utc_now_iso()}
+    return {"ok": True, "time": utc_now_iso(), "sku_map_keys": list(SKU_TIER_MAP.keys())}
 
 
 @app.post("/v1/license/validate")

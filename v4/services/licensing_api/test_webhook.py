@@ -48,9 +48,14 @@ def main():
     parser.add_argument("--email", required=True, help="Email address to receive the license key")
     parser.add_argument("--sku", default="HPAK-PRO", help="SKU to test (default: HPAK-PRO)")
     parser.add_argument("--url", default=RAILWAY_URL, help="Override API URL (default: Railway production)")
+    parser.add_argument("--order-id", default=None, help="Override order ID (default: random)")
     args = parser.parse_args()
 
+    import random, time
+    order_id = int(args.order_id) if args.order_id else random.randint(10_000_000_000, 99_999_999_999)
+
     order = dict(FAKE_ORDER)
+    order["id"] = order_id
     order["email"] = args.email
     order["line_items"][0]["sku"] = args.sku
 
@@ -68,7 +73,7 @@ def main():
         headers={
             "Content-Type": "application/json",
             "X-Shopify-Hmac-Sha256": sig,
-            "X-Shopify-Webhook-Id": "test-webhook-hakpak4-001",
+            "X-Shopify-Webhook-Id": f"test-{order_id}",
             "X-Shopify-Topic": "orders/paid",
         },
         method="POST",
