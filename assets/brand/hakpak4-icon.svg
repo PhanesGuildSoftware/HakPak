@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="HakPak4 Icon">
+  <defs>
+    <!-- Aerial marbling: warped gradient displaced by turbulence, blended subtly -->
+    <linearGradient id="aerialGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0E141A"/>
+      <stop offset="50%" stop-color="#0A1E2A"/>
+      <stop offset="100%" stop-color="#0D1117"/>
+    </linearGradient>
+    <filter id="aerial" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.008 0.012" numOctaves="3" seed="11" result="noise"/>
+      <feGaussianBlur in="noise" stdDeviation="0.7" result="soft"/>
+      <feDisplacementMap in="SourceGraphic" in2="soft" scale="22" xChannelSelector="R" yChannelSelector="G" result="disp"/>
+      <feBlend in="disp" in2="SourceGraphic" mode="overlay"/>
+    </filter>
+    <!-- Subtle contour lines effect -->
+    <filter id="contours" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="2" seed="17" result="n"/>
+      <feColorMatrix in="n" type="matrix"
+        values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -8" result="hi"/>
+      <feGaussianBlur in="hi" stdDeviation="0.4"/>
+    </filter>
+    <!-- Neon cyan glow for the "4" -->
+    <filter id="cyanGlow" x="-80%" y="-80%" width="260%" height="260%" color-interpolation-filters="sRGB">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="blur1"/>
+      <feGaussianBlur in="SourceGraphic" stdDeviation="18" result="blur2"/>
+      <feFlood flood-color="#00e5ff" flood-opacity="0.9" result="flood1"/>
+      <feFlood flood-color="#00e5ff" flood-opacity="0.45" result="flood2"/>
+      <feComposite in="flood1" in2="blur1" operator="in" result="glow1"/>
+      <feComposite in="flood2" in2="blur2" operator="in" result="glow2"/>
+      <feMerge>
+        <feMergeNode in="glow2"/>
+        <feMergeNode in="glow1"/>
+        <feMergeNode in="glow1"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <!-- Subtle cyan edge accent line -->
+    <linearGradient id="edgeAccent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#00e5ff" stop-opacity="0.55"/>
+      <stop offset="50%"  stop-color="#00e5ff" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#00e5ff" stop-opacity="0.45"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Base plate -->
+  <rect x="24" y="24" width="464" height="464" rx="64" fill="#0D1117"/>
+  <rect x="24.5" y="24.5" width="463" height="463" rx="63.5" fill="none" stroke="#1A1F24" stroke-width="1"/>
+
+  <!-- Aerial marbled overlay -->
+  <g opacity="0.35" filter="url(#aerial)">
+    <rect x="24" y="24" width="464" height="464" rx="64" fill="url(#aerialGrad)"/>
+  </g>
+  <!-- Contour accents -->
+  <rect x="24" y="24" width="464" height="464" rx="64" fill="#FFFFFF" filter="url(#contours)" opacity="0.06"/>
+
+  <!-- Cyan edge accent border -->
+  <rect x="24.5" y="24.5" width="463" height="463" rx="63.5" fill="none" stroke="url(#edgeAccent)" stroke-width="1.5"/>
+
+  <!-- Wordmark -->
+  <text x="256" y="285" text-anchor="middle"
+        font-family="Inter,Segoe UI,Ubuntu,Arial,sans-serif"
+        font-weight="900" font-size="96" fill="#EAF2F5" letter-spacing="0.5">HakPak<tspan fill="#00e5ff" filter="url(#cyanGlow)">4</tspan></text>
+</svg>

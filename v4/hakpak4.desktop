@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Name=HakPak4
+GenericName=Security Tool Installer & Script Builder
+Comment=HakPak4 — Cross-Distro Hacking Tool Installer & Script Builder GUI
+Exec=hakpak4 gui
+Icon=/usr/share/pixmaps/hakpak4-icon.svg
+Terminal=false
+Categories=Security;Utility;
+Keywords=HakPak;Security;Hacking;Tools;Scripts;Kali;
+StartupNotify=true
+X-GNOME-UsesNotifications=true
